@@ -1,0 +1,24 @@
+/* Read more about CSS @layer: https://developer.mozilla.org/en-US/docs/Web/CSS/@layer */
+@layer resets, font, theme, components;
+
+@import url("@fontsource/open-sans/latin-300.css") layer(font);
+@import url("@fontsource/open-sans/latin-300-italic.css") layer(font);
+@import url("@fontsource/open-sans/latin-400.css") layer(font);
+@import url("@fontsource/open-sans/latin-400-italic.css") layer(font);
+@import url("@fontsource/open-sans/latin-500.css") layer(font);
+@import url("@fontsource/open-sans/latin-500-italic.css") layer(font);
+@import url("@fontsource/open-sans/latin-600.css") layer(font);
+@import url("@fontsource/open-sans/latin-600-italic.css") layer(font);
+@import url("@fontsource/open-sans/latin-700.css") layer(font);
+@import url("@fontsource/open-sans/latin-700-italic.css") layer(font);
+@import url("@fontsource/open-sans/latin-800.css") layer(font);
+@import url("@fontsource/open-sans/latin-800-italic.css") layer(font);
+@import url("@fontsource/pt-mono") layer(font);
+
+@import url("@salt-ds/theme/index.css") layer(theme);
+
+@layer resets {
+  body {
+    margin: 0;
+  }
+}

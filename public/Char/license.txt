@@ -1,0 +1,8 @@
+Model Information:
+* title:	Persona Formal
+* source:	https://sketchfab.com/3d-models/persona-formal-53209dc94ac949118b58f66b0fcfba63
+* author:	JohnMora (https://sketchfab.com/JohnMora)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

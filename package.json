@@ -1,0 +1,53 @@
+{
+  "name": "hevyfy",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:ci": "cross-env CI=true npm run build",
+    "build:prod": "npm run test:ci && npm run build:ci",
+    "test": "vitest",
+    "test:ci": "cross-env CI=true npm run test:coverage",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ext ts,tsx"
+  },
+  "dependencies": {
+    "@fontsource/open-sans": "^4.5.13",
+    "@fontsource/pt-mono": "^4.5.11",
+    "@react-three/drei": "^8.20.2",
+    "@react-three/fiber": "^8.18.0",
+    "@salt-ds/core": "latest",
+    "@salt-ds/icons": "latest",
+    "@salt-ds/theme": "latest",
+    "ag-grid-react": "^28.2.1",
+    "react": "~18.2.0",
+    "react-dom": "~18.2.0",
+    "react-router-dom": "~6.4.1",
+    "three": "^0.152.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "~5.16.4",
+    "@testing-library/react": "~14.0.0",
+    "@testing-library/user-event": "~14.4.3",
+    "@types/node": "^20",
+    "@types/react": "~18.0.9",
+    "@types/react-dom": "~18.0.3",
+    "@types/react-router-dom": "~5.3.3",
+    "@typescript-eslint/eslint-plugin": "~7.3.1",
+    "@typescript-eslint/parser": "~7.4.0",
+    "@vitejs/plugin-react": "~4.2.1",
+    "@vitest/coverage-v8": "~1.2.2",
+    "cross-env": "~7.0.3",
+    "eslint": "~8.57.0",
+    "eslint-plugin-react": "~7.34.1",
+    "eslint-plugin-react-hooks": "~4.6.0",
+    "eslint-plugin-react-refresh": "~0.4.1",
+    "jest-sonar-reporter": "^2.0.0",
+    "jsdom": "~22.0.0",
+    "vite": "~5.1.1",
+    "vitest": "~1.2.2",
+    "vitest-sonar-reporter": "~0.4.1"
+  }
+}

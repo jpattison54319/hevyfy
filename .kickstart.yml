@@ -1,0 +1,9 @@
+---
+starterName: "saltDesignSystem"
+starterVersion: "0.1.0"
+starterLibraries:
+- "kickstart-control-library:1.0.14"
+inputs:
+- name: "projectName"
+  value: "hevyfy"
+generated: "2025.06.25-14.22.20"
