@@ -20,6 +20,7 @@ import jpmLogo from "../assets/JPM_logo_2008_DIGITAL_D_Black.png";
 import { routes } from "../routes";
 
 import "./Header.css";
+import { handleSignOut } from "../SignOut";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -85,6 +86,7 @@ const Header = () => {
               appearance="bordered"
               sentiment="accented"
               aria-label="User Settings"
+              onClick={handleSignOut}
           >
             <UserIcon />
           </Button>

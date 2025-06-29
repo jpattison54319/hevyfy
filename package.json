@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "proxy": "http://localhost:2025",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -22,6 +23,7 @@
     "@salt-ds/icons": "latest",
     "@salt-ds/theme": "latest",
     "ag-grid-react": "^28.2.1",
+    "firebase": "^11.9.1",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "react-router-dom": "~6.4.1",
