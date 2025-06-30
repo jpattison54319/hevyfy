@@ -4,7 +4,26 @@ import admin from '../firebaseAdmin.js';
 import User from '../models/User.js'; // your Mongoose User model
 
 const router = express.Router();
-
+/**
+ * @swagger
+ * /api/auth/google:
+ *   post:
+ *     summary: Log in with Google token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: User object
+ *       401:
+ *         description: Unauthorized
+ */
 router.post('/google', async (req, res) => {
   const { token } = req.body;
 
@@ -15,6 +34,7 @@ router.post('/google', async (req, res) => {
     let user = await User.findOne({ uid });
 
     if (!user) {
+        console.log('Creating new user:', uid, name, email);
       user = await User.create({
         uid,
         name,

@@ -1,6 +1,6 @@
 import {
   Badge,
-  Button, FlexItem, FlexLayout,
+  Button, Drawer, FlexItem, FlexLayout,
   GridItem,
   GridLayout, Menu, MenuItem, MenuPanel, MenuTrigger,
   NavigationItem,
@@ -8,8 +8,8 @@ import {
   StackLayout,
   Text, Tooltip,
 } from "@salt-ds/core";
-import {CallIcon, MenuIcon, NotificationIcon, UserIcon} from "@salt-ds/icons";
-import { ForwardedRef, forwardRef } from "react";
+import {AddIcon, CallIcon, MenuIcon, NotificationIcon, UserIcon} from "@salt-ds/icons";
+import { ForwardedRef, forwardRef, useState } from "react";
 import {
   To,
   useHref,
@@ -21,6 +21,7 @@ import { routes } from "../routes";
 
 import "./Header.css";
 import { handleSignOut } from "../SignOut";
+import LogFoodPage from "../LogFoodPage/LogFoodPage";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -48,6 +49,7 @@ const NavLink = forwardRef(function NavLink(
 
 // Check App header pattern: https://www.saltdesignsystem.com/salt/patterns/app-header
 const Header = () => {
+const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">("none");
   const { pathname } = useLocation();
 
   return (
@@ -55,15 +57,14 @@ const Header = () => {
       <FlexItem >
         <Menu>
           <MenuTrigger>
-            <Button appearance="transparent" aria-label="Open Menu">
-              <MenuIcon aria-hidden />
+            <Button appearance="bordered"
+              sentiment="accented" aria-label="Open Menu">
+              <AddIcon aria-hidden />
             </Button>
           </MenuTrigger>
           <MenuPanel>
-            <MenuItem>Copy</MenuItem>
-            <MenuItem>Paste</MenuItem>
-            <MenuItem>Export</MenuItem>
-            <MenuItem>Settings</MenuItem>
+            <MenuItem onClick={() => setDrawerView('logFood')} >Log Food</MenuItem>
+            <MenuItem>Log Manual Workout</MenuItem>
           </MenuPanel>
         </Menu>
       </FlexItem>
@@ -92,6 +93,10 @@ const Header = () => {
           </Button>
         </Tooltip>
       </FlexItem>
+       <Drawer open={drawerView !== "none"} onOpenChange={() => setDrawerView('none')} position="bottom">
+         {drawerView === "logFood" && <LogFoodPage />}
+  {drawerView === "logWorkout" && <></> }
+      </Drawer>
     </FlexLayout>
   );
 };

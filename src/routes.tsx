@@ -1,5 +1,7 @@
-import AboutPage from "./about/AboutPage";
+import AboutPage from "./skills/SkillsPage";
 import HomePage from "./home/HomePage";
+import SkillsPage from "./skills/SkillsPage";
+import QuestsPage from "./quests/QuestsPage";
 
 export const routes = [
   {
@@ -8,13 +10,13 @@ export const routes = [
     element: <HomePage />,
   },
   {
-    path: "/about",
+    path: "/skills",
     name: "Skills",
-    element: <AboutPage />,
+    element: <SkillsPage />,
   },
   {
     path: "/quests",
     name: "Quests",
-    element: <AboutPage />,
+    element: <QuestsPage />,
   },
 ] as const;

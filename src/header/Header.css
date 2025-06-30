@@ -1,8 +1,8 @@
 .app-header {
-  height: calc(var(--salt-size-base) + var(--salt-spacing-200));
+  height: calc(var(--salt-size-base) + var(--salt-spacing-600));
   padding-inline: var(--salt-spacing-300);
   z-index: var(--salt-zIndex-appHeader);
-  border-bottom: var(--salt-size-border) var(--salt-container-borderStyle)
+  border: var(--salt-size-border) var(--salt-container-borderStyle)
     var(--salt-container-secondary-borderColor);
   box-shadow: var(--salt-overlayable-shadow-region);
 }

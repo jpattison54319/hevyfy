@@ -5,7 +5,7 @@ import { routes } from "./routes";
 import { useEffect, useState } from "react";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase'; // Adjust the path if your firebase config is elsewhere
-import LoginPage from "./LoginPage"; // Import your login component
+import LoginPage from "./login/LoginPage"; // Import your login component
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -24,20 +24,20 @@ function App() {
   }
 
   if (!user) {
-    return <LoginPage />; // show your login component until they're logged in
+    return <SaltProvider mode="dark"><LoginPage /></SaltProvider>; // show your login component until they're logged in
   }
   
   return (
-    <SaltProvider>
+    <SaltProvider mode="dark">
       <BorderLayout style={{height: '100vh'}}>
-        <BorderItem position="center" style={{flex: 1,height: '100vh', width: '100%'}} >
-          <Routes>
+        <BorderItem position="center" style={{flex: 1, width: '100%', height: '100%', overflowY: 'auto'}} >
+          <Routes >
             {routes.map((r) => (
               <Route key={r.name} path={r.path} element={r.element} />
             ))}
           </Routes>
         </BorderItem>
-        <BorderItem sticky={true} position="south" style={{bottom: 0, left: 0, right: 0}}>
+        <BorderItem sticky={true} position="south">
           <Header />
         </BorderItem>
       </BorderLayout>

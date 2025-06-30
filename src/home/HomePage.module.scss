@@ -1,0 +1,48 @@
+.homePage {
+  padding: var(--salt-spacing-300);
+  width: 100%;
+}
+
+.homePageTitle {
+  padding: 1rem 0 0 0;
+}
+
+.card-links {
+  height: calc(11 * var(--salt-size-base));
+  width: calc(9 * var(--salt-size-base));
+}
+
+.card-links > * {
+  height: 100%;
+}
+
+.card-image {
+  margin: calc(-1 * var(--salt-spacing-200));
+  height: calc(5 * var(--salt-size-base));
+}
+
+.statusSection {
+  padding: 1.5rem;;
+  text-align: center;
+}
+
+.levelText {
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding-bottom: 0.5rem;
+}
+
+.xpBarWrapper {
+  width: 80%;
+  margin: 0 auto;
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.xpBarFill {
+  height: 100%;
+  background-color: #4caf50; // You can theme this color
+  transition: width 0.3s ease;
+}

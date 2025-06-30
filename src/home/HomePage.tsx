@@ -1,6 +1,7 @@
 import {
   Card,
   FlexItem,
+  FlexLayout,
   FlowLayout,
   Link,
   StackLayout,
@@ -11,12 +12,14 @@ import communityIndexImage from "../assets/Com index.png";
 import saltImage from "../assets/SaltDesignSystem.png";
 import uitkImage from "../assets/UITK.png";
 
-import "./HomePage.css";
 import {Canvas} from '@react-three/fiber';
 import {Suspense} from 'react';
 import {OrbitControls, useGLTF} from '@react-three/drei';
+import styles from "./HomePage.module.scss";
+import { useLocation } from "react-router-dom";
 
 const HomePage = () => {
+  
   const cardsData = [
     {
       name: "Salt design system",
@@ -48,7 +51,7 @@ const HomePage = () => {
   ] as const;
 
   // @ts-ignore
-  function Model({url, scale = 5, position = [0,2,0]}){
+  function Model({url, scale = 2, position = [0,-2,0]}){
     // @ts-ignore
     const {scene} = useGLTF(url);
     scene.scale.set(scale,scale,scale);
@@ -56,16 +59,31 @@ const HomePage = () => {
   }
 
   return (
-    <FlowLayout className="home-page" justify="center">
-      <Canvas >
+    <FlexLayout style={{height: '100%'}} justify="center" direction="column" >
+      <FlexItem align="center">
+        <Text styleAs="h1" className={styles.homePageTitle} >
+          Your Pet!
+          </Text>
+      </FlexItem>
+      <FlexItem grow={1}>
+        <Canvas camera={{ position: [5, 4, 5], fov: 50 }}>
         <ambientLight intensity={0.5}/>
         <directionalLight position={[0,5,5]}/>
         <Suspense>
-          <Model url={'/Char/scene.gltf'} />
+          <group rotation={[0, Math.PI , 0]}> {/* Rotate 180° around Y axis */}
+      <Model url="/dog/scene.gltf" />
+    </group>
         </Suspense>
         <OrbitControls />
       </Canvas>
-    </FlowLayout>
+      </FlexItem>
+      <FlexItem className={styles.statusSection}>
+  <div className={styles.levelText}>Level 2</div>
+  <div className={styles.xpBarWrapper}>
+    <div className={styles.xpBarFill} style={{ width: '80%' }} /> {/* 80% = XP Progress */}
+  </div>
+</FlexItem>
+    </FlexLayout>
   );
 };
 

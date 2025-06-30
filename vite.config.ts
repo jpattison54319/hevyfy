@@ -11,6 +11,7 @@ export default defineConfig({
   ],
   // Workaround to make it work on I:\  - https://github.com/vitejs/vite/issues/4635
   resolve: {
+
     preserveSymlinks: true
   },
   build: {

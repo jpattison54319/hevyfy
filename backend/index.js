@@ -6,7 +6,9 @@ import cors from 'cors';
 import axios from 'axios';  // import axios as a whole
 import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
-
+import chatRoutes from './routes/chat.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 import userRoutes from './routes/user.js';
 // mongodb+srv://jpattison54319:<db_password>@cluster0.x3iwmzl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 const app = express();
@@ -28,6 +30,26 @@ app.use(express.json());
 app.use(cors());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/chatnutrition', chatRoutes);
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Workout RPG API',
+      version: '1.0.0',
+      description: 'API documentation for the Hevy RPG App',
+    },
+    servers: [
+      {
+        url: 'http://localhost:2025',
+      },
+    ],
+  },
+  apis: ['./routes/*.js'], // path to your route files
+};
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Example Route
