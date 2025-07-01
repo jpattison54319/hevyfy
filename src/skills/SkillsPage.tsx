@@ -1,4 +1,4 @@
-import { FlexLayout, FlexItem, Card, Text, ProgressBar, LinearProgress } from "@salt-ds/core";
+import { FlexLayout, FlexItem, Card, Text, LinearProgress } from "@salt-ds/core";
 import styles from "./SkillsPage.module.scss"; // Assuming you have a CSS module for styles
 
 const skills = [

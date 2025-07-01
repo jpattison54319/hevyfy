@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import { SaltProvider, BorderLayout, BorderItem } from "@salt-ds/core";
+import { SaltProvider, BorderLayout, BorderItem, FlexLayout, FlexItem } from "@salt-ds/core";
 import Header from "./header/Header";
 import { routes } from "./routes";
 import { useEffect, useState } from "react";
@@ -28,20 +28,31 @@ function App() {
   }
   
   return (
-    <SaltProvider mode="dark">
-      <BorderLayout style={{height: '100vh'}}>
-        <BorderItem position="center" style={{flex: 1, width: '100%', height: '100%', overflowY: 'auto'}} >
-          <Routes >
-            {routes.map((r) => (
-              <Route key={r.name} path={r.path} element={r.element} />
-            ))}
-          </Routes>
-        </BorderItem>
-        <BorderItem sticky={true} position="south">
-          <Header />
-        </BorderItem>
-      </BorderLayout>
-    </SaltProvider>
+   <SaltProvider mode="dark">
+    <div style={{height: '100vh', position: 'relative'}}>
+      <div style={{
+        height: 'calc(100vh - 76px)', 
+        overflowY: 'auto',
+        paddingBottom: 0
+      }}>
+        <Routes>
+          {routes.map((r) => (
+            <Route key={r.name} path={r.path} element={r.element} />
+          ))}
+        </Routes>
+      </div>
+      <div style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '76px',
+        zIndex: 1000
+      }}>
+        <Header />
+      </div>
+    </div>
+  </SaltProvider>
   );
 }
 
