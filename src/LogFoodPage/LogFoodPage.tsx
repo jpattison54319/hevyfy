@@ -43,13 +43,17 @@ const ChatFoodLogger = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Describe what you ate today..."
+          onBlur={() => {
+  // iOS Safari-specific hack to reflow and possibly nudge zoom out
+  window.scrollTo(0, window.scrollY);
+}}
           rows={5}
           style={{
             width: "100%",
             padding: "8px",
             borderRadius: "6px",
             border: "1px solid var(--salt-palette-neutral-300)",
-            fontSize: "1rem",
+            fontSize: "17px",
             fontFamily: "inherit",
             backgroundColor: "var(--salt-container-primary-background)",
             color: "var(--salt-content-primary-foreground)",

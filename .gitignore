@@ -25,3 +25,4 @@ dist-ssr
 backend/firebase-service-account.json
 apphosting.yaml
 functions/firebase-service-account.json
+.env.production

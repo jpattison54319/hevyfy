@@ -12,13 +12,6 @@ export interface PetStats {
     happiness: number; // calorie goal
 }
 
-export interface UserSkills {
-  [skillName: string]: {
-    level: number;
-    xp: number;
-  };
-}
-
 export interface Quest {
   id: string;
   title: string;
@@ -48,25 +41,24 @@ export interface UserBodyStats {
 export interface UserGoal {
 
     goalType: 'weight_loss' | 'muscle_gain' | 'maintenance';
-    targetWeight: number; // in lbs
-    targetDate: string; // ISO date string
     dailyCalorieGoal: number; // based on TDEE and goal type
     weeklyProgress: {
         week: number;
         weightChange: number; // in lbs
-        caloriesBurned: number; // total calories burned this week
     }[];
 }
 
-export interface RPGUser {
+export interface User  {
   uid: string;
   email: string;
   displayName?: string;
   avatarUrl?: string;
   pet: PetStats;
-  skills: UserSkills;
   quests: Quest[];
   meals: LoggedMeal[];
   goal: UserGoal;
     bodyStats: UserBodyStats;
+    settings: {
+        showCalories: boolean; // show calorie intake
+    }
 }

@@ -95,7 +95,7 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
       </FlexItem>
        <Drawer open={drawerView !== "none"} onOpenChange={() => setDrawerView('none')} position="bottom">
          {drawerView === "logFood" && <LogFoodPage />}
-  {drawerView === "logWorkout" && <></> }
+        {drawerView === "logWorkout" && <></> }
       </Drawer>
     </FlexLayout>
   );
