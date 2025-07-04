@@ -92,7 +92,7 @@ router.post('/update', async (req, res) => {
     const user = await User.findByIdAndUpdate(
       _id,
       updateData,
-      { new: true, runValidators: true, overwrite: true }
+      { new: true, runValidators: true }
     );
     
     if (!user) {

@@ -26,6 +26,7 @@ export interface LoggedMeal {
   protein: number;
   carbs: number;
   fat: number;
+  currency: number; // calorie currency equivalent
   timestamp: string;
 }
 
@@ -42,6 +43,10 @@ export interface UserGoal {
 
     goalType: 'weight_loss' | 'muscle_gain' | 'maintenance';
     dailyCalorieGoal: number; // based on TDEE and goal type
+    dailyCurrencyTotal: number,
+    dailyCurrencyUsed: {
+    [date: string]: number; // e.g., "2025-07-03": 6
+  };
     weeklyProgress: {
         week: number;
         weightChange: number; // in lbs
@@ -61,4 +66,6 @@ export interface User  {
     settings: {
         showCalories: boolean; // show calorie intake
     }
+    lastLogin: Date; // last login date
+    createdAt: Date; // account creation date
 }

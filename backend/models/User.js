@@ -31,6 +31,9 @@ const LoggedMealSchema = new mongoose.Schema({
   protein: Number,
   carbs: Number,
   fat: Number,
+  fluid_intake_ml: { type: Number, default: 0 },               // new field
+  servings_of_fruits_vegetables: { type: Number, default: 0 }, // new field
+  currency: Number, // calorie currency equivalent
   timestamp: String,
 }, { _id: false });
 
@@ -54,6 +57,12 @@ const UserGoalSchema = new mongoose.Schema({
     default: 'maintenance',
   },
   dailyCalorieGoal: Number,
+  dailyCurrencyTotal: Number,
+   dailyCurrencyUsed: {
+    type: Map,
+    of: Number,
+    default: () => ({}), // ensure default so Mongo doesn't require init
+  },
   weeklyProgress: [{
     week: Number,
     weightChange: Number,
@@ -81,6 +90,7 @@ const UserSchema = new mongoose.Schema({
 },
   bodyStats: {type: UserBodyStatsSchema, default: () => ({}),},
   settings: SettingsSchema,
+  lastLogin: { type: Date, default: Date.now },
 }, { timestamps: true });
 
 export default mongoose.model('User', UserSchema);

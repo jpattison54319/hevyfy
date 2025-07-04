@@ -15,26 +15,47 @@ import { Box3, Vector3, Object3D, Group } from 'three';
 import type { OrbitControls as ThreeOrbitControls } from 'three-stdlib';
 
 import {Canvas, useThree} from '@react-three/fiber';
-import {Suspense, useEffect, useRef} from 'react';
+import {Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {Bounds, OrbitControls, useGLTF} from '@react-three/drei';
 import styles from "./HomePage.module.scss";
 import { useUser } from "../context/UserContext";
 import type { OrbitControls as DreiOrbitControls } from '@react-three/drei';
 import XpBar from "../xpbar/XpBar";
+import { CalorieCurrencyContainer } from "../calorieResources/calorieCurrencyContainer";
 
 const HomePage = () => {
 
 
 
   const {userData, setUserData} = useUser(); // Assuming you have a UserContext to manage user data
+  const [modelPath, setModelPath] = useState<string>('');
+  const [currencyBalance, setCurrencyBalance] = useState<number>(0);
+  const [consumedCurrency, setConsumedCurrency] = useState<boolean[]>([]);
 
-  const petTypeMap: Record<string, string | null> = {
+  let isModelKitten = false;
+  const petTypeMap: Record<string, string> = {
     'puppy': '/puppy/scene.gltf',
     'kitten': '/kitten/scene.gltf',
   }
+  useEffect(() => {
+    setModelPath(petTypeMap[userData?.pet?.currentPet ?? 'puppy']);
+    isModelKitten = modelPath?.includes('kitten');
+  }, [userData]);
 
-  const modelPath = petTypeMap[userData?.pet?.currentPet ?? 'puppy'];
-  const isCatModel = modelPath?.includes('kitten');
+  useEffect(() => {
+  const today = new Date().toISOString().slice(0, 10);
+const total = userData?.goal?.dailyCurrencyTotal ?? 0;
+const used = userData?.goal?.dailyCurrencyUsed?.[today] ?? 0;
+const currencyBalance = total - used;
+setCurrencyBalance(currencyBalance);
+const newConsumedCurrency = Array(total)
+    .fill(false)
+    .map((_, i) => i >= currencyBalance);
+
+  setConsumedCurrency(newConsumedCurrency);
+}, [userData]);
+
+  //const modelPath = petTypeMap[userData?.pet?.currentPet ?? 'puppy'];
   console.log('Model Path:', modelPath); // Debug log to check the model path
   
   const cardsData = [
@@ -77,7 +98,13 @@ const HomePage = () => {
 
    function Model({ url, scale = 2, position = [0, -2, 0], rotation = [0, 0, 0] }) {
   const gltf = useGLTF(url) as { scene: Object3D };
-  return <primitive object={gltf.scene} scale={scale} position={position} rotation={rotation} />;
+    if (!gltf || !gltf.scene) {
+    return null;
+  }
+  const clonedScene = useMemo(() => {
+    return gltf.scene.clone();
+  }, [gltf.scene]);
+  return <primitive object={clonedScene} scale={scale} position={position} rotation={rotation} />;
 }
 
 //   function Model({ url, scale = 1 }) {
@@ -140,7 +167,8 @@ function FitCameraToModel({ modelRef }: { modelRef: React.RefObject<Group> }) {
 
   return null;
 }
-  console.log('is Cat Model:', isCatModel); // Debug log to check if it's a cat model
+
+  console.log('userData', userData); // Debug log to check if it's a cat model
   return (
    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 , height: '100%' }}>
     <FlexLayout style={{flex: 1, display: 'flex',height: '100%', minHeight: '100%'}} justify="center" direction="column">
@@ -148,6 +176,9 @@ function FitCameraToModel({ modelRef }: { modelRef: React.RefObject<Group> }) {
         <Text styleAs="h1" className={styles.homePageTitle}>
           {userData?.pet.name}
         </Text>
+      </FlexItem>
+      <FlexItem style={{ maxWidth: "100%", padding: 16 }} shrink={1}>
+        <CalorieCurrencyContainer count={userData?.goal?.dailyCurrencyTotal ?? 0} consumedCurrency={consumedCurrency} />
       </FlexItem>
       <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden'}}>
          <div style={{ width: '100%', height: '100%' }}>
@@ -161,8 +192,8 @@ function FitCameraToModel({ modelRef }: { modelRef: React.RefObject<Group> }) {
               <Model
           url={modelPath}
           scale={.8} // Same scale for both models
-          position={isCatModel ? [0, -3, 0] : [0, -2, 0]} // Lower cat model
-          rotation={isCatModel ? [0, Math.PI, 0] : [0, 0, 0]} // Rotate cat 180° around Y-axis
+          position={isModelKitten ? [0, -3, 0] : [0, -2, 0]} // Lower cat model
+          rotation={isModelKitten ? [0, Math.PI, 0] : [0, 0, 0]} // Rotate cat 180° around Y-axis
         />
             {/* </group> */}
             </Bounds>

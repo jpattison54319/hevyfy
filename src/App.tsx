@@ -16,24 +16,37 @@ function App() {
   const [loading, setLoading] = useState(true);
   // const [initializing, setInitializing] = useState(true);
     const { userData, setUserData } = useUser();
+    const [currencyBalance, setCurrencyBalance] = useState<number>(0);
    // console.log('User Data in App:', userData); // Log user data to check if it's being set correctly
 
-// function retrieveUserData(firebaseUser: any) {
-//     if (firebaseUser) { // If user is logged in
-//       api.get(`/users/${firebaseUser.uid}`) // Fetch user data from your backend   
-//         .then((response) => {
-//           setUserData(response.data); // Set user data in context
-//               setLoading(false);
+//   const checkForNewDay = async () => {
+//     const currentDate = new Date();
+//     const lastLogin = userData?.lastLogin ? new Date(userData.lastLogin) : null;
 
-//           console.log('User data retrieved:', response.data); // Log the retrieved user data
-//         })
-//         .catch((error) => {
-//           console.error('Error fetching user data:', error);
-//         }).finally(() => {
-//           setLoading(false); // Always set loading to false
-//         });
-//     }
-//   }    handleSignOut(); // Ensure sign out is handled on app load
+//     // if (!lastLogin || currentDate.getDate() !== lastLogin.getDate() || currentDate.getMonth() !== lastLogin.getMonth() || currentDate.getFullYear() !== lastLogin.getFullYear()) {
+//     //   console.log('New day detected, resetting user data...');
+//     //   // Reset user data logic here
+//     //   try {
+//     //     const response = await api.post('/resetUserData', { uid: user?.uid });
+//     //     setUserData(response.data);
+//     //   } catch (error) {
+//     //     console.error('Error resetting user data:', error);
+//     //   }
+//     // }
+//   }
+
+// useEffect(() => {
+//   const handleFocus = () => {
+//     // user came back to your site/tab
+//     console.log('User came back!');
+//     checkForNewDay(); // or trigger your reset logic here
+//   };
+
+//   window.addEventListener('focus', handleFocus);
+//   return () => {
+//     window.removeEventListener('focus', handleFocus);
+//   };
+// }, []);
 
 
    useEffect(() => {

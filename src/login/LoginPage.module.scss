@@ -9,3 +9,54 @@
   justify-content: center;
   align-items: center;
 }
+
+.loginScreen {
+  display: flex;
+  position: relative;
+  z-index: 0;
+  width: 100dvw;
+  height: 100dvh;
+  background-image: url('/wolfbackground.PNG');
+   background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* Semi-transparent black overlay */
+  z-index: 1;
+}
+
+.loginContainer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1); /* Slight white tint for readability */
+  border-radius: 10px;
+  backdrop-filter: blur(5px); /* Optional: modern blur effect */
+}
+
+.googleButton {
+  display: flex;
+  padding: 30px 30px;
+  line-height: 20px;
+  font-family: 'Press Start 2P', Pixelify Sans; /* Retro 8-bit font */
+  font-size: 17px;
+  color: #fff;
+  background-color: #ff9900; /* Orange from the theme */
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}

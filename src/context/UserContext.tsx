@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, Dispatch, SetStateAction, useEffect } from 'react';
+import { createContext, useContext, useState, Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 import { ReactNode } from 'react';
 import { User } from '../types/user.types';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -16,6 +16,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const saved = localStorage.getItem("userData");
     return saved ? JSON.parse(saved) : null;
   });
+
 
   const setUserData = (data: User | null) => {
     setUserDataState(data);
@@ -38,5 +39,14 @@ export const useUser = () => {
   if (!context) {
     throw new Error('useUser must be used within a UserProvider');
   }
-  return context;
+
+    const { userData, setUserData } = context;
+
+  const dailyCurrency = useMemo(() => {
+    if (!userData) return undefined;
+    return Math.floor(userData.goal.dailyCalorieGoal / 100); // Replace 50 with your logic
+  }, [userData]);
+
+  return {
+    userData, setUserData, dailyCurrency};
 };

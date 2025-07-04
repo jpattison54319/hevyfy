@@ -6,12 +6,21 @@ import {
   Spinner,
 } from "@salt-ds/core";
 import api from "../api/api";
+import { useUser } from "../context/UserContext";
+
 
 const ChatFoodLogger = () => {
+  const {userData, setUserData} = useUser();
   const [input, setInput] = useState("");
   const [response, setResponse] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const calculateDefense = (fiber: number) => Math.min(Math.round((fiber / 30) * 10), 10);
+  const calculateIntelligence = (fruitsAndVeggies : number) => Math.min(Math.round((fruitsAndVeggies / 400) * 10), 10);
+  const calculateArmor = (protein: number) => Math.min(Math.round((protein / 56) * 10), 10);
+  const calculateSpeed = (water: number) => Math.min(Math.round((water / 2000) * 10), 10);
+
 
   const handleSubmit = async () => {
     if (!input.trim()) return;
@@ -21,10 +30,34 @@ const ChatFoodLogger = () => {
 
     try {
 
-     const { data } = await api.post('/chatnutrition', { message: input });
+       const { data} = await api.post('/chatnutrition', { message: input });
+      console.log('Received data from API:', data); // Debug log to check the received data structure
+const mealWithDescription = {
+  ...data,
+  description: input,
+};
 
+console.log('Meal Data:', mealWithDescription); // Debug log to check the meal data structure
+    // 2. Now call your addMeal endpoint with the received mealData
+    // Assume you have `userId` available in your component's scope
+    const addMealResponse = await api.post(`/chatnutrition/${userData?.uid}/addMeal`, mealWithDescription);
+    const { mealAffects, updatedUser } = addMealResponse.data;
+    setUserData(updatedUser);
+    console.log('Meal Affects:', mealAffects); // Debug log to check the meal affects
 
-      setResponse(JSON.stringify(data, null, 2));
+      const summary = [];
+if (mealAffects.currency)
+  summary.push(`🦴 This meal cost ${mealAffects.currency} bone${mealAffects.currency > 1 ? 's' : ''}!`);
+if (mealAffects.armorIncrease)
+  summary.push(`🛡️ +${mealAffects.armorIncrease.toFixed(1)} Armor from protein`);
+if (mealAffects.defenseIncrease)
+  summary.push(`🧱 +${mealAffects.defenseIncrease.toFixed(1)} Defense from fiber`);
+if (mealAffects.speedIncrease)
+  summary.push(`💨 +${mealAffects.speedIncrease.toFixed(1)} Speed from hydration`);
+if (mealAffects.intelligenceIncrease)
+  summary.push(`🧠 +${mealAffects.intelligenceIncrease} Intelligence from fruits & vegetables`);
+
+setResponse(summary.join('\n'));
     } catch {
       setError("Failed to get nutrition info. Try again.");
     } finally {
@@ -92,7 +125,7 @@ const ChatFoodLogger = () => {
             fontSize: 14,
           }}
         >
-          {response}
+          <Text style={{lineHeight: '33px'}} styleAs="h3"> {response}</Text>
         </pre>
       )}
     </Panel>

@@ -13,6 +13,8 @@ const OnboardingPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [userDataStaging, setUserDataStaging] = useState<User>(userData);
   const [weightLossRate, setWeightLossRate] = useState<number>(1); // Default to -0.5 lbs/week
+  const [workActivityLevel, setWorkActivityLevel] = useState<number>(1.2); // Default to Sedentary
+  const [exerciseActivityLevel, setExerciseActivityLevel] = useState<number>(0); // Default to Sedentary
 
   if (!userData || !userDataStaging) {
     return <Text>Loading...</Text>;
@@ -29,26 +31,31 @@ const OnboardingPage: React.FC = () => {
   };
 
   const calculateTDEE = (bmr: number): number => {
-    // Moderate activity level (1.55 multiplier)
-    return bmr * 1.55;
+    const totalMultiplier = workActivityLevel + exerciseActivityLevel;
+    return bmr * totalMultiplier;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const bmr = calculateBMR(userDataStaging.bodyStats!);
     const tdee = calculateTDEE(bmr);
+      const calorieGoal =
+    userDataStaging.goal!.goalType === 'weight_loss'
+      ? tdee - (weightLossRate * 3500) / 7
+      : userDataStaging.goal!.goalType === 'muscle_gain'
+      ? tdee + 300
+      : tdee;
+
+      const dailyCurrencyTotal = Math.round(calorieGoal / 100);
     const updatedUserData = {
       ...userDataStaging,
       bodyStats: { ...userDataStaging.bodyStats!, bmr, tdee },
       goal: {
-        ...userDataStaging.goal!,
-        dailyCalorieGoal:
-          userDataStaging.goal!.goalType === 'weight_loss'
-            ? tdee + weightLossRate * 3500 / 7 // Convert weekly loss to daily deficit
-            : userDataStaging.goal!.goalType === 'muscle_gain'
-            ? tdee + 300
-            : tdee,
-      },
+      ...userDataStaging.goal!,
+      dailyCalorieGoal: calorieGoal,
+      dailyCurrencyTotal,
+      dailyCurrencyUsed: {}, // Start fresh on submit/setup
+    },
     };
     console.log('Submitted User Data:', updatedUserData);
     try {
@@ -196,83 +203,290 @@ const OnboardingPage: React.FC = () => {
             )}
 
             {/* Step 2: Fitness Goals */}
-            {currentStep === 1 && (
-              <StackLayout gap={2}>
-                <Text styleAs="h3">Fitness Goals</Text>
-                <FlexLayout direction="row" gap={2}>
-                    <FlexItem grow={1}>
-                  <InteractableCard
-                    onClick={() => handleCardSelection('goal', 'goalType', 'weight_loss')}
-                    aria-label="Weight Loss"
-                    style={{
-          backgroundColor: 'var(--salt-palette-neutral-selection)',
-          borderRadius: '12px',
-          border: userDataStaging.goal!.goalType === 'weight_loss' ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)'
-        }}
-                  >
-                    <FlexLayout direction="column" align="center" gap={1}>
-                        <FlexItem  style={{minHeight: '72px', alignItems: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', gap: '4px'}}>
-                      <Emoji symbol={'🔥'} size={24} />
-                      <Text>Weight Loss</Text>
-                      </FlexItem>
-                    </FlexLayout>
-                  </InteractableCard>
-                  </FlexItem>
-                  <FlexItem grow={1}>
-                  <InteractableCard
-                    onClick={() => handleCardSelection('goal', 'goalType', 'muscle_gain')}
-                    aria-label="Muscle Gain"
-                    style={{
-          backgroundColor: 'var(--salt-palette-neutral-selection)',
-          borderRadius: '12px',
-          border: userDataStaging.goal!.goalType === 'muscle_gain' ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)'
-        }}
-                  >
-                    <FlexLayout direction="column" align="center" gap={1}>
-                     <FlexItem  style={{minHeight: '72px', alignItems: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center',gap: '4px'}}>
-                      <Emoji symbol={userDataStaging.bodyStats.sex === 'male' ? '🏋️‍♂️' : '🏋🏽‍♀️'} size={24} />
-                      <Text>Muscle Gain</Text>
-                      </FlexItem>
-                    </FlexLayout>
-                  </InteractableCard>
-                  </FlexItem>
-                  <FlexItem grow={1} >
-                  <InteractableCard
-                    onClick={() => handleCardSelection('goal', 'goalType', 'maintenance')}
-                    aria-label="Maintenance"
-                    style={{
-          backgroundColor: 'var(--salt-palette-neutral-selection)',
-          borderRadius: '12px',
-          border: userDataStaging.goal!.goalType === 'maintenance' ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)'
-        }}
-                  >
-                    <FlexLayout direction="column" align="center" gap={1}>
-                        <FlexItem  style={{minHeight: '72px', alignItems: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center',gap: '4px'}}>
-                      <Emoji symbol={'🛠️'} size={24} />
-                      <Text>Maintenance</Text>
-                      </FlexItem>
-                    </FlexLayout>
-                  </InteractableCard>
-                  </FlexItem>
-                </FlexLayout>
-                {userDataStaging.goal!.goalType === 'weight_loss' && (
-                  <FormField>
-                    <Text styleAs='h3'>Weekly Weight Loss (lbs)</Text>
-                    <Slider
-                      max={2}
-                      min={0.5}
-                      step={0.25}
-                      value={weightLossRate}
-                      //onChangeEnd={(event: Event, value: number) => setWeightLossRate(value)}
-                      onChange={(event: Event, value: number) => setWeightLossRate(value)}
-                      minLabel='0.5'
-                      maxLabel='2'
-                      aria-label="Weekly weight loss slider"
-                    />
-                  </FormField>
-                )}
-              </StackLayout>
-            )}
+          {currentStep === 1 && (
+  <StackLayout gap={2}>
+    <Text styleAs="h3">Fitness Goals</Text>
+    <FlexLayout direction="row" gap={2}>
+      <FlexItem grow={1}>
+        <InteractableCard
+          onClick={() => handleCardSelection('goal', 'goalType', 'weight_loss')}
+          aria-label="Weight Loss"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '12px',
+            border: userDataStaging.goal!.goalType === 'weight_loss' ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)'
+          }}
+        >
+          <FlexLayout direction="column" align="center" gap={1}>
+            <FlexItem style={{minHeight: '72px', alignItems: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center', gap: '4px'}}>
+              <Emoji symbol={'🔥'} size={24} />
+              <Text>Weight Loss</Text>
+            </FlexItem>
+          </FlexLayout>
+        </InteractableCard>
+      </FlexItem>
+      <FlexItem grow={1}>
+        <InteractableCard
+          onClick={() => handleCardSelection('goal', 'goalType', 'muscle_gain')}
+          aria-label="Muscle Gain"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '12px',
+            border: userDataStaging.goal!.goalType === 'muscle_gain' ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)'
+          }}
+        >
+          <FlexLayout direction="column" align="center" gap={1}>
+            <FlexItem style={{minHeight: '72px', alignItems: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center',gap: '4px'}}>
+              <Emoji symbol={userDataStaging.bodyStats.sex === 'male' ? '🏋️‍♂️' : '🏋🏽‍♀️'} size={24} />
+              <Text>Muscle Gain</Text>
+            </FlexItem>
+          </FlexLayout>
+        </InteractableCard>
+      </FlexItem>
+      <FlexItem grow={1}>
+        <InteractableCard
+          onClick={() => handleCardSelection('goal', 'goalType', 'maintenance')}
+          aria-label="Maintenance"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '12px',
+            border: userDataStaging.goal!.goalType === 'maintenance' ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)'
+          }}
+        >
+          <FlexLayout direction="column" align="center" gap={1}>
+            <FlexItem style={{minHeight: '72px', alignItems: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center',gap: '4px'}}>
+              <Emoji symbol={'🛠️'} size={24} />
+              <Text>Maintenance</Text>
+            </FlexItem>
+          </FlexLayout>
+        </InteractableCard>
+      </FlexItem>
+    </FlexLayout>
+    
+    {userDataStaging.goal!.goalType === 'weight_loss' && (
+      <FormField>
+        <Text styleAs='h3'>Weekly Weight Loss (lbs)</Text>
+        <Slider
+          max={2}
+          min={0.5}
+          step={0.25}
+          value={weightLossRate}
+          onChange={(event: Event, value: number) => setWeightLossRate(value)}
+          minLabel='0.5'
+          maxLabel='2'
+          aria-label="Weekly weight loss slider"
+        />
+      </FormField>
+    )}
+
+    {/* Job Activity Level */}
+    <StackLayout gap={1}>
+      <Text styleAs="h3">Job Activity Level</Text>
+      <Text styleAs="h4" style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+        Select the option that best describes your daily work activity
+      </Text>
+      <FlexLayout direction="column" gap={1}>
+        <InteractableCard
+          onClick={() => setWorkActivityLevel(1.2)}
+          aria-label="Sedentary - Desk Job"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: workActivityLevel === 1.2 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'💻'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Sedentary - Desk Job</Text>
+              <Text  style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Mostly sitting, minimal physical activity
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setWorkActivityLevel(1.375)}
+          aria-label="Lightly Active - Teacher"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: workActivityLevel === 1.375 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'👩‍🏫'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Lightly Active - Teacher</Text>
+              <Text  style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Some standing and walking throughout the day
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setWorkActivityLevel(1.55)}
+          aria-label="Moderately Active - Nurse/Waitress"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: workActivityLevel === 1.55 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'👩‍⚕️'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Moderately Active - Nurse/Waitress</Text>
+              <Text style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Frequent walking, standing, and physical tasks
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setWorkActivityLevel(1.75)}
+          aria-label="Very Active - Construction Worker"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: workActivityLevel === 1.75 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'👷‍♂️'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Very Active - Construction Worker</Text>
+              <Text  style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Heavy physical labor and constant movement
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+      </FlexLayout>
+    </StackLayout>
+
+    {/* Workout Activity Level */}
+    <StackLayout gap={1}>
+      <Text styleAs="h3">Workout Activity Level</Text>
+      <Text styleAs="h4" style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+        How often do you exercise per week?
+      </Text>
+      <FlexLayout direction="column" gap={1}>
+        <InteractableCard
+          onClick={() => setExerciseActivityLevel(0)}
+          aria-label="Sedentary - No Exercise"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: exerciseActivityLevel === 0 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'🛋️'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Sedentary</Text>
+              <Text  style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Little to no exercise
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setExerciseActivityLevel(0.05)}
+          aria-label="Lightly Active - 1-3 days per week"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: exerciseActivityLevel === 0.05 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'🚶‍♀️'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Lightly Active</Text>
+              <Text style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Light exercise 1-3 days per week
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setExerciseActivityLevel(0.1)}
+          aria-label="Moderately Active - 3-5 days per week"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: exerciseActivityLevel === 0.1 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'🏃‍♂️'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Moderately Active</Text>
+              <Text style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Moderate exercise 3-5 days per week
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setExerciseActivityLevel(0.15)}
+          aria-label="Very Active - 6-7 days per week"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: exerciseActivityLevel === 0.15 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'🏋️‍♀️'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Very Active</Text>
+              <Text  style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Hard exercise 6-7 days per week
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+        
+        <InteractableCard
+          onClick={() => setExerciseActivityLevel(0.2)}
+          aria-label="Extremely Active - 2x per day or intense training"
+          style={{
+            backgroundColor: 'var(--salt-palette-neutral-selection)',
+            borderRadius: '8px',
+            border: exerciseActivityLevel === 0.2 ? '2px solid var(--salt-palette-measured-foreground-active)' : '2px solid var(--salt-palette-neutral-primary-border)',
+            padding: '12px'
+          }}
+        >
+          <FlexLayout direction="row" align="center" gap={2}>
+            <Emoji symbol={'💪'} size={30} />
+            <StackLayout gap={0}>
+              <Text styleAs='h2'>Extremely Active</Text>
+              <Text style={{color: 'var(--salt-palette-neutral-secondary-foreground)'}}>
+                Very hard exercise 2x/day or intense training
+              </Text>
+            </StackLayout>
+          </FlexLayout>
+        </InteractableCard>
+      </FlexLayout>
+    </StackLayout>
+  </StackLayout>
+)}
 
             {/* Step 3: Virtual Pet */}
             {currentStep === 2 && (

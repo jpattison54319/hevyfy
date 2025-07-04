@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { auth, provider, signInWithPopup } from '../firebase';
-import { Button, Spinner } from '@salt-ds/core';
+import { Button, Spinner, Text } from '@salt-ds/core';
 import styles from './LoginPage.module.scss'; // Assuming you have a CSS module for styles
 import api from '../api/api';
 import { useUser } from '../context/UserContext';
@@ -27,13 +27,18 @@ function LoginPage() {
       console.error(err);
     }
         setIsLoading(true);
-
   };
 
-  if(isLoading) {
-    return <div className={styles.myBackground}><Spinner size='large' aria-label="loading" role="status"></Spinner></div>
-    }
-  return <div className={styles.myBackground}><Button style={{borderRadius: '16px'}} appearance='solid' sentiment='positive' onClick={handleLogin}>Start your journey with Google</Button></div>;
+    return (
+    <div className={styles.loginScreen}>
+      <div className={styles.loginContainer}>
+        {isLoading ? <Spinner size='large' aria-label="loading" role="status"></Spinner>: 
+        <Button className={styles.googleButton} onClick={handleLogin}>Embark with Google</Button>}
+      </div>
+    </div>
+  );
+
+  // return <div className={styles.myBackground}><Button style={{borderRadius: '16px'}} appearance='solid' sentiment='positive' onClick={handleLogin}>Start your journey with Google</Button></div>;
 }
 
 export default LoginPage;
