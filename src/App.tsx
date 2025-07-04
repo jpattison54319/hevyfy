@@ -10,30 +10,42 @@ import { UserProvider, useUser } from "./context/UserContext";
 import OnboardingPage from "./onboarding/onboardingPage";
 import api from "./api/api";
 import { handleSignOut } from "./SignOut";
+import { debounce, throttle } from 'lodash';
 
 function App() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   // const [initializing, setInitializing] = useState(true);
     const { userData, setUserData } = useUser();
-    const [currencyBalance, setCurrencyBalance] = useState<number>(0);
    // console.log('User Data in App:', userData); // Log user data to check if it's being set correctly
 
-//   const checkForNewDay = async () => {
-//     const currentDate = new Date();
-//     const lastLogin = userData?.lastLogin ? new Date(userData.lastLogin) : null;
+useEffect(() => {
+   const throttledFetch = throttle(() => {
+    console.log("Fetching user object...");
+    api.get(`/users/${userData?.uid}`)
+      .then((res) => {
+        setUserData(res.data);
+        console.log("User data synced:", res.data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user:", err);
+      });
+  }, 10000); // only allow once every 10s
 
-//     // if (!lastLogin || currentDate.getDate() !== lastLogin.getDate() || currentDate.getMonth() !== lastLogin.getMonth() || currentDate.getFullYear() !== lastLogin.getFullYear()) {
-//     //   console.log('New day detected, resetting user data...');
-//     //   // Reset user data logic here
-//     //   try {
-//     //     const response = await api.post('/resetUserData', { uid: user?.uid });
-//     //     setUserData(response.data);
-//     //   } catch (error) {
-//     //     console.error('Error resetting user data:', error);
-//     //   }
-//     // }
-//   }
+  const handleFocus = () => {
+    console.log("User came back!");
+    throttledFetch();
+  };
+  if(userData){
+  window.addEventListener('focus', handleFocus);
+  }
+  return () => {
+    if(userData){
+    window.removeEventListener('focus', handleFocus);
+    throttledFetch.cancel();
+    }
+  };
+}, []);
 
 // useEffect(() => {
 //   const handleFocus = () => {

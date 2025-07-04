@@ -13,6 +13,8 @@ const Emoji = ({ symbol, label = "", className = "", style = {}, size = 24 }: Em
     aria-hidden={label ? "false" : "true"}
     className={className}
     style={{
+      display: "inline-block",
+      verticalAlign: "middle",
       fontSize: typeof size === "number" ? `${size}px` : size,
       lineHeight: 1,
       ...style,

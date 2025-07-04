@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import { Bone } from "./Bone";
+import { Fish } from "./Fish";
 
-interface BonesRowProps {
+interface CurrencyRowProps {
   count: number;
   consumedCurrency: boolean[];
+  userArchetype: string;
 }
 
-export const CalorieCurrencyContainer: React.FC<BonesRowProps> = ({ count, consumedCurrency}) => {
-
+export const CalorieCurrencyContainer: React.FC<CurrencyRowProps> = ({ count, consumedCurrency, userArchetype}) => {
+  
  return (
     <div style={{    display: "flex",
         flexWrap: "wrap", // allow wrapping if bones exceed width
@@ -26,7 +28,9 @@ export const CalorieCurrencyContainer: React.FC<BonesRowProps> = ({ count, consu
             justifyContent: "center",
           }}
         >
-          <Bone consumed={consumedCurrency[i] ?? false} />
+         {userArchetype === 'puppy' ? <Bone consumed={consumedCurrency[i] ?? false} />
+         : <Fish consumed={consumedCurrency[i] ?? false} />
+        }
         </div>
       ))}
     </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, FormField, Input, Text, H1, StackLayout, FlexLayout, FlexItem, Stepper, Slider, FormFieldLabel, InteractableCard, Step } from '@salt-ds/core';
+import { Button, Option, FormField, Input, Text, H1, StackLayout, FlexLayout, FlexItem, Stepper, Slider, FormFieldLabel, InteractableCard, Step, Dropdown } from '@salt-ds/core';
 import api from '../api/api';
 import Emoji from '../Emoji/Emoji';
 import { useUser } from '../context/UserContext';
@@ -15,10 +15,24 @@ const OnboardingPage: React.FC = () => {
   const [weightLossRate, setWeightLossRate] = useState<number>(1); // Default to -0.5 lbs/week
   const [workActivityLevel, setWorkActivityLevel] = useState<number>(1.2); // Default to Sedentary
   const [exerciseActivityLevel, setExerciseActivityLevel] = useState<number>(0); // Default to Sedentary
+  const [heightFeet, setHeightFeet] = useState(Math.floor(userDataStaging.bodyStats!.height / 12));
+  const [heightInches, setHeightInches] = useState(userDataStaging.bodyStats!.height % 12);
 
   if (!userData || !userDataStaging) {
     return <Text>Loading...</Text>;
   }
+
+  useEffect(() => {
+  const totalInches = heightFeet * 12 + heightInches;
+  console.log('total inches : ', totalInches);
+  setUserDataStaging((prev) => ({
+    ...prev,
+    bodyStats: {
+      ...prev.bodyStats!,
+      height: totalInches,
+    },
+  }));
+}, [heightFeet, heightInches]);
 
   const calculateBMR = (bodyStats: UserBodyStats): number => {
     const { weight, height, age, sex } = bodyStats;
@@ -114,7 +128,6 @@ const OnboardingPage: React.FC = () => {
   };
 
   const steps = ['Body Stats', 'Fitness Goals', 'Virtual Pet'];
-
   return (
     //<div style={{display: 'flex', height: '100%', width: '100%' }}>
     <FlexLayout direction="column" align="stretch" style={{display: 'flex', minHeight: '100vh', width: '100%', overflow: 'hidden', padding: '14px' }}>
@@ -148,13 +161,32 @@ const OnboardingPage: React.FC = () => {
                     onChange={(e) => handleInputChange(e, 'bodyStats', 'weight')}
                   />
                 </FormField>
-                <FormField>
-                  <FormFieldLabel>Height (inches)</FormFieldLabel>
-                  <Input
-                    value={userDataStaging.bodyStats!.height}
-                    onChange={(e) => handleInputChange(e, 'bodyStats', 'height')}
-                  />
-                </FormField>
+               <FormField>
+  <FormFieldLabel>Height</FormFieldLabel>
+  <div style={{ display: "flex", gap: "1rem" }}>
+    <Dropdown
+      value={heightFeet.toString() + ' ft'}
+      onSelectionChange={(_, value) => setHeightFeet(Number(value))}
+    >
+      {[2, 3, 4, 5, 6, 7, 8, 9].map((ft) => (
+        <Option value={ft.toString()} key={ft}>
+          {ft} ft
+        </Option>
+      ))}
+    </Dropdown>
+
+    <Dropdown
+      value={heightInches.toString() + ' in'}
+      onSelectionChange={(_, value) => setHeightInches(Number(value))}
+    >
+      {Array.from({ length: 12 }, (_, i) => (
+        <Option value={i.toString()} key={i}>
+          {i} in
+        </Option>
+      ))}
+    </Dropdown>
+  </div>
+</FormField>
                 <FormField>
                   <FormFieldLabel>Sex</FormFieldLabel>
                   <FlexLayout direction="row" gap={2}>

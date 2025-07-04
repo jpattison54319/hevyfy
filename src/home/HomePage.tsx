@@ -58,35 +58,7 @@ const newConsumedCurrency = Array(total)
   //const modelPath = petTypeMap[userData?.pet?.currentPet ?? 'puppy'];
   console.log('Model Path:', modelPath); // Debug log to check the model path
   
-  const cardsData = [
-    {
-      name: "Salt design system",
-      image: saltImage,
-      description:
-        "Checkout our website to learn more about the design system.",
-      goLink: "go/salt-ds",
-    },
-    {
-      name: "Community Index",
-      image: communityIndexImage,
-      description: "An index of prior art built with Salt.",
-      goLink: "go/community-index",
-    },
-    {
-      name: "UITK Migration Guides",
-      image: uitkImage,
-      description:
-        "Read component-by-component guides if you're migrating from UI Toolkit.",
-      goLink: "go/saltds-migration",
-    },
-    {
-      name: "Journey from UITK to Salt",
-      image: blogImage,
-      description:
-        "A personal story around the journey from UI Toolkit to Salt from Mark Tate on Modem.",
-      goLink: "go/whysalt",
-    },
-  ] as const;
+
 
   //@ts-ignore
   // function Model({url, scale = 2, position = [0,-2,0]}){
@@ -178,7 +150,7 @@ function FitCameraToModel({ modelRef }: { modelRef: React.RefObject<Group> }) {
         </Text>
       </FlexItem>
       <FlexItem style={{ maxWidth: "100%", padding: 16 }} shrink={1}>
-        <CalorieCurrencyContainer count={userData?.goal?.dailyCurrencyTotal ?? 0} consumedCurrency={consumedCurrency} />
+        <CalorieCurrencyContainer userArchetype={userData?.pet.currentPet ?? 'puppy'} count={userData?.goal?.dailyCurrencyTotal ?? 0} consumedCurrency={consumedCurrency} />
       </FlexItem>
       <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden'}}>
          <div style={{ width: '100%', height: '100%' }}>

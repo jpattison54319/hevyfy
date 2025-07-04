@@ -99,20 +99,7 @@ router.post('/:uid/addMeal', async (req, res) => {
   };
 
   console.log(mealLog); // Debug log to check the meal data structure
-
-  try {
-    const updatedUser = await User.findOneAndUpdate(
-      { uid },
-      { $push: { meals: mealLog },
-    $inc: { [`goal.dailyCurrencyUsed.${today}`]: currency },
-   },
-      { new: true }
-    );
-    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
-    console.log('Updated user:', updatedUser); // Debug log to check the updated user data
-
-    console.log(mealLog); // Debug log to check the meal data structure
-      const mealAffects = {
+       const mealAffects = {
       currency: mealLog.currency ?? 0,
       description: mealLog.description ?? '',
       armorIncrease: Math.round(mealLog.protein * 0.1) ?? 0,
@@ -120,6 +107,27 @@ router.post('/:uid/addMeal', async (req, res) => {
       intelligenceIncrease: mealLog.servings_of_fruits_vegetables ?? 0, 
       defenseIncrease: Math.round(mealLog.fiber * 0.5) ?? 0,
     }
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+          { uid },
+          { $push: { meals: mealLog },
+        $inc: {
+          [`goal.dailyCurrencyUsed.${today}`]: currency,
+          'pet.armor': mealAffects.armorIncrease,
+          'pet.speed': mealAffects.speedIncrease,
+          'pet.intelligence': mealAffects.intelligenceIncrease,
+          'pet.defense': mealAffects.defenseIncrease,
+          // You could also increment XP here if meals grant XP:
+          // 'pet.xp': xpEarnedFromMeal
+        },
+       },
+          { new: true }
+        );
+    if (!updatedUser) return res.status(404).json({ message: 'User not found' });
+    console.log('Updated user:', updatedUser); // Debug log to check the updated user data
+
+    console.log(mealLog); // Debug log to check the meal data structure
 
     res.status(200).json({
       message: 'Meal added successfully',
