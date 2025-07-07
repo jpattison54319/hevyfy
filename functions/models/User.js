@@ -73,6 +73,17 @@ const SettingsSchema = new mongoose.Schema({
   showCalories: Boolean,
 }, { _id: false });
 
+const LoggedWorkoutSchema = new mongoose.Schema({
+  id: String,
+   workoutType: String,
+  cardioMode: String, //duration or distance
+  duration: Number, //mins
+  distance: Number, //miles
+  rpe: Number,
+  notes: String,
+  timestamp: String,
+}, { _id: false });
+
 const UserSchema = new mongoose.Schema({
   uid: { type: String, required: true, unique: true },
   email: { type: String, required: true },
@@ -84,6 +95,7 @@ const UserSchema = new mongoose.Schema({
 },
   quests: [QuestSchema],
   meals: {type: [LoggedMealSchema], default: []},
+  workouts: {type: [LoggedWorkoutSchema], default: []},
   goal: {
   type: UserGoalSchema,
   default: () => ({}),

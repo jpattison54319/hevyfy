@@ -22,6 +22,7 @@ import { routes } from "../routes";
 import "./Header.css";
 import { handleSignOut } from "../SignOut";
 import LogFoodPage from "../LogFoodPage/LogFoodPage";
+import { WorkoutLogger } from "../WorkoutLoggerPage/WorkoutLogger";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -64,7 +65,7 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
           </MenuTrigger>
           <MenuPanel>
             <MenuItem onClick={() => setDrawerView('logFood')} >Log Food</MenuItem>
-            <MenuItem>Log Manual Workout</MenuItem>
+            <MenuItem onClick={() => setDrawerView('logWorkout')}>Log Manual Workout</MenuItem>
           </MenuPanel>
         </Menu>
       </FlexItem>
@@ -95,7 +96,7 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
       </FlexItem>
        <Drawer open={drawerView !== "none"} onOpenChange={() => setDrawerView('none')} position="bottom">
          {drawerView === "logFood" && <LogFoodPage />}
-        {drawerView === "logWorkout" && <></> }
+        {drawerView === "logWorkout" && <WorkoutLogger /> }
       </Drawer>
     </FlexLayout>
   );

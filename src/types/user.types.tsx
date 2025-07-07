@@ -53,6 +53,17 @@ export interface UserGoal {
     }[];
 }
 
+export interface LoggedWorkout {
+  id: string;
+  workoutType: string;
+  cardioMode: string; //duration or distance
+  duration: number; //mins
+  distance: number; //miles
+  rpe: number;
+  notes: string;
+  timestamp: string;
+}
+
 export interface User  {
   uid: string;
   email: string;
@@ -61,6 +72,7 @@ export interface User  {
   pet: PetStats;
   quests: Quest[];
   meals: LoggedMeal[];
+  workouts: LoggedWorkout[];
   goal: UserGoal;
     bodyStats: UserBodyStats;
     settings: {

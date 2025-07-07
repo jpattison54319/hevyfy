@@ -1,6 +1,7 @@
 import express from 'express';
 const router = express.Router();
 import User from '../models/User.js'; // Adjust the import path as necessary
+import mongoose from 'mongoose';
 
 
 /**
@@ -102,9 +103,53 @@ router.post('/update', async (req, res) => {
     res.json(user);
   } catch (err) {
     if (err.name === 'CastError') {
+      console.error(err);
       return res.status(400).json({ error: 'Invalid user ID' });
     }
+    console.error(err);
+
     res.status(500).json({ error: 'Failed to update user' });
+  }
+});
+
+router.post('/:uid/addWorkout', async (req, res) => {
+  const { uid } = req.params;
+  const { workoutType, cardioMode, duration, distance, rpe, notes } = req.body;
+
+  if (!workoutType || !cardioMode || rpe === undefined) {
+    return res.status(400).json({ message: 'Missing required fields' });
+  }
+
+  const workoutLog = {
+    id: new mongoose.Types.ObjectId().toString(),
+    workoutType,
+    cardioMode,
+    duration: duration ?? 0,
+    distance: distance ?? 0,
+    rpe,
+    notes: notes ?? '',
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { uid },
+      { $push: { workouts: workoutLog } },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'Workout logged successfully',
+      workoutLog,
+      updatedUser,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
