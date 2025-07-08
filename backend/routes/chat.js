@@ -130,6 +130,14 @@ router.post('/:uid/addMeal', async (req, res) => {
   const currency = Math.round(calories / 100);// Convert calories to currency (1 currency = 100 calories)
   const today = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
 
+const mealAffects = {
+  armorIncrease: Math.round((protein ?? 0) * 0.1),
+  speedIncrease: Math.round((fluid_intake_ml ?? 0) * 0.01),
+  intelligenceIncrease: servings_of_fruits_vegetables ?? 0,
+  defenseIncrease: Math.round((fiber ?? 0) * 0.5),
+};
+
+
   const mealLog = {
     id: new mongoose.Types.ObjectId().toString(),
     description,
@@ -142,17 +150,10 @@ router.post('/:uid/addMeal', async (req, res) => {
     fluid_intake_ml,
     currency,
     timestamp: new Date().toISOString(),
+    mealAffects,
   };
 
   console.log(mealLog); // Debug log to check the meal data structure
-      const mealAffects = {
-      currency: mealLog.currency ?? 0,
-      description: mealLog.description ?? '',
-      armorIncrease: Math.round(mealLog.protein * 0.1) ?? 0,
-      speedIncrease: Math.round(mealLog.fluid_intake_ml * 0.01) ?? 0,
-      intelligenceIncrease: mealLog.servings_of_fruits_vegetables ?? 0, 
-      defenseIncrease: Math.round(mealLog.fiber * 0.5) ?? 0,
-    }
 
   try {
     const updatedUser = await User.findOneAndUpdate(
@@ -175,7 +176,11 @@ router.post('/:uid/addMeal', async (req, res) => {
 
      res.status(200).json({
       message: 'Meal added successfully',
-      mealAffects,
+      mealAffects: {
+    ...mealAffects,
+    currency: mealLog.currency,
+    description: mealLog.description,
+  },
       updatedUser, // <-- return updated user object here
     });
   } catch (err) {

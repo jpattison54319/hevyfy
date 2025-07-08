@@ -12,7 +12,8 @@
     "test": "vitest",
     "test:ci": "cross-env CI=true npm run test:coverage",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint . --ext ts,tsx"
+    "lint": "eslint . --ext ts,tsx",
+    "tailwind:init": "tailwindcss init -p"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
@@ -32,6 +33,7 @@
     "emoji-mart": "^5.6.0",
     "firebase": "^11.9.1",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.525.0",
     "react": "~18.2.0",
     "react-dom": "~18.2.0",
     "react-router-dom": "~6.4.1",

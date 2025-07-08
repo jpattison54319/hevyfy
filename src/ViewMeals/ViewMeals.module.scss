@@ -1,0 +1,463 @@
+$primary-orange: #ff9900;
+$primary-orange-hover: #e68900;
+$primary-orange-dark: #cc7700;
+
+$bg-primary: #1f2937;
+$bg-secondary: #111827;
+$bg-tertiary: #374151;
+
+$text-primary: #ffffff;
+$text-secondary: #d1d5db;
+$text-tertiary: #9ca3af;
+$text-quaternary: #6b7280;
+
+$border-primary: #374151;
+$border-secondary: #4b5563;
+
+$stat-colors: (
+  'red': #ef4444,
+  'blue': #3b82f6,
+  'yellow': #eab308,
+  'green': #22c55e,
+  'purple': #a855f7
+);
+
+// Mixins
+@mixin pixel-border($color: $border-primary, $width: 2px) {
+  border: $width solid $color;
+  border-radius: 8px;
+}
+
+@mixin retro-shadow() {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@mixin pulse-animation() {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Backdrop
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  transition: opacity 0.3s ease;
+}
+
+// Drawer
+.drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: $bg-primary;
+  border-top: 4px solid $primary-orange;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  z-index: 50;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 80vh;
+
+  &--open {
+    transform: translateY(0);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid $border-primary;
+  }
+
+  &__headerContent {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__headerIcon {
+    color: $primary-orange;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: bold;
+    color: $text-primary;
+    margin: 0;
+  }
+
+  &__closeButton {
+    color: $text-tertiary;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $text-primary;
+    }
+  }
+
+  &__content {
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: calc(80vh - 80px);
+  }
+}
+
+// Meal Card
+.mealCard {
+  background-color: $bg-primary;
+  @include pixel-border($border-primary);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  @include retro-shadow;
+  transition: border-color 0.2s ease;
+
+  &:hover {
+    border-color: $border-secondary;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  &__info {
+    flex: 1;
+  }
+
+  &__title {
+    color: $text-primary;
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin: 0 0 0.25rem 0;
+  }
+
+  &__timestamp {
+    color: $text-tertiary;
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  &__calories {
+    text-align: right;
+  }
+
+  &__caloriesValue {
+    font-size: 2rem;
+    font-weight: bold;
+    color: $primary-orange;
+    margin-bottom: 0.25rem;
+    line-height: 1;
+  }
+
+  &__caloriesLabel {
+    font-size: 0.75rem;
+    color: $text-tertiary;
+  }
+
+  &__macros {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__additionalStats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  &__statBoosts {
+    border-top: 1px solid $border-primary;
+    padding-top: 0.75rem;
+  }
+
+  &__statBoostsTitle {
+    font-size: 15px;
+    color: $text-tertiary;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  &__statBoostsGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  &__currency {
+    margin-top: 0.75rem;
+    text-align: right;
+  }
+
+  &__currencyText {
+    color: $primary-orange;
+    font-weight: bold;
+    font-size: 15px;
+  }
+}
+
+// Macro Item
+.macroItem {
+  background-color: $bg-tertiary;
+  border-radius: 6px;
+  padding: 0.5rem;
+  text-align: center;
+
+  &__value {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    line-height: 19px;
+  }
+
+  &__label {
+    font-size: 14px;
+    color: $text-tertiary;
+  }
+
+  &--protein &__value {
+    color: map-get($stat-colors, 'red');
+  }
+
+  &--carbs &__value {
+    color: map-get($stat-colors, 'yellow');
+  }
+
+  &--fat &__value {
+    color: map-get($stat-colors, 'blue');
+  }
+}
+
+// Additional Stat
+.additionalStat {
+  background-color: $bg-tertiary;
+  border-radius: 6px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &__icon {
+    color: map-get($stat-colors, 'blue');
+  }
+
+  &__content {
+    flex: 1;
+  }
+
+  &__value {
+    font-size: 17px;
+    font-weight: bold;
+    color: map-get($stat-colors, 'blue');
+    margin-bottom: 0.125rem;
+    line-height: 1;
+  }
+
+  &__label {
+    font-size: 14px;
+    color: $text-tertiary;
+  }
+
+  &:nth-child(2) {
+    .additionalStat__icon,
+    .additionalStat__value {
+      color: map-get($stat-colors, 'green');
+    }
+  }
+}
+
+// Stat Boost
+.statBoost {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: $bg-tertiary;
+  border-radius: 4px;
+  padding: 0.25rem 0.5rem;
+  font-size: 15px;
+
+  &__icon {
+    @each $color, $value in $stat-colors {
+      .statBoost--#{$color} & {
+        color: $value;
+      }
+    }
+  }
+
+  &__label {
+    color: $text-secondary;
+  }
+
+  &__value {
+    color: map-get($stat-colors, 'green');
+    font-weight: bold;
+  }
+}
+
+// Loading States
+.loadingState {
+  text-align: center;
+  padding: 2rem 0;
+
+  &__content {
+    @include pulse-animation;
+  }
+
+  &__text {
+    color: $text-tertiary;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtext {
+    color: $text-quaternary;
+    font-size: 0.875rem;
+  }
+}
+
+.loadingMore {
+  text-align: center;
+  padding: 1rem 0;
+
+  &__content {
+    @include pulse-animation;
+  }
+
+  &__text {
+    color: $text-tertiary;
+    margin-bottom: 0.25rem;
+  }
+
+  &__subtext {
+    color: $text-quaternary;
+    font-size: 0.875rem;
+  }
+}
+
+// Empty State
+.emptyState {
+  text-align: center;
+  padding: 2rem 0;
+
+  &__icon {
+    color: $text-quaternary;
+    margin: 0 auto 1rem auto;
+  }
+
+  &__text {
+    color: $text-tertiary;
+    margin-bottom: 0.5rem;
+  }
+
+  &__subtext {
+    color: $text-quaternary;
+    font-size: 0.875rem;
+  }
+}
+
+// End of List
+.endOfList {
+  text-align: center;
+  padding: 1rem 0;
+  border-top: 1px solid $border-primary;
+
+  &__text {
+    color: $text-quaternary;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+  }
+
+  &__subtext {
+    color: $text-quaternary;
+    font-size: 0.75rem;
+  }
+}
+
+// Meals List
+.mealsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Demo App Styles
+.demoApp {
+  min-height: 100vh;
+  background-color: $bg-tertiary;
+  padding: 1rem;
+
+  &__container {
+    max-width: 448px; // max-w-md equivalent
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: $text-primary;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  &__button {
+    width: 100%;
+    background-color: $primary-orange;
+    color: $text-primary;
+    font-weight: bold;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    border: 2px solid $primary-orange-dark;
+    cursor: pointer;
+    @include retro-shadow;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: $primary-orange-hover;
+    }
+
+    &:active {
+      transform: translateY(1px);
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 640px) {
+  .drawer {
+    &__content {
+      padding: 0.75rem;
+    }
+  }
+
+  .mealCard {
+    padding: 0.75rem;
+
+    &__macros {
+      gap: 0.375rem;
+    }
+
+    &__additionalStats {
+      gap: 0.375rem;
+    }
+  }
+}

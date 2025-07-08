@@ -35,6 +35,12 @@ const LoggedMealSchema = new mongoose.Schema({
   servings_of_fruits_vegetables: { type: Number, default: 0 }, // new field
   currency: Number, // calorie currency equivalent
   timestamp: String,
+  mealAffects: {
+    armorIncrease: { type: Number, default: 0 },
+    speedIncrease: { type: Number, default: 0 },
+    intelligenceIncrease: { type: Number, default: 0 },
+    defenseIncrease: { type: Number, default: 0 },
+  },
 }, { _id: false });
 
 const UserBodyStatsSchema = new mongoose.Schema({

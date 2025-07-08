@@ -177,4 +177,38 @@ router.post('/:uid/addWorkout', async (req, res) => {
   }
 });
 
+router.get('/:userId/meals', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { limit = 50, offset = 0 } = req.query;
+
+    // Find user and populate meals
+    const user = await User.findOne({ uid: userId }).select('meals');
+    
+    if (!user) {
+      return res.status(404).json({ 
+        error: 'User not found' 
+      });
+    }
+
+    // Sort meals by timestamp (newest first) and apply pagination
+    const sortedMeals = user.meals
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+      .slice(offset, offset + parseInt(limit));
+
+    res.json({
+      meals: sortedMeals,
+      total: user.meals.length,
+      offset: parseInt(offset),
+      limit: parseInt(limit)
+    });
+
+  } catch (error) {
+    console.error('Error fetching meals:', error);
+    res.status(500).json({ 
+      error: 'Internal server error' 
+    });
+  }
+});
+
 export default router;

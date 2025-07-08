@@ -29,7 +29,7 @@ const RPE_XP_MULTIPLIER: Record<number, number> = {
   4: 2.2,   // near maximal
 };
 
-export const WorkoutLogger = ({ setDrawerView }: { setDrawerView: (view: string) => void }) => {
+export const WorkoutLogger = ({ setDrawerView }: { setDrawerView: React.Dispatch<React.SetStateAction<"none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist">> }) => {
   const {userData, setUserData} = useUser();
   const {addToast} = useToast();
   const { showSplash } = useSplashScreen();

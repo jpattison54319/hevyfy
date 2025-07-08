@@ -133,7 +133,7 @@ return () => unsub();
   
   return (
    <SaltProvider mode="dark">
-    <div style={{maxHeight: '100dvh', minHeight: '100dvh', height: '100dvh', position: 'relative', display: 'flex', flexDirection: 'column'}}>
+    <div style={{background: 'var(--salt-palette-background-primary)', backgroundSize: '8px 8px',  maxHeight: '100dvh', minHeight: '100dvh', height: '100dvh', position: 'relative', display: 'flex', flexDirection: 'column'}}>
       <div style={{
         flex: 1,
         maxHeight: 'calc(100dvh - 76px)', 

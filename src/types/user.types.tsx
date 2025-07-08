@@ -27,7 +27,15 @@ export interface LoggedMeal {
   carbs: number;
   fat: number;
   currency: number; // calorie currency equivalent
+  fluid_intake_ml: number;            // new field
+  servings_of_fruits_vegetables: number;
   timestamp: string;
+  mealAffects: {
+    armorIncrease: number;
+    speedIncrease: number;
+    intelligenceIncrease: number;
+    defenseIncrease: number;
+  },
 }
 
 export interface UserBodyStats {

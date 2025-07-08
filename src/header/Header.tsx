@@ -23,6 +23,7 @@ import "./Header.css";
 import { handleSignOut } from "../SignOut";
 import LogFoodPage from "../LogFoodPage/LogFoodPage";
 import { WorkoutLogger } from "../WorkoutLoggerPage/WorkoutLogger";
+import ViewMeals from "../ViewMeals/ViewMeals";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -50,7 +51,7 @@ const NavLink = forwardRef(function NavLink(
 
 // Check App header pattern: https://www.saltdesignsystem.com/salt/patterns/app-header
 const Header = () => {
-const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">("none");
+const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist">("none");
   const { pathname } = useLocation();
 
   return (
@@ -65,7 +66,7 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
           </MenuTrigger>
           <MenuPanel>
             <MenuItem onClick={() => setDrawerView('logFood')} >Log Food</MenuItem>
-            <MenuItem onClick={() => setDrawerView('logWorkout')}>Log Manual Workout</MenuItem>
+            <MenuItem onClick={() => setDrawerView('logWorkout')}>Log Workout</MenuItem>
           </MenuPanel>
         </Menu>
       </>
@@ -84,19 +85,25 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
       </>
       < >
         <Tooltip placement="top" content="User Settings">
-          <Button
-              appearance="bordered"
-              sentiment="accented"
-              aria-label="User Settings"
-              onClick={handleSignOut}
-          >
-            <UserIcon />
-          </Button>
+                  <Menu>
+          <MenuTrigger>
+            <Button appearance="bordered"
+              sentiment="accented" aria-label="Open Menu">
+              <UserIcon aria-hidden />
+            </Button>
+          </MenuTrigger>
+          <MenuPanel>
+            <MenuItem onClick={() => setDrawerView('mealHist')} >View Meals</MenuItem>
+            <MenuItem onClick={() => setDrawerView('workoutHist')}>View Workouts</MenuItem>
+            <MenuItem onClick={handleSignOut}>Logout</MenuItem>
+          </MenuPanel>
+        </Menu>
         </Tooltip>
       </>
        <Drawer open={drawerView !== "none"} onOpenChange={() => setDrawerView('none')} position="bottom">
          {drawerView === "logFood" && <LogFoodPage />}
         {drawerView === "logWorkout" && <WorkoutLogger setDrawerView={setDrawerView}/> }
+        {drawerView === "mealHist" && <ViewMeals /> }
       </Drawer>
     </div>
   );

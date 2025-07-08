@@ -40,3 +40,12 @@ canvas {
   height: 100% !important;
   display: block;
 }
+
+:root {
+  --salt-palette-background-primary: 
+    linear-gradient(#111111 50%, transparent 50%),
+  linear-gradient(90deg, #000000 50%, transparent 50%);
+
+}
+
+
