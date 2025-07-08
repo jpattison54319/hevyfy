@@ -19,19 +19,18 @@ const RPE_CARDS = {
 
 export type PetType = "puppy" | "kitten";
 
-const RpeSelector = ({
-  petType,
-  onChange,
-}: {
+type RpeSelectorProps = {
   petType: PetType;
-  onChange?: (rpe: number) => void;
-}) => {
-  const cards = RPE_CARDS[petType];
-  const [selectedRpe, setSelectedRpe] = useState<number | null>(null);
+  selectedRpe: number | null; // controlled selected value from parent
+  onChange: (rpe: number) => void; // required since parent controls selection
+};
 
-    const handleClick = (rpe: number) => {
-    setSelectedRpe(rpe);
-    if (onChange) onChange(rpe); 
+const RpeSelector = ({ petType, selectedRpe, onChange }: RpeSelectorProps) => {
+
+   const cards = RPE_CARDS[petType];
+
+  const handleClick = (rpe: number) => {
+    onChange(rpe);
   };
 
   return (

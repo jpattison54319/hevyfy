@@ -23,6 +23,7 @@ import type { OrbitControls as DreiOrbitControls } from '@react-three/drei';
 import XpBar from "../xpbar/XpBar";
 import { CalorieCurrencyContainer } from "../calorieResources/calorieCurrencyContainer";
 
+
 const HomePage = () => {
 
 

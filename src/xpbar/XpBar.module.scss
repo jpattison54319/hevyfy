@@ -2,17 +2,66 @@
   position: relative;
   width: 100%;
   height: 20px;
-  background-color: var(--salt-content-primary-foreground);
-  border-color: var(--salt-actionable-bold-borderColor-active);
+  background: linear-gradient(45deg, #404040, #606060);
+  border: 2px solid var(--salt-actionable-bold-borderColor-active);
   border-radius: 10px;
   overflow: hidden;
+  box-shadow: 
+    inset 0 2px 4px rgba(0,0,0,0.4),
+    0 1px 4px rgba(255,215,0,0.2);
 }
 
 .xpBarFill {
   height: 100%;
-  background-color: #4caf50;
+  background: 
+    /* Orange pixelation pattern */
+    repeating-linear-gradient(
+      90deg,
+      #ff6b35 0px,
+      #ff6b35 2px,
+      #ff8c42 2px,
+      #ff8c42 4px,
+      #ffad5a 4px,
+      #ffad5a 6px,
+      #ffc971 6px,
+      #ffc971 8px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      #ff4500 0px,
+      #ff4500 2px,
+      #ff6b35 2px,
+      #ff6b35 4px,
+      #ff8c42 4px,
+      #ff8c42 6px,
+      #ffad5a 6px,
+      #ffad5a 8px
+    );
+  background-size: 8px 8px;
   transition: width 0.5s ease-in-out;
-  border-radius: 10px 0 0 10px;
+  border-radius: 8px 0 0 8px;
+  position: relative;
+  box-shadow: 
+    inset 0 1px 2px rgba(255,255,255,0.3),
+    inset 0 -1px 2px rgba(0,0,0,0.3);
+  animation: pixelGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pixelGlow {
+  0% {
+    filter: brightness(1) saturate(1);
+    box-shadow: 
+      inset 0 1px 2px rgba(255,255,255,0.3),
+      inset 0 -1px 2px rgba(0,0,0,0.3),
+      0 0 5px rgba(255,107,53,0.3);
+  }
+  100% {
+    filter: brightness(1.1) saturate(1.2);
+    box-shadow: 
+      inset 0 1px 2px rgba(255,255,255,0.4),
+      inset 0 -1px 2px rgba(0,0,0,0.2),
+      0 0 8px rgba(255,107,53,0.5);
+  }
 }
 
 .xpText {
@@ -20,10 +69,40 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  //font-size: 0.8rem;
-  //font-weight: bold;
-  color: var(--salt-content-foreground-highlight);
+  color: #ffffff;
   pointer-events: none;
   user-select: none;
+  text-shadow: 
+    1px 1px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 3px #000;
+  font-weight: bold;
+  z-index: 10;
 }
 
+/* Retro scanlines effect - scaled down for 20px height */
+.xpBarWrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 1px,
+    rgba(0,0,0,0.1) 1px,
+    rgba(0,0,0,0.1) 2px
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+.levelText{
+  font-family: 'Press Start 2P', Pixelify Sans !important;
+  font-size: 17px !important;
+  color: white;
+}

@@ -3,6 +3,11 @@ const router = express.Router();
 import User from '../models/User.js'; // Adjust the import path as necessary
 import mongoose from 'mongoose';
 
+export function xpNeededForLevel(level) {
+  const baseXp = 1000;       // XP needed to reach level 2
+  const growthFactor = 1.5;  // XP multiplies by this factor each level
+  return Math.floor(baseXp * Math.pow(growthFactor, level - 1));
+}
 
 /**
  * @swagger
@@ -111,12 +116,13 @@ router.post('/update', async (req, res) => {
 
 router.post('/:uid/addWorkout', async (req, res) => {
   const { uid } = req.params;
-  const { workoutType, cardioMode, duration, distance, rpe, notes } = req.body;
+  const { workoutType, cardioMode, duration, distance, rpe, notes, workoutXp } = req.body;
 
   if (!workoutType || !cardioMode || rpe === undefined) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
+  // Create workout log
   const workoutLog = {
     id: new mongoose.Types.ObjectId().toString(),
     workoutType,
@@ -125,24 +131,45 @@ router.post('/:uid/addWorkout', async (req, res) => {
     distance: distance ?? 0,
     rpe,
     notes: notes ?? '',
+    workoutXp,
     timestamp: new Date().toISOString(),
   };
 
   try {
-    const updatedUser = await User.findOneAndUpdate(
-      { uid },
-      { $push: { workouts: workoutLog } },
-      { new: true }
-    );
+    // Fetch the user first to update total XP & level
+    const user = await User.findOne({ uid });
 
-    if (!updatedUser) {
+    if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Update user's total XP by adding workout XP
+    user.pet.xp = (user.pet.xp || 0) + (workoutXp.pet || 0);
+    user.pet.strength = (user.pet.strength || 0) + (workoutXp.strength || 0);
+    user.pet.agility = (user.pet.agility || 0) + (workoutXp.agility || 0);
+
+
+    // Check if user.level exists, else default to 1
+    user.pet.level = user.pet.level || 1;
+    const previousLevel = user.pet.level || 1;
+
+    // Loop level-ups if multiple levels gained at once
+    while (user.pet.xp >= xpNeededForLevel(user.pet.level)) {
+  user.pet.xp -= xpNeededForLevel(user.pet.level);
+  user.pet.level += 1;
+}
+
+    // Push new workout to workouts array
+    user.workouts.push(workoutLog);
+
+    await user.save();
+    const leveledUp = user.pet.level > previousLevel;
+
     res.status(200).json({
-      message: 'Workout logged successfully',
+      message: 'Workout logged and XP updated successfully',
       workoutLog,
-      updatedUser,
+      updatedUser: user,
+      levelUp: leveledUp,
     });
   } catch (err) {
     console.error(err);

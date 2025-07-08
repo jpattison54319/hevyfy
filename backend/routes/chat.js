@@ -42,35 +42,35 @@ router.post("/", async (req, res) => {
   try {
     const prompt = 
     `You are a nutrition assistant. Given the following food description, return a JSON object with calories, 
-    protein, carbs, fiber, fat, servings of fruits/vegetables, and fluid intake in ml.
+    protein, carbs, fiber, fat, servings of fruits/vegetables, and fluid intake in ml. 
     Food: ${message}
 
-Return only a JSON object without explanation.
+Return JSON with exact structure:
+{
+  "calories": number,
+  "protein": number,
+  "carbs": number,
+  "fiber": number,
+  "fat": number,
+  "servings_of_fruits_vegetables": number,
+  "fluid_intake_ml": number
+}
 `;
 
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 150,
+      max_tokens: 200,
       temperature: 0,
+      response_format: { type: "json_object" }
     });
     console.log('OpenAI response:', response); // Debug log to check the OpenAI response
 
     // Extract JSON from response text
-const rawResponse = response.choices[0].message.content;
-const cleaned = rawResponse.replace(/```json|```/g, '').trim();
-let parsed;
-try {
-  parsed = JSON.parse(cleaned);
-  console.log('Parsed JSON:', parsed); // Debug log to check the parsed JSON
-} catch (err) {
-  console.error("Failed to parse response:", err);
-  parsed = null;
-}
-    // Try parsing JSON
+const nutritionData = JSON.parse(response.choices[0].message.content);
 
 
-    res.json(parsed);
+    res.json(nutritionData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "OpenAI request failed" });
@@ -123,7 +123,7 @@ router.post('/:uid/addMeal', async (req, res) => {
   const { uid } = req.params;
   const { description, calories, protein, carbs, fat, fiber,  servings_of_fruits_vegetables, fluid_intake_ml } = req.body;
   console.log('Received meal data:', req.body); // Debug log to check the incoming data
-  if (!description || !calories) {
+  if (description === null || calories === null) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 

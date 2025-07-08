@@ -54,8 +54,8 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
   const { pathname } = useLocation();
 
   return (
-    <FlexLayout as="header" justify={'space-between'} align={'center'} className="app-header">
-      <FlexItem >
+    <div  className="app-header">
+      < >
         <Menu>
           <MenuTrigger>
             <Button appearance="bordered"
@@ -68,8 +68,8 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
             <MenuItem onClick={() => setDrawerView('logWorkout')}>Log Manual Workout</MenuItem>
           </MenuPanel>
         </Menu>
-      </FlexItem>
-      <FlexItem >
+      </>
+      < >
         <nav>
           <StackLayout direction="row" gap={1} role="list">
             {routes.map((r) => (
@@ -81,8 +81,8 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
             ))}
           </StackLayout>
         </nav>
-      </FlexItem>
-      <FlexItem >
+      </>
+      < >
         <Tooltip placement="top" content="User Settings">
           <Button
               appearance="bordered"
@@ -93,12 +93,12 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout">(
             <UserIcon />
           </Button>
         </Tooltip>
-      </FlexItem>
+      </>
        <Drawer open={drawerView !== "none"} onOpenChange={() => setDrawerView('none')} position="bottom">
          {drawerView === "logFood" && <LogFoodPage />}
-        {drawerView === "logWorkout" && <WorkoutLogger /> }
+        {drawerView === "logWorkout" && <WorkoutLogger setDrawerView={setDrawerView}/> }
       </Drawer>
-    </FlexLayout>
+    </div>
   );
 };
 

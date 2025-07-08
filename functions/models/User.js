@@ -81,6 +81,11 @@ const LoggedWorkoutSchema = new mongoose.Schema({
   distance: Number, //miles
   rpe: Number,
   notes: String,
+  workoutXp: {
+   strength: { type: Number, default: 0 },
+    agility: { type: Number, default: 0 },
+    pet: { type: Number, default: 0 },
+  },
   timestamp: String,
 }, { _id: false });
 

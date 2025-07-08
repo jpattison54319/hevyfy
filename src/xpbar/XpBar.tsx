@@ -23,19 +23,19 @@ function xpToNextLevel(level: number): number {
 //   return Math.min(Math.max(percent, 0), 100);
 // }
 
-function getXpLevelInfo(currentXp: number, level: number) {
-  let xpForCurrentLevel = 0;
-  for (let i = 1; i < level; i++) {
-    xpForCurrentLevel += xpToNextLevel(i);
-  }
+export function xpNeededForLevel(level: number) {
+  const baseXp = 1000;       // XP needed to reach level 2
+  const growthFactor = 1.5;  // XP multiplies by this factor each level
+  return Math.floor(baseXp * Math.pow(growthFactor, level - 1));
+}
 
-  const currentLevelXp = currentXp - xpForCurrentLevel;
-  const xpNeeded = xpToNextLevel(level);
-  const progress = Math.min(Math.max((currentLevelXp / xpNeeded) * 100, 0), 100);
+function getXpLevelInfo(currentXp: number, level: number) {
+
+  const xpNeeded = xpNeededForLevel(level);
+  const progress = Math.min(Math.max((currentXp / xpNeeded) * 100, 0), 100);
 
   return {
     progress,
-    currentLevelXp,
     xpNeeded,
   };
 }
@@ -43,7 +43,7 @@ function getXpLevelInfo(currentXp: number, level: number) {
 const XpBar: React.FC<XpBarProps> = ({ currentXp, level }) => {
   const [progress, setProgress] = useState(() => getXpLevelInfo(currentXp, level).progress);
   const prevXpRef = useRef(currentXp);
-  const { currentLevelXp, xpNeeded } = getXpLevelInfo(currentXp, level);
+  const {xpNeeded } = getXpLevelInfo(currentXp, level);
 
   useEffect(() => {
     const newProgress = getXpLevelInfo(currentXp, level).progress;
@@ -61,13 +61,13 @@ const XpBar: React.FC<XpBarProps> = ({ currentXp, level }) => {
   }, [currentXp, level]);
 
   return (<>
-    <Text styleAs='display4'>Level {level}</Text>
+    <Text className={styles.levelText} styleAs='display4'>Level {level}</Text>
     <div className={styles.xpBarWrapper}>
       <div
         className={styles.xpBarFill}
         style={{ width: `${progress}%` }}
       />
-      <Text className={styles.xpText} styleAs='label'> {currentLevelXp} / {xpNeeded}</Text>
+      <Text className={styles.xpText} styleAs='label'> {currentXp} / {xpNeeded}</Text>
       {/* <div className={styles.xpText}>
         {currentLevelXp} / {xpNeeded}
       </div> */}
