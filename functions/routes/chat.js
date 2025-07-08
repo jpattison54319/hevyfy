@@ -31,6 +31,9 @@ const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
  *         description: Unauthorized
  */
 router.post("/", async (req, res) => {
+  const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY.value(),
+  });
   const { message } = req.body;
   console.log('Received message:', message); // Debug log to check the incoming message
   if (!message) return res.status(400).json({ error: "No message provided" });
