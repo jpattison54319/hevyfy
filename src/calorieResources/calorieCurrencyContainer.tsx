@@ -9,30 +9,55 @@ interface CurrencyRowProps {
 }
 
 export const CalorieCurrencyContainer: React.FC<CurrencyRowProps> = ({ count, consumedCurrency, userArchetype}) => {
+    const consumedCount = consumedCurrency.filter(Boolean).length;
+
   
  return (
-    <div style={{    display: "flex",
-        flexWrap: "wrap", // allow wrapping if bones exceed width
-        justifyContent: "center",
-        alignItems: "center",
-        gap: 8,
-        width: "100%",
-        overflow: "hidden",}}>
-      {[...Array(count)].map((_, i) => (
+     <div style={{ width: "100%" }}>
         <div
-          key={i}
-           style={{
-            flex: `1 0 ${100 / count}%`, // make each bone take a fraction of space
-            maxWidth: `${100 / count}%`,
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-         {userArchetype === 'puppy' ? <Bone consumed={consumedCurrency[i] ?? false} />
-         : <Fish consumed={consumedCurrency[i] ?? false} />
-        }
-        </div>
-      ))}
+        style={{
+          textAlign: "center",
+          marginTop: 6,
+          fontSize: 14,
+          color: "#ccc"
+        }}
+      >
+        {consumedCount} / {count}{" "}
+        {userArchetype === "puppy" ? "bones" : "fish"}
+      </div>
+      {/* Icon Row */}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 8,
+          width: "100%",
+          overflow: "hidden",
+           minHeight: 0,
+        }}
+      >
+        {[...Array(count)].map((_, i) => (
+          <div
+            key={i}
+            style={{
+              //flex: `1 0 ${100 / count}%`,
+              // maxWidth: `${100 / count}%`,
+               width: 32, 
+        height: 32,
+              display: "flex",
+              justifyContent: "center"
+            }}
+          >
+            {userArchetype === "puppy" ? (
+              <Bone consumed={consumedCurrency[i] ?? false} />
+            ) : (
+              <Fish consumed={consumedCurrency[i] ?? false} />
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

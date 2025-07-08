@@ -144,7 +144,7 @@ function FitCameraToModel({ modelRef }: { modelRef: React.RefObject<Group> }) {
   console.log('userData', userData); // Debug log to check if it's a cat model
   return (
    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 , height: '100%' }}>
-    <FlexLayout style={{flex: 1, display: 'flex',height: '100%', minHeight: '100%'}} justify="center" direction="column">
+    <FlexLayout gap={0.5} style={{flex: 1, display: 'flex',height: '100%', minHeight: '100%'}} justify="center" direction="column">
       <FlexItem align="center" style={{flexShrink: 0}}>
         <Text styleAs="h1" className={styles.homePageTitle}>
           {userData?.pet.name}
