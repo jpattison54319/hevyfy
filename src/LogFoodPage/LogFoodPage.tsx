@@ -107,84 +107,253 @@ const handleCancel = () => {
 
 
   return (
-    <Panel style={{ maxWidth: 480, margin: "auto", padding: 16 }}>
-      <Text styleAs="h2" style={{ marginBottom: 12 }}>
-        Log Your Food
-      </Text>
+    <div style={{
+      padding: 0,
+      fontFamily: "'Courier New', monospace",
+       background: "linear-gradient(135deg, #1a1a1a 0%, #2d2520 100%)",
+      border: "4px solid #ff9900",
+      borderRadius: "0",
+      boxShadow: "0 0 20px rgba(255, 153, 0, 0.3), inset 0 0 20px rgba(255, 255, 255, 0.1)",
+      color: "#f5f5dc",
+      position: "relative",
+      overflow: "hidden"
+    }}>
+      
+      {/* Retro scan lines effect */}
+      <div style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(245, 245, 220, 0.02) 2px, rgba(245, 245, 220, 0.02) 4px)",
+        pointerEvents: "none",
+        zIndex: 1
+      }} />
 
-       <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Describe what you ate today..."
-          onBlur={() => {
-  // iOS Safari-specific hack to reflow and possibly nudge zoom out
-  window.scrollTo(0, window.scrollY);
-}}
-          rows={5}
-          style={{
-            width: "100%",
-            padding: "8px",
-            borderRadius: "6px",
-            border: "1px solid var(--salt-palette-neutral-300)",
-            fontSize: "17px",
-            fontFamily: "inherit",
-            backgroundColor: "var(--salt-container-primary-background)",
-            color: "var(--salt-content-primary-foreground)",
-            resize: "vertical",
-          }}
-        />
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 2 }}>
+        
+        {/* Header */}
+        <div style={{
+          textAlign: "center",
+          marginBottom: 20,
+          padding: "10px 0",
+          border: "2px solid #4a9660",
+          backgroundColor: "rgba(74, 150, 96, 0.1)",
+          textShadow: "0 0 10px #4a9660"
+        }}>
+          <h2 style={{
+            margin: 0,
+            fontSize: "22px",
+            fontWeight: "bold",
+            letterSpacing: "2px",
+            color: "#4a9660"
+          }}>
+            🍎 FOOD LOGGER v2.0 🍎
+          </h2>
+          <div style={{
+            fontSize: "14px",
+            color: "#f5f5dc",
+            marginTop: 4
+          }}>
+            [NUTRITIONAL ANALYSIS SYSTEM]
+          </div>
+        </div>
 
-      {confirming ? (
-  <>
-    <Text styleAs="h2">
-      🦴 This meal will cost {Math.round(pendingMeal.calories / 100)} {currencyType}. Proceed?
-    </Text>
-    <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-      <Button onClick={handleConfirm} sentiment="positive" disabled={loading}>
-        {loading ? <Spinner size="small" /> : "Confirm"}
-      </Button>
-      <Button onClick={handleCancel} sentiment="neutral" disabled={loading}>
-        Cancel
-      </Button>
+        {/* Input Section */}
+        <div style={{
+          marginBottom: 20,
+          border: "2px solid #f5f5dc",
+          padding: 15,
+          backgroundColor: "rgba(245, 245, 220, 0.05)",
+        }}>
+          <label style={{
+            display: "block",
+            marginBottom: 8,
+            fontSize: "14px",
+            color: "#f5f5dc",
+            textTransform: "uppercase",
+            letterSpacing: "1px"
+          }}>
+            &gt; ENTER FOOD DATA:
+          </label>
+          
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="DESCRIBE CONSUMED ITEMS..."
+            onBlur={() => {
+              window.scrollTo(0, window.scrollY);
+            }}
+            rows={4}
+            style={{
+              width: "100%",
+              padding: "12px",
+              border: "2px solid #4a9660",
+              borderRadius: "0",
+              fontSize: "16px",
+              fontFamily: "'Courier New', monospace",
+              backgroundColor: "#0a0a0a",
+              color: "#f5f5dc",
+              resize: "none",
+              outline: "none",
+              boxSizing: "border-box"
+            }}
+          />
+        </div>
+
+      {/* Confirmation Screen */}
+        {confirming ? (
+          <div style={{
+            border: "3px solid #ff6600",
+            padding: 20,
+            backgroundColor: "rgba(255, 102, 0, 0.1)",
+            textAlign: "center",
+            marginBottom: 20
+          }}>
+            <div style={{
+              fontSize: "18px",
+              color: "#ff6600",
+              marginBottom: 15,
+              textShadow: "0 0 8px #ff6600"
+            }}>
+              {currencyType === 'bones' ? '🦴' : '🐟' } COST: {Math.round(pendingMeal.calories / 100)} {currencyType}
+            </div>
+            <div style={{
+              fontSize: "14px",
+              color: "#ff9900",
+              marginBottom: 15
+            }}>
+              PROCEED WITH TRANSACTION?
+            </div>
+            <div style={{ display: "flex", gap: 10, justifyContent: "center" }}>
+              <button
+                onClick={handleConfirm}
+                disabled={loading}
+                style={{
+                  padding: "10px 20px",
+                  border: "2px solid #ff9900",
+                  backgroundColor: loading ? "#332200" : "#1a1100",
+                  color: "#ff9900",
+                  fontFamily: "'Courier New', monospace",
+                  fontSize: "14px",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  transition: "all 0.2s"
+                }}
+              >
+                {loading ? "PROCESSING..." : "✓ CONFIRM"}
+              </button>
+              <button
+                onClick={handleCancel}
+                disabled={loading}
+                style={{
+                  padding: "10px 20px",
+                  border: "2px solid #ff6600",
+                  backgroundColor: loading ? "#331100" : "#1a0800",
+                  color: "#ff6600",
+                  fontFamily: "'Courier New', monospace",
+                  fontSize: "14px",
+                  cursor: loading ? "not-allowed" : "pointer",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  transition: "all 0.2s"
+                }}
+              >
+                ✗ CANCEL
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", marginBottom: 20 }}>
+            <button
+              onClick={handleSubmit}
+              disabled={loading || !input.trim()}
+              style={{
+                padding: "15px 30px",
+                border: "3px solid #ff9900",
+                backgroundColor: loading || !input.trim() ? "#332200" : "#1a1100",
+                color: loading || !input.trim() ? "#996600" : "#ff9900",
+                fontFamily: "'Courier New', monospace",
+                fontSize: "14px",
+                cursor: loading || !input.trim() ? "not-allowed" : "pointer",
+                textTransform: "uppercase",
+                letterSpacing: "2px",
+                fontWeight: "bold",
+                textShadow: loading || !input.trim() ? "none" : "0 0 8px #ff9900",
+                transition: "all 0.3s",
+                width: "100%"
+              }}
+            >
+              {loading ? "⚡ ANALYZING..." : "🚀 ANALYZE FOOD"}
+            </button>
+          </div>
+        )}
+
+     {/* Error Display */}
+        {error && (
+          <div style={{
+            border: "2px solid #ff3300",
+            padding: 15,
+            backgroundColor: "rgba(255, 51, 0, 0.1)",
+            marginBottom: 20,
+            textAlign: "center"
+          }}>
+            <div style={{
+              fontSize: "14px",
+              color: "#ff3300",
+              textShadow: "0 0 8px #ff3300",
+              textTransform: "uppercase"
+            }}>
+              ⚠️ ERROR: {error}
+            </div>
+          </div>
+        )}
+
+     {response && (
+          <div style={{
+            border: "3px solid #ff9900",
+            padding: 20,
+            backgroundColor: "rgba(255, 153, 0, 0.1)",
+            textAlign: "center",
+            animation: "pulse 2s infinite"
+          }}>
+            <div style={{
+              fontSize: "18px",
+              color: "#ff9900",
+              textShadow: "0 0 12px #ff9900",
+              fontWeight: "bold",
+              whiteSpace: "pre-wrap",
+              lineHeight: 1.75,
+            }}>
+              {response}
+            </div>
+          </div>
+        )}
+    {/* Footer */}
+        <div style={{
+          textAlign: "center",
+          marginTop: 20,
+          fontSize: "12px",
+          color: "#f5f5dc",
+          opacity: 0.7
+        }}>
+          POWERED BY XPETS-GPT ENGINE™
+        </div>
+      </div>
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+          }
+        `
+      }} />
     </div>
-  </>
-) : (
-  <Button
-    appearance="solid"
-    sentiment="accented"
-    onClick={handleSubmit}
-    disabled={loading || !input.trim()}
-    style={{ marginTop: 12 }}
-  >
-    {loading ? <Spinner size="small" /> : "Send"}
-  </Button>
-)}
-
-      {error && (
-        <Text
-          styleAs="display2"
-          style={{ color: "var(--salt-error-text-color)", marginTop: 12 }}
-        >
-          {error}
-        </Text>
-      )}
-
-      {response && (
-        <pre
-          style={{
-            marginTop: 16,
-            backgroundColor: "var(--salt-gray-50)",
-            padding: 12,
-            borderRadius: 6,
-            whiteSpace: "pre-wrap",
-            fontFamily: "monospace",
-            fontSize: 14,
-          }}
-        >
-          <Text style={{lineHeight: '33px'}} styleAs="h3"> {response}</Text>
-        </pre>
-      )}
-    </Panel>
   );
 };
 
