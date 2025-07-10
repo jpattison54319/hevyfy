@@ -51,6 +51,12 @@ const OnboardingPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+  const newWeight = userDataStaging.bodyStats!.weight;
+
+  // Add a new weight log entry here
+  const newWeightLog = { date: new Date(), weight: newWeight };
+
     const bmr = calculateBMR(userDataStaging.bodyStats!);
     const tdee = calculateTDEE(bmr);
       const calorieGoal =
@@ -63,7 +69,12 @@ const OnboardingPage: React.FC = () => {
       const dailyCurrencyTotal = Math.round(calorieGoal / 100);
     const updatedUserData = {
       ...userDataStaging,
-      bodyStats: { ...userDataStaging.bodyStats!, bmr, tdee },
+      bodyStats: {
+      ...userDataStaging.bodyStats!,
+      bmr: bmr,
+      tdee: tdee,
+      weightLogs: [...(userDataStaging.bodyStats!.weightLogs ?? []), newWeightLog],
+    },
       goal: {
       ...userDataStaging.goal!,
       dailyCalorieGoal: calorieGoal,
@@ -176,7 +187,7 @@ const OnboardingPage: React.FC = () => {
     </Dropdown>
 
     <Dropdown
-      value={heightInches.toString() + ' in'}
+      value={heightInches.toString() + ' ft'}
       onSelectionChange={(_, value) => setHeightInches(Number(value))}
     >
       {Array.from({ length: 12 }, (_, i) => (

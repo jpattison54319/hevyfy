@@ -43,8 +43,15 @@ const LoggedMealSchema = new mongoose.Schema({
   },
 }, { _id: false });
 
+const WeightLog = new mongoose.Schema({
+  date: {type: Date, default: Date.now},
+  weight: {type: Number, required: true},
+  }, { _id: false });
+
+
 const UserBodyStatsSchema = new mongoose.Schema({
   weight: {type: Number, default: 0},
+  weightLogs: [WeightLog],
   height: {type: Number, default: 0},
   sex: {
     type: String,

@@ -9,6 +9,51 @@ dotenv.config();
 const router = express.Router();
 const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
 
+const validationSystemMessage = {
+  role: "system",
+  content: `Determine if the user's message describes a food item or meal that can be nutritionally analyzed and is realistic for a human.
+
+Respond with only "yes" or "no" - nothing else.`
+};
+
+const validateMealInput = async (userMessage) => {
+
+   const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY.value(),
+  });
+  try {
+    const validationResponse = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        validationSystemMessage,
+        { role: "user", content: userMessage }
+      ],
+      max_tokens: 10,
+      temperature: 0
+    });
+
+    const response = validationResponse.choices[0].message.content.trim().toLowerCase();
+    
+    if (response === "no") {
+      return {
+        success: false,
+        error: "Invalid food input",
+        suggestion: "Please enter a valid meal"
+      };
+    }
+
+    return { success: true };
+    
+  } catch (error) {
+    console.error('Validation error:', error);
+    return {
+      success: false,
+      error: "Unable to validate input",
+      suggestion: "Please try again with a food description"
+    };
+  }
+}
+
 
 /**
  * @swagger
@@ -38,13 +83,26 @@ router.post("/", async (req, res) => {
   console.log('Received message:', message); // Debug log to check the incoming message
   if (!message) return res.status(400).json({ error: "No message provided" });
 
-  try {
-    const prompt = 
-    `You are a nutrition assistant. Given the following food description, return a JSON object with calories, 
-    protein, carbs, fiber, fat, servings of fruits/vegetables, and fluid intake in ml. 
-    Food: ${message}
+  const validation = await validateMealInput(message);
 
-Return JSON with exact structure:
+        if (!validation.success) {
+      return res.status(400).json({
+        error: validation.error,
+        suggestion: validation.suggestion
+      });
+    }
+
+
+
+try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        { 
+          role: "system", 
+          content: `You are a nutrition assistant. Analyze food descriptions and return nutritional information as JSON.
+
+Return JSON with this exact structure:
 {
   "calories": number,
   "protein": number,
@@ -54,11 +112,14 @@ Return JSON with exact structure:
   "servings_of_fruits_vegetables": number,
   "fluid_intake_ml": number
 }
-`;
 
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
+Provide your best estimates based on typical nutritional values for the described food.`
+        },
+        { 
+          role: "user", 
+          content: message 
+        }
+      ],
       max_tokens: 200,
       temperature: 0,
       response_format: { type: "json_object" }

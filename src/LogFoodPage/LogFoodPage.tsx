@@ -7,6 +7,7 @@ import {
 } from "@salt-ds/core";
 import api from "../api/api";
 import { useUser } from "../context/UserContext";
+import { AxiosError } from "axios";
 
 
 const ChatFoodLogger = () => {
@@ -17,12 +18,13 @@ const ChatFoodLogger = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const calculateDefense = (fiber: number) => Math.min(Math.round((fiber / 30) * 10), 10);
-  const calculateIntelligence = (fruitsAndVeggies : number) => Math.min(Math.round((fruitsAndVeggies / 400) * 10), 10);
-  const calculateArmor = (protein: number) => Math.min(Math.round((protein / 56) * 10), 10);
-  const calculateSpeed = (water: number) => Math.min(Math.round((water / 2000) * 10), 10);
   const [pendingMeal, setPendingMeal] = useState<any>(null); // holds meal data until confirmed
 const [confirming, setConfirming] = useState(false);        // whether we're in confirmation step
+
+type ValidationErrorResponse = {
+  error: string;
+  suggestion?: string;
+};
 
 const handleSubmit = async () => {
   if (!input.trim()) return;
@@ -43,7 +45,15 @@ const handleSubmit = async () => {
     setConfirming(true);
 
   } catch (error) {
+    const axiosError = error as AxiosError;
+
+  const errData = axiosError.response?.data as ValidationErrorResponse;
+
+  if (axiosError.response?.status === 400) {
+    setError(errData?.suggestion || "Please describe a specific food item or meal");
+  } else {
     setError("Failed to get nutrition info. Try again.");
+  }
   } finally {
     setLoading(false);
   }
@@ -73,6 +83,10 @@ const handleConfirm = async () => {
     if (mealAffects.intelligenceIncrease)
       summary.push(`🧠 +${mealAffects.intelligenceIncrease} Intelligence from fruits & vegetables`);
 
+    if(summary.length === 0){
+      summary.push(`Seems like this meal didnt contain any sustenance!`);
+
+    }
     setResponse(summary.join('\n'));
 
   } catch (error) {
@@ -91,50 +105,6 @@ const handleCancel = () => {
   setResponse(null);
 };
 
-
-//   const handleSubmit = async () => {
-//     if (!input.trim()) return;
-//     setLoading(true);
-//     setError(null);
-//     setResponse(null);
-
-//     try {
-
-//        const { data} = await api.post('/chatnutrition', { message: input });
-//       console.log('Received data from API:', data); // Debug log to check the received data structure
-// const mealWithDescription = {
-//   ...data,
-//   description: input,
-// };
-
-// console.log('Meal Data:', mealWithDescription); // Debug log to check the meal data structure
-//     // 2. Now call your addMeal endpoint with the received mealData
-//     // Assume you have `userId` available in your component's scope
-//     const addMealResponse = await api.post(`/chatnutrition/${userData?.uid}/addMeal`, mealWithDescription);
-//     const { mealAffects, updatedUser } = addMealResponse.data;
-//     setUserData(updatedUser);
-//     console.log('Meal Affects:', mealAffects); // Debug log to check the meal affects
-
-//       const summary = [];
-// if (mealAffects.currency)
-//   summary.push(`🦴 This meal cost ${mealAffects.currency} ${currencyType}!`);
-// if (mealAffects.armorIncrease)
-//   summary.push(`🛡️ +${mealAffects.armorIncrease.toFixed(1)} Armor from protein`);
-// if (mealAffects.defenseIncrease)
-//   summary.push(`🧱 +${mealAffects.defenseIncrease.toFixed(1)} Defense from fiber`);
-// if (mealAffects.speedIncrease)
-//   summary.push(`💨 +${mealAffects.speedIncrease.toFixed(1)} Speed from hydration`);
-// if (mealAffects.intelligenceIncrease)
-//   summary.push(`🧠 +${mealAffects.intelligenceIncrease} Intelligence from fruits & vegetables`);
-
-// setResponse(summary.join('\n'));
-//     } catch {
-//       setError("Failed to get nutrition info. Try again.");
-//     } finally {
-//       setLoading(false);
-//       setInput("");
-//     }
-//   };
 
   return (
     <Panel style={{ maxWidth: 480, margin: "auto", padding: 16 }}>

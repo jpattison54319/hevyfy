@@ -9,7 +9,7 @@ interface CurrencyRowProps {
 }
 
 export const CalorieCurrencyContainer: React.FC<CurrencyRowProps> = ({ count, consumedCurrency, userArchetype}) => {
-    const consumedCount = consumedCurrency.filter(Boolean).length;
+    const bonesLeft = count - consumedCurrency.filter(Boolean).length;
 
   
  return (
@@ -22,8 +22,8 @@ export const CalorieCurrencyContainer: React.FC<CurrencyRowProps> = ({ count, co
           color: "#ccc"
         }}
       >
-        {consumedCount} / {count}{" "}
-        {userArchetype === "puppy" ? "bones" : "fish"}
+        {bonesLeft} / {count}{" "}
+        {userArchetype === "puppy" ? "bones left" : "fish left"}
       </div>
       {/* Icon Row */}
       <div

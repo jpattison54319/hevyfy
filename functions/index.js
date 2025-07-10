@@ -84,10 +84,6 @@ async function connectToDatabase(uri) {
 // this will be the maximum concurrent request count.
 setGlobalOptions({ maxInstances: 10 });
 
-export const helloWorld = onRequest((request, response) => {
-  logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase, updating for test!");
-});
 app.use(cors({ origin: true }));  // enable CORS for all origins
 app.use(express.json());
 app.use(cors());

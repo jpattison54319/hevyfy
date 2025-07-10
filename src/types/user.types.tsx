@@ -38,13 +38,19 @@ export interface LoggedMeal {
   },
 }
 
+export interface WeightLog {
+  date: Date;
+  weight: number;
+}
+
 export interface UserBodyStats {
- weight: number; // in lbs
-    height: number; // in inches
-    sex: 'male' | 'female';
-    age: number; // in years
-    tdee: number; // Total Daily Energy Expenditure
-    bmr: number; // Basal Metabolic Rate
+  weight: number; // in lbs
+  weightLogs: WeightLog[];
+  height: number; // in inches 
+  sex: 'male' | 'female';
+  age: number; // in years
+  tdee: number; // Total Daily Energy Expenditure
+  bmr: number; // Basal Metabolic Rate
 }
 
 export interface UserGoal {
@@ -82,10 +88,10 @@ export interface User  {
   meals: LoggedMeal[];
   workouts: LoggedWorkout[];
   goal: UserGoal;
-    bodyStats: UserBodyStats;
-    settings: {
-        showCalories: boolean; // show calorie intake
-    }
-    lastLogin: Date; // last login date
-    createdAt: Date; // account creation date
+  bodyStats: UserBodyStats;
+  settings: {
+    showCalories: boolean; // show calorie intake
+  }
+  lastLogin: Date; // last login date
+  createdAt: Date; // account creation date
 }

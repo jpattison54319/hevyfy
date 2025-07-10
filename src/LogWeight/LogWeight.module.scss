@@ -1,0 +1,62 @@
+
+@font-face {
+  font-family: 'Pixelfy Sans';
+  //src: url('/fonts/PressStart2P-Regular.ttf') format('truetype');
+}
+
+.container {
+  color: #ff9900;
+  font-family: 'Press Start 2P', monospace;
+  min-height: 60vh;
+}
+
+.heading {
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.rangeButtons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.button {
+  background-color: transparent;
+  color: #ff9900;
+  border: 2px solid #ff9900;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #003300;
+}
+
+.activeButton {
+  background-color: #ff9900;
+  color: black;
+  border: 2px solid #00ff00;
+}
+
+@keyframes draw-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fade-check {
+  to {
+    opacity: 0;
+  }
+}
+
+.checkmarkPath {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: draw-check 0.8s ease-out forwards, fade-check 0.5s ease-out 0.9s forwards;
+}

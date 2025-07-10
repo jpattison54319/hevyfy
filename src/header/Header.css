@@ -379,14 +379,14 @@ img.logo-img {
 /* Style menu items inside the panel */
 .app-header .saltMenuPanel .saltMenuItem,
 .saltMenuPanel .saltMenuItem {
-  font-family: 'Press Start 2P', monospace !important;
-  font-size: 15px !important;
+  font-family: 'Pixelify Sans', monospace !important;
+  font-size: 17px !important;
   color: #ff9900 !important;
   padding: 12px 16px !important;
   background: transparent !important;
   border: 2px solid transparent !important;
   cursor: pointer !important;
-  text-transform: uppercase !important;
+  /* text-transform: uppercase !important; */
   letter-spacing: 1px !important;
   line-height: 17px;
   transition: all 0.1s ease !important;

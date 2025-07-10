@@ -63,15 +63,40 @@ useEffect(() => {
   fetchMeals(0, true); // Fetch initial page on mount
 }, []);
 
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+useEffect(() => {
+  const handleScroll = () => {
+    const drawerElement = document.querySelector('.saltDrawer');
+    if (!drawerElement) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = drawerElement;
     
     // Load more when user scrolls to bottom (with 100px buffer)
     if (scrollHeight - scrollTop <= clientHeight + 100 && hasMore && !loadingMore) {
       fetchMeals(offset, false);
     }
   };
+
+  const drawerElement = document.querySelector('.saltDrawer');
+  if (drawerElement) {
+    drawerElement.addEventListener('scroll', handleScroll);
+  }
+
+  return () => {
+    if (drawerElement) {
+      drawerElement.removeEventListener('scroll', handleScroll);
+    }
+  };
+}, [offset, hasMore, loadingMore]);
+
+
+//   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+//     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    
+//     // Load more when user scrolls to bottom (with 100px buffer)
+//     if (scrollHeight - scrollTop <= clientHeight + 100 && hasMore && !loadingMore) {
+//       fetchMeals(offset, false);
+//     }
+//   };
 
   const formatDate = (timestamp: string | number | Date) => {
     return new Date(timestamp).toLocaleDateString('en-US', {
@@ -198,7 +223,7 @@ return (
     <div
       className="p-4 overflow-y-auto"
       style={{ maxHeight: 'calc(80vh - 80px)' }}
-      onScroll={handleScroll}
+      //onScroll={handleScroll}
       ref={scrollContainer}
     >
       {loading ? (

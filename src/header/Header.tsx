@@ -1,6 +1,6 @@
 import {
   Badge,
-  Button, Drawer, FlexItem, FlexLayout,
+  Button, Drawer, DrawerCloseButton, FlexItem, FlexLayout,
   GridItem,
   GridLayout, Menu, MenuItem, MenuPanel, MenuTrigger,
   NavigationItem,
@@ -24,6 +24,7 @@ import { handleSignOut } from "../SignOut";
 import LogFoodPage from "../LogFoodPage/LogFoodPage";
 import { WorkoutLogger } from "../WorkoutLoggerPage/WorkoutLogger";
 import ViewMeals from "../ViewMeals/ViewMeals";
+import LogWeight from "../LogWeight/LogWeight";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -49,9 +50,11 @@ const NavLink = forwardRef(function NavLink(
   );
 });
 
+type DrawerTypes = "none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist" | "logWeight";
+
 // Check App header pattern: https://www.saltdesignsystem.com/salt/patterns/app-header
 const Header = () => {
-const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist">("none");
+const [drawerView, setDrawerView] = useState<DrawerTypes>("none");
   const { pathname } = useLocation();
 
   return (
@@ -65,6 +68,7 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout" |
             </Button>
           </MenuTrigger>
           <MenuPanel>
+            <MenuItem onClick={() => setDrawerView('logWeight')}>Log Weight</MenuItem>
             <MenuItem onClick={() => setDrawerView('logFood')} >Log Food</MenuItem>
             <MenuItem onClick={() => setDrawerView('logWorkout')}>Log Workout</MenuItem>
           </MenuPanel>
@@ -101,9 +105,12 @@ const [drawerView, setDrawerView] = useState<"none" | "logFood" | "logWorkout" |
         </Tooltip>
       </>
        <Drawer open={drawerView !== "none"} onOpenChange={() => setDrawerView('none')} position="bottom">
+        <DrawerCloseButton onClick={() => setDrawerView('none')} />
          {drawerView === "logFood" && <LogFoodPage />}
         {drawerView === "logWorkout" && <WorkoutLogger setDrawerView={setDrawerView}/> }
         {drawerView === "mealHist" && <ViewMeals /> }
+        {drawerView === "logWeight" && <LogWeight /> }
+
       </Drawer>
     </div>
   );
