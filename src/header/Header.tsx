@@ -25,6 +25,7 @@ import LogFoodPage from "../LogFoodPage/LogFoodPage";
 import { WorkoutLogger } from "../WorkoutLoggerPage/WorkoutLogger";
 import ViewMeals from "../ViewMeals/ViewMeals";
 import LogWeight from "../LogWeight/LogWeight";
+import ViewWorkouts from "../ViewWorkouts/ViewWorkouts";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -109,6 +110,7 @@ const [drawerView, setDrawerView] = useState<DrawerTypes>("none");
          {drawerView === "logFood" && <LogFoodPage />}
         {drawerView === "logWorkout" && <WorkoutLogger setDrawerView={setDrawerView}/> }
         {drawerView === "mealHist" && <ViewMeals /> }
+        {drawerView === "workoutHist" && <ViewWorkouts /> }
         {drawerView === "logWeight" && <LogWeight /> }
 
       </Drawer>

@@ -114,101 +114,101 @@ router.post('/update', async (req, res) => {
   }
 });
 
-router.post('/:uid/addWorkout', async (req, res) => {
-  const { uid } = req.params;
-  const { workoutType, cardioMode, duration, distance, rpe, notes, workoutXp } = req.body;
+// router.post('/:uid/addWorkout', async (req, res) => {
+//   const { uid } = req.params;
+//   const { workoutType, cardioMode, duration, distance, rpe, notes, workoutXp } = req.body;
 
-  if (!workoutType || !cardioMode || rpe === undefined) {
-    return res.status(400).json({ message: 'Missing required fields' });
-  }
+//   if (!workoutType || !cardioMode || rpe === undefined) {
+//     return res.status(400).json({ message: 'Missing required fields' });
+//   }
 
-  // Create workout log
-  const workoutLog = {
-    id: new mongoose.Types.ObjectId().toString(),
-    workoutType,
-    cardioMode,
-    duration: duration ?? 0,
-    distance: distance ?? 0,
-    rpe,
-    notes: notes ?? '',
-    workoutXp,
-    timestamp: new Date().toISOString(),
-  };
+//   // Create workout log
+//   const workoutLog = {
+//     id: new mongoose.Types.ObjectId().toString(),
+//     workoutType,
+//     cardioMode,
+//     duration: duration ?? 0,
+//     distance: distance ?? 0,
+//     rpe,
+//     notes: notes ?? '',
+//     workoutXp,
+//     timestamp: new Date().toISOString(),
+//   };
 
-  try {
-    // Fetch the user first to update total XP & level
-    const user = await User.findOne({ uid });
+//   try {
+//     // Fetch the user first to update total XP & level
+//     const user = await User.findOne({ uid });
 
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
 
-    // Update user's total XP by adding workout XP
-    user.pet.xp = (user.pet.xp || 0) + (workoutXp.pet || 0);
-    user.pet.strength = (user.pet.strength || 0) + (workoutXp.strength || 0);
-    user.pet.agility = (user.pet.agility || 0) + (workoutXp.agility || 0);
+//     // Update user's total XP by adding workout XP
+//     user.pet.xp = (user.pet.xp || 0) + (workoutXp.pet || 0);
+//     user.pet.strength = (user.pet.strength || 0) + (workoutXp.strength || 0);
+//     user.pet.agility = (user.pet.agility || 0) + (workoutXp.agility || 0);
 
 
-    // Check if user.level exists, else default to 1
-    user.pet.level = user.pet.level || 1;
-    const previousLevel = user.pet.level || 1;
+//     // Check if user.level exists, else default to 1
+//     user.pet.level = user.pet.level || 1;
+//     const previousLevel = user.pet.level || 1;
 
-    // Loop level-ups if multiple levels gained at once
-    while (user.pet.xp >= xpNeededForLevel(user.pet.level)) {
-  user.pet.xp -= xpNeededForLevel(user.pet.level);
-  user.pet.level += 1;
-}
+//     // Loop level-ups if multiple levels gained at once
+//     while (user.pet.xp >= xpNeededForLevel(user.pet.level)) {
+//   user.pet.xp -= xpNeededForLevel(user.pet.level);
+//   user.pet.level += 1;
+// }
 
-    // Push new workout to workouts array
-    user.workouts.push(workoutLog);
+//     // Push new workout to workouts array
+//     user.workouts.push(workoutLog);
 
-    await user.save();
-    const leveledUp = user.pet.level > previousLevel;
+//     await user.save();
+//     const leveledUp = user.pet.level > previousLevel;
 
-    res.status(200).json({
-      message: 'Workout logged and XP updated successfully',
-      workoutLog,
-      updatedUser: user,
-      levelUp: leveledUp,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
+//     res.status(200).json({
+//       message: 'Workout logged and XP updated successfully',
+//       workoutLog,
+//       updatedUser: user,
+//       levelUp: leveledUp,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
 
-router.get('/:userId/meals', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { limit = 50, offset = 0 } = req.query;
+// router.get('/:userId/meals', async (req, res) => {
+//   try {
+//     const { userId } = req.params;
+//     const { limit = 50, offset = 0 } = req.query;
 
-    // Find user and populate meals
-    const user = await User.findOne({ uid: userId }).select('meals');
+//     // Find user and populate meals
+//     const user = await User.findOne({ uid: userId }).select('meals');
     
-    if (!user) {
-      return res.status(404).json({ 
-        error: 'User not found' 
-      });
-    }
+//     if (!user) {
+//       return res.status(404).json({ 
+//         error: 'User not found' 
+//       });
+//     }
 
-    // Sort meals by timestamp (newest first) and apply pagination
-    const sortedMeals = user.meals
-      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-      .slice(offset, offset + parseInt(limit));
+//     // Sort meals by timestamp (newest first) and apply pagination
+//     const sortedMeals = user.meals
+//       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+//       .slice(offset, offset + parseInt(limit));
 
-    res.json({
-      meals: sortedMeals,
-      total: user.meals.length,
-      offset: parseInt(offset),
-      limit: parseInt(limit)
-    });
+//     res.json({
+//       meals: sortedMeals,
+//       total: user.meals.length,
+//       offset: parseInt(offset),
+//       limit: parseInt(limit)
+//     });
 
-  } catch (error) {
-    console.error('Error fetching meals:', error);
-    res.status(500).json({ 
-      error: 'Internal server error' 
-    });
-  }
-});
+//   } catch (error) {
+//     console.error('Error fetching meals:', error);
+//     res.status(500).json({ 
+//       error: 'Internal server error' 
+//     });
+//   }
+// });
 
 export default router;

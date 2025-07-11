@@ -38,6 +38,7 @@ const handleSubmit = async () => {
     const mealWithDescription = {
       ...data,
       description: input,
+      userId: userData?.uid,
     };
     console.log(mealWithDescription);
     // Show confirmation with bone cost
@@ -66,7 +67,7 @@ const handleConfirm = async () => {
   setError(null);
 
   try {
-    const addMealResponse = await api.post(`/chatnutrition/${userData?.uid}/addMeal`, pendingMeal);
+    const addMealResponse = await api.post(`/meal/addMeal`, pendingMeal);
     const { mealAffects, updatedUser } = addMealResponse.data;
 
     setUserData(updatedUser);

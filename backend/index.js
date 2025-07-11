@@ -10,6 +10,12 @@ import chatRoutes from './routes/chat.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import userRoutes from './routes/user.js';
+import weightLogRoutes from './routes/weightLog.js';
+import workoutRoutes from './routes/workout.js';
+import mealRoutes from './routes/meal.js';
+
+
+
 // mongodb+srv://jpattison54319:<db_password>@cluster0.x3iwmzl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 const app = express();
 const PORT = process.env.PORT || 2025;
@@ -31,6 +37,11 @@ app.use(cors());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/chatnutrition', chatRoutes);
+app.use('/api/weightLogs', weightLogRoutes);
+app.use('/api/workout', workoutRoutes);
+app.use('/api/meal', mealRoutes);
+
+
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -50,12 +61,6 @@ const swaggerOptions = {
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// Example Route
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Hello from Express API!' });
-});
 
 // New route: Get workouts from the Hevy API
 app.get('/api/hevy_workouts', async (req, res) => {

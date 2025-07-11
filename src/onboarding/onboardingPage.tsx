@@ -55,7 +55,7 @@ const OnboardingPage: React.FC = () => {
   const newWeight = userDataStaging.bodyStats!.weight;
 
   // Add a new weight log entry here
-  const newWeightLog = { date: new Date(), weight: newWeight };
+  const newWeightLog = { userId: userData.uid, date: new Date(), weight: newWeight };
 
     const bmr = calculateBMR(userDataStaging.bodyStats!);
     const tdee = calculateTDEE(bmr);
@@ -73,7 +73,7 @@ const OnboardingPage: React.FC = () => {
       ...userDataStaging.bodyStats!,
       bmr: bmr,
       tdee: tdee,
-      weightLogs: [...(userDataStaging.bodyStats!.weightLogs ?? []), newWeightLog],
+      weight: newWeight,
     },
       goal: {
       ...userDataStaging.goal!,
@@ -89,6 +89,12 @@ const OnboardingPage: React.FC = () => {
     } catch (error) {
       console.error('Error updating user data:', error);
     }
+
+    try{
+  await api.post('/weightLogs/addWeightLog', newWeightLog);
+}catch(err){
+  console.error(err);
+}
   };
 
   const handleInputChange = (
@@ -187,7 +193,7 @@ const OnboardingPage: React.FC = () => {
     </Dropdown>
 
     <Dropdown
-      value={heightInches.toString() + ' ft'}
+      value={heightInches.toString() + ' in'}
       onSelectionChange={(_, value) => setHeightInches(Number(value))}
     >
       {Array.from({ length: 12 }, (_, i) => (

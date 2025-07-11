@@ -25,7 +25,7 @@ const ViewMeals = () => {
 
   try {
     const response = await api.get(
-      `/users/${userData?.uid}/meals?limit=${ITEMS_PER_PAGE}&offset=${currentOffset}`
+      `/meal/${userData?.uid}/meals?limit=${ITEMS_PER_PAGE}&offset=${currentOffset}`
     );
     const data = response.data;
     const newMeals = data.meals || [];

@@ -21,6 +21,9 @@ import chatRoutes from './routes/chat.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import userRoutes from './routes/user.js';
+import weightLogRoutes from './routes/weightLog.js';
+import workoutRoutes from './routes/workout.js';
+import mealRoutes from './routes/meal.js';
 
 const isLocal = !process.env.K_SERVICE;
 if (isLocal) {
@@ -90,6 +93,9 @@ app.use(cors());
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/chatnutrition', chatRoutes);
+app.use('/api/weightLogs', weightLogRoutes);
+app.use('/api/workout', workoutRoutes);
+app.use('/api/meal', mealRoutes);
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',

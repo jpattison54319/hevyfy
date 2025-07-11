@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   LineChart,
   Line,
@@ -13,7 +13,7 @@ import styles from './LogWeight.module.scss';
 import WeightAdjuster from './WeightAdjustor';
 import { useUser } from '../context/UserContext';
 import api from '../api/api';
-import { WeightLog } from '../types/user.types';
+import { type WeightLog } from '../types/weightLog.types';
 import { Button } from '@headlessui/react';
 
 const ranges = {
@@ -35,7 +35,26 @@ const [showCheck, setShowCheck] = useState(false);
 
   const {userData, setUserData} = useUser();
   const [range, setRange] = useState<'week' | 'month' | 'threeMonths' | 'all'>('week');
-  const weightLogs: WeightLog[] = userData?.bodyStats?.weightLogs ?? [];
+  const [weightLogs, setWeightLogs] = useState<WeightLog[]>([]);
+  const [initialLoad, setInitialLoad] = useState(true);
+
+
+    useEffect(() => {
+        if(showCheck || initialLoad){
+        api.get<{ message: string; weightLogs: WeightLog[] }>(`/weightLogs/${userData?.uid}`)
+        .then(res => {
+            setWeightLogs(res.data.weightLogs);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    }
+    setInitialLoad(false);
+        
+    },[showCheck])
+
+
+  //const weightLogs: WeightLog[] = userData?.bodyStats?.weightLogs ?? [];
 const sortedLogs = [...weightLogs].sort(
   (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
 ).map((log: { date: string | Date; weight: number }) => ({
@@ -52,20 +71,11 @@ const filteredData = range === 'all' ? sortedLogs : sortedLogs.slice(-ranges[ran
   const newLog = {
     date: new Date().toISOString(),
     weight: newWeight,
-  };
-
-  const updatedUser = {
-    ...userData,
-    bodyStats: {
-      ...userData.bodyStats,
-      weight: newWeight,
-      weightLogs: [...(userData.bodyStats.weightLogs ?? []), newLog],
-    },
+    userId: userData.uid,
   };
 
     try {
-    const {data} = await api.post('users/update',updatedUser);
-    setUserData(data);
+    const {data} = await api.post('weightLogs/addWeightLog',newLog);
     setShowCheck(true);
     setTimeout(() => setShowCheck(false), 1500);
       } catch (err) {
@@ -126,7 +136,10 @@ const filteredData = range === 'all' ? sortedLogs : sortedLogs.slice(-ranges[ran
           <CartesianGrid strokeDasharray="3 3" stroke="#ff9900" />
           <XAxis
             dataKey="date"
-            tickFormatter={(tick) => format(new Date(tick), 'MM/dd')}
+            tickFormatter={(tick) => {
+  const d = new Date(tick);
+  return isNaN(d.getTime()) ? '' : format(d, 'MM/dd');
+}}
             stroke="#ff9900"
             interval={interval}
             style={{ fontFamily: 'Arial, sans-serif', fontSize: 15 }}

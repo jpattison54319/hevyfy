@@ -14,44 +14,43 @@ const PetStatsSchema = new mongoose.Schema({
   happiness: { type: Number, default: 5 }
 }, { _id: false });
 
-const QuestSchema = new mongoose.Schema({
-  id: String,
-  title: String,
-  status: {
-    type: String,
-    enum: ['not_started', 'in_progress', 'completed'],
-  },
-  rewardXp: Number,
-}, { _id: false });
+// const QuestSchema = new mongoose.Schema({
+//   id: String,
+//   title: String,
+//   status: {
+//     type: String,
+//     enum: ['not_started', 'in_progress', 'completed'],
+//   },
+//   rewardXp: Number,
+// }, { _id: false });
 
-const LoggedMealSchema = new mongoose.Schema({
-  id: String,
-  description: String,
-  calories: Number,
-  protein: Number,
-  carbs: Number,
-  fat: Number,
-  fluid_intake_ml: { type: Number, default: 0 },               // new field
-  servings_of_fruits_vegetables: { type: Number, default: 0 }, // new field
-  currency: Number, // calorie currency equivalent
-  timestamp: String,
-  mealAffects: {
-    armorIncrease: { type: Number, default: 0 },
-    speedIncrease: { type: Number, default: 0 },
-    intelligenceIncrease: { type: Number, default: 0 },
-    defenseIncrease: { type: Number, default: 0 },
-  },
-}, { _id: false });
+// const LoggedMealSchema = new mongoose.Schema({
+//   id: String,
+//   description: String,
+//   calories: Number,
+//   protein: Number,
+//   carbs: Number,
+//   fat: Number,
+//   fluid_intake_ml: { type: Number, default: 0 },               // new field
+//   servings_of_fruits_vegetables: { type: Number, default: 0 }, // new field
+//   currency: Number, // calorie currency equivalent
+//   timestamp: String,
+//   mealAffects: {
+//     armorIncrease: { type: Number, default: 0 },
+//     speedIncrease: { type: Number, default: 0 },
+//     intelligenceIncrease: { type: Number, default: 0 },
+//     defenseIncrease: { type: Number, default: 0 },
+//   },
+// }, { _id: false });
 
-const WeightLog = new mongoose.Schema({
-  date: {type: Date, default: Date.now},
-  weight: {type: Number, required: true},
-  }, { _id: false });
+// const WeightLog = new mongoose.Schema({
+//   date: {type: Date, default: Date.now},
+//   weight: {type: Number, required: true},
+//   }, { _id: false });
 
 
 const UserBodyStatsSchema = new mongoose.Schema({
   weight: {type: Number, default: 0},
-  weightLogs: [WeightLog],
   height: {type: Number, default: 0},
   sex: {
     type: String,
@@ -70,36 +69,70 @@ const UserGoalSchema = new mongoose.Schema({
     default: 'maintenance',
   },
   dailyCalorieGoal: Number,
-   dailyCurrencyTotal: Number,
-    dailyCurrencyUsed: {
+  dailyCurrencyTotal: Number,
+   dailyCurrencyUsed: {
     type: Map,
     of: Number,
-    default: () => ({}), // Use a function here to ensure it's not shared across instances
+    default: () => ({}), // ensure default so Mongo doesn't require init
   },
-  weeklyProgress: [{
-    week: Number,
-    weightChange: Number,
-  }],
 }, { _id: false });
 
 const SettingsSchema = new mongoose.Schema({
   showCalories: Boolean,
 }, { _id: false });
 
-const LoggedWorkoutSchema = new mongoose.Schema({
-  id: String,
-   workoutType: String,
-  cardioMode: String, //duration or distance
-  duration: Number, //mins
-  distance: Number, //miles
-  rpe: Number,
-  notes: String,
-  workoutXp: {
-   strength: { type: Number, default: 0 },
-    agility: { type: Number, default: 0 },
-    pet: { type: Number, default: 0 },
-  },
-  timestamp: String,
+// const LoggedWorkoutSchema = new mongoose.Schema({
+//   id: String,
+//    workoutType: String,
+//   cardioMode: String, //duration or distance
+//   duration: Number, //mins
+//   distance: Number, //miles
+//   rpe: Number,
+//   notes: String,
+//   workoutXp: {
+//    strength: { type: Number, default: 0 },
+//     agility: { type: Number, default: 0 },
+//     pet: { type: Number, default: 0 },
+//   },
+//   timestamp: String,
+// }, { _id: false });
+
+// const UserSchema = new mongoose.Schema({
+//   uid: { type: String, required: true, unique: true },
+//   email: { type: String, required: true },
+//   displayName: String,
+//   avatarUrl: String,
+//   pet: {
+//   type: PetStatsSchema,
+//   default: () => ({}), // this triggers defaults inside PetStatsSchema
+// },
+//   quests: [QuestSchema],
+//   meals: {type: [LoggedMealSchema], default: []},
+//   workouts: {type: [LoggedWorkoutSchema], default: []},
+//   goal: {
+//   type: UserGoalSchema,
+//   default: () => ({}),
+// },
+//   bodyStats: {type: UserBodyStatsSchema, default: () => ({}),},
+//   settings: SettingsSchema,
+//   lastLogin: { type: Date, default: Date.now },
+// }, { timestamps: true });
+
+const RoutineSchema = new mongoose.Schema({
+  routineId: { type: String, required: true },
+  routineName: String,
+  routineGoal: String, // 'strength', 'endurance', etc.
+  sport: String,
+  daysPerWeek: Number,
+  weeklySchedule: [{
+    day: String, // 'Monday', 'Day 1', etc.
+    exercises: [{
+      name: String,
+      howTo: String,
+      sets: Number,
+      repRange: String
+    }]
+  }]
 }, { _id: false });
 
 const UserSchema = new mongoose.Schema({
@@ -107,78 +140,24 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
   displayName: String,
   avatarUrl: String,
+  routine: { type: RoutineSchema, default: null }, // only one routine per user
   pet: {
-  type: PetStatsSchema,
-  default: () => ({}), // this triggers defaults inside PetStatsSchema
-},
-  quests: [QuestSchema],
-  meals: {type: [LoggedMealSchema], default: []},
-  workouts: {type: [LoggedWorkoutSchema], default: []},
+    type: PetStatsSchema,
+    default: () => ({}),
+  },
+
   goal: {
-  type: UserGoalSchema,
-  default: () => ({}),
-},
-  bodyStats: {type: UserBodyStatsSchema, default: () => ({}),},
+    type: UserGoalSchema,
+    default: () => ({}),
+  },
+
+  bodyStats: {
+    type: UserBodyStatsSchema,
+    default: () => ({}),
+  },
+
   settings: SettingsSchema,
-  lastLogin: { type: Date, default: Date.now },
+  lastLogin: { type: Date, default: Date.now }
 }, { timestamps: true });
 
 export default mongoose.model('User', UserSchema);
-
-// const petStatsSchema = new mongoose.Schema({
-//   strength: { type: Number, default: 1 },
-//   endurance: { type: Number, default: 1 },
-//   speed: { type: Number, default: 1 }
-// }, { _id: false });
-
-// const petSchema = new mongoose.Schema({
-//   name: { type: String, default: 'Mochi' },
-//   species: { type: String, default: 'fox' },
-//   mood: { type: String, enum: ['happy', 'neutral', 'sad'], default: 'neutral' },
-//   happiness: { type: Number, default: 5, min: 0, max: 10 },
-//   xp: { type: Number, default: 0 },
-//   level: { type: Number, default: 1 },
-//   health: { type: Number, default: 100 },
-//   stats: { type: petStatsSchema, default: () => ({}) }
-// }, { _id: false });
-
-// const nutritionLogSchema = new mongoose.Schema({
-//   date: { type: String, required: true },
-//   summary: String,
-//   proteinScore: Number,
-//   fiberScore: Number,
-//   happinessImpact: Number
-// }, { _id: false });
-
-// const workoutLogSchema = new mongoose.Schema({
-//   date: { type: String, required: true },
-//   source: { type: String, enum: ['hevy', 'manual'], default: 'manual' },
-//   type: String,
-//   xpGained: Number,
-//   statChanges: {
-//     strength: Number,
-//     endurance: Number
-//   }
-// }, { _id: false });
-
-// const userSchema = new mongoose.Schema({
-//   uid: { type: String, required: true, unique: true }, // Firebase UID
-//   email: { type: String, required: true, unique: true },
-//   displayName: { type: String },
-
-//   pet: { type: petSchema, default: () => ({}) },
-
-//   logs: {
-//     nutrition: { type: [nutritionLogSchema], default: [] },
-//     workouts: { type: [workoutLogSchema], default: [] }
-//   },
-
-//   settings: {
-//     showCalories: { type: Boolean, default: false },
-//     notificationsEnabled: { type: Boolean, default: true }
-//   },
-
-//   createdAt: { type: Date, default: Date.now }
-// });
-
-// export default mongoose.model('User', userSchema);

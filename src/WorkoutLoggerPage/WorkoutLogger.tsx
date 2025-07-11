@@ -121,7 +121,9 @@ const handleLogWorkout = async () => {
     
 
     try {
-     const {data} = await api.post(`/users/${userData.uid}/addWorkout`, {
+     const {data} = await api.post(`/workout/logWorkout`, {
+      userId: userData.uid,
+      logType: 'manual',
   workoutType,
   cardioMode,
   duration: durationMinutesTotal,

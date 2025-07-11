@@ -1,0 +1,714 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+// Color scheme - 16-bit arcade inspired
+$primary-bg: #0a0a0a;
+$secondary-bg: #1a1a1a;
+$accent-cyan: #00ffff;
+$accent-green: #00ff00;
+$accent-yellow: #ffff00;
+$accent-pink: #ff00ff;
+$accent-red: #ff0000;
+$accent-blue: #0066ff;
+$accent-orange: #ff9900;
+$text-primary: #ffffff;
+$text-secondary: #cccccc;
+$text-dim: #888888;
+
+// Mixins
+@mixin pixelBorder($color: $accent-cyan, $width: 2px) {
+  border: $width solid $color;
+  box-shadow: 
+    0 0 0 #{$width * 2} $primary-bg,
+    0 0 0 #{$width * 3} $color,
+    0 0 #{$width * 4} $color;
+}
+
+@mixin glowEffect($color: $accent-cyan) {
+  box-shadow: 
+    0 0 8px $color,
+    0 0 16px $color,
+    inset 0 0 8px rgba($color, 0.3);
+}
+
+@mixin retroText {
+  font-family: 'Press Start 2P', cursive;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+// Header styles
+.drawer__header {
+  @include retroText;
+  background: linear-gradient(135deg, $primary-bg 0%, $secondary-bg 100%);
+  color: $accent-cyan;
+  padding: 16px;
+  margin-top: 8px;
+  @include pixelBorder($accent-cyan);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      $accent-cyan 0%, 
+      $accent-green 25%, 
+      $accent-yellow 50%, 
+      $accent-pink 75%, 
+      $accent-red 100%
+    );
+  }
+}
+
+.drawer__headerContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 1;
+  position: relative;
+}
+
+.drawer__headerIcon {
+  color: $accent-green;
+  filter: drop-shadow(0 0 8px $accent-green);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { filter: drop-shadow(0 0 8px $accent-green); }
+  50% { filter: drop-shadow(0 0 16px $accent-green); }
+}
+
+.drawer__title {
+  @include retroText;
+  font-size: 22px;
+  margin: 0;
+  color: $text-primary;
+  text-shadow: 
+    2px 2px 0 $primary-bg,
+    0 0 8px $accent-cyan;
+}
+
+// Content container
+.drawer__content {
+  padding: 1rem;
+  overflow-y: auto;
+  max-height: calc(80vh - 80px);
+  background: $primary-bg;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $secondary-bg;
+    border: 1px solid $accent-cyan;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $accent-cyan;
+    border-radius: 0;
+    
+    &:hover {
+      background: $accent-green;
+    }
+  }
+}
+
+// Loading and empty states
+.loadingState,
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  background: $secondary-bg;
+  @include pixelBorder($accent-cyan);
+  margin: 2rem 0;
+}
+
+.loadingState__content,
+.emptyState__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loadingState__spinner {
+  width: 32px;
+  height: 32px;
+  border: 4px solid $secondary-bg;
+  border-top: 4px solid $accent-cyan;
+  border-radius: 0;
+  animation: pixel-spin 1s linear infinite;
+}
+
+@keyframes pixel-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loadingState__text,
+.emptyState__text {
+  @include retroText;
+  font-size: 1rem;
+  color: $text-primary;
+  text-shadow: 2px 2px 0 $primary-bg;
+}
+
+.loadingState__subtext,
+.emptyState__subtext {
+  @include retroText;
+  font-size: 0.75rem;
+  color: $accent-yellow;
+  text-shadow: 1px 1px 0 $primary-bg;
+}
+
+.emptyState__icon {
+  color: $accent-cyan;
+  @include glowEffect($accent-cyan);
+  padding: 1rem;
+  border: 2px solid $accent-cyan;
+  background: $primary-bg;
+}
+
+// Workouts list
+.workoutsList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+// Workout card styles
+.workoutCard {
+  background: $secondary-bg;
+  color: $text-primary;
+  @include retroText;
+  @include pixelBorder($accent-green);
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $accent-cyan, transparent);
+    animation: scan-line 3s linear infinite;
+  }
+  
+  &:hover {
+    @include glowEffect($accent-green);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+  }
+}
+
+@keyframes scan-line {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.workoutCard__border {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  right: 4px;
+  bottom: 4px;
+  border: 1px solid $accent-cyan;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.workoutCard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid $accent-cyan;
+}
+
+.workoutCard__info {
+  flex: 1;
+}
+
+.workoutCard__title {
+  font-size: 17px;
+  margin: 0 0 0.5rem 0;
+  color: $accent-yellow;
+  text-shadow: 2px 2px 0 $primary-bg;
+}
+
+.workoutCard__timestamp {
+  @include retroText;
+  font-size: 12px;
+  color: $text-dim;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.workoutCard__timestampIcon {
+  color: $accent-cyan;
+}
+
+.workoutCard__xp {
+  background: $accent-pink;
+  color: $primary-bg;
+  @include pixelBorder($text-primary, 2px);
+  padding: 0.75rem;
+  text-align: center;
+  min-width: 80px;
+  @include glowEffect($accent-pink);
+}
+
+.workoutCard__xpValue {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.workoutCard__xpLabel {
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+// Main stats grid
+.workoutCard__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  text-align: center;
+  @include pixelBorder($accent-cyan, 2px);
+  background: $primary-bg;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 8px);
+    height: calc(100% - 8px);
+    border: 1px solid currentColor;
+    opacity: 0.3;
+  }
+}
+
+.statItem--type {
+  color: $accent-blue;
+  border-color: $accent-blue;
+  @include glowEffect($accent-blue);
+}
+
+.statItem--logtype {
+  color: $accent-pink;
+  border-color: $accent-pink;
+  @include glowEffect($accent-pink);
+}
+
+.statItem--rpe {
+  color: $accent-red;
+  border-color: $accent-red;
+  @include glowEffect($accent-red);
+}
+
+.statItem__value {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.statItem__label {
+  font-size: 15px;
+  opacity: 0.9;
+  letter-spacing: 2px;
+}
+
+// Section titles
+.workoutCard__sectionTitle {
+  @include retroText;
+  font-size: 13px;
+  color: $accent-cyan;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: $primary-bg;
+  border: 1px solid $accent-cyan;
+  
+  svg {
+    color: $accent-green;
+  }
+}
+
+// Manual workout stats
+.workoutCard__manualStats {
+  margin-bottom: 1.5rem;
+}
+
+.workoutCard__manualGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.manualStat {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: $primary-bg;
+  @include pixelBorder($accent-orange, 2px);
+  @include glowEffect($accent-orange);
+}
+
+.manualStat__icon {
+  color: $accent-orange;
+  flex-shrink: 0;
+}
+
+.manualStat__content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.manualStat__value {
+  font-size: 17px;
+  font-weight: bold;
+  color: $text-primary;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.manualStat__label {
+  font-size: 14px;
+  color: $accent-orange;
+  letter-spacing: 1px;
+}
+
+// Exercises section
+.workoutCard__exercises {
+  margin-bottom: 1.5rem;
+}
+
+.workoutCard__exercisesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exerciseItem {
+  padding: 1rem;
+  background: $primary-bg;
+  @include pixelBorder($accent-green, 2px);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 1px solid $accent-green;
+    opacity: 0.3;
+  }
+}
+
+.exerciseItem__name {
+  font-size: 0.875rem;
+  color: $accent-yellow;
+  margin-bottom: 0.75rem;
+  text-shadow: 1px 1px 0 $primary-bg;
+}
+
+.exerciseItem__sets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.exerciseItem__set {
+  background: $accent-blue;
+  color: $text-primary;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid $text-primary;
+  font-size: 0.625rem;
+  text-shadow: 1px 1px 0 $primary-bg;
+}
+
+.exerciseItem__notes {
+  font-size: 0.625rem;
+  color: $text-dim;
+  font-style: italic;
+  margin-top: 0.5rem;
+  border-top: 1px solid $accent-cyan;
+  padding-top: 0.5rem;
+}
+
+// XP boosts
+.workoutCard__statBoosts {
+    margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background: $secondary-bg;
+  @include pixelBorder($accent-cyan, 3px); // Thick visible border for container
+  border-radius: 1rem;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.22);
+}
+
+.workoutCard__statBoostsGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+}
+
+.statBoost {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  max-width: fit-content;
+  font-size: 0.75rem;
+  @include pixelBorder($accent-cyan, 2px);
+  background: $primary-bg;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    border: 1px solid currentColor;
+    opacity: 0.3;
+  }
+}
+
+.statBoost--red {
+  color: $accent-red;
+  border-color: $accent-red;
+  @include glowEffect($accent-red);
+}
+
+.statBoost--yellow {
+  color: $accent-yellow;
+  border-color: $accent-yellow;
+  @include glowEffect($accent-yellow);
+}
+
+.statBoost--pink {
+  color: $accent-pink;
+  border-color: $accent-pink;
+  @include glowEffect($accent-pink);
+}
+
+.statBoost__icon {
+  flex-shrink: 0;
+}
+
+.statBoost__label {
+  font-weight: bold;
+}
+
+.statBoost__value {
+  font-weight: bold;
+  color: $text-primary;
+}
+
+// Notes section
+.workoutCard__notes {
+  margin-bottom: 1rem;
+}
+
+.workoutCard__notesText {
+  font-size: 0.75rem;
+  color: $text-secondary;
+  line-height: 1.5;
+  padding: 1rem;
+  background: $primary-bg;
+  @include pixelBorder($accent-yellow, 2px);
+  font-style: italic;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+    bottom: 4px;
+    border: 1px solid $accent-yellow;
+    opacity: 0.3;
+  }
+}
+
+// Loading more and end of list
+.loadingMore,
+.endOfList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.loadingMore {
+  background: $secondary-bg;
+  @include pixelBorder($accent-cyan);
+  
+  .loadingMore__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .loadingMore__spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid $secondary-bg;
+    border-top: 3px solid $accent-cyan;
+    border-radius: 0;
+    animation: pixel-spin 1s linear infinite;
+  }
+  
+  .loadingMore__text {
+    @include retroText;
+    font-size: 0.875rem;
+    color: $text-primary;
+    text-shadow: 1px 1px 0 $primary-bg;
+  }
+  
+  .loadingMore__subtext {
+    @include retroText;
+    font-size: 0.625rem;
+    color: $accent-yellow;
+    text-shadow: 1px 1px 0 $primary-bg;
+  }
+}
+
+.endOfList {
+  background: $primary-bg;
+  border: 2px solid $accent-green;
+  color: $accent-green;
+  
+  .endOfList__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .endOfList__text {
+    @include retroText;
+    font-size: 0.875rem;
+    color: $accent-green;
+    text-shadow: 1px 1px 0 $primary-bg;
+  }
+  
+  .endOfList__subtext {
+    @include retroText;
+    font-size: 0.625rem;
+    color: $text-dim;
+    text-shadow: 1px 1px 0 $primary-bg;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .drawer__title {
+    font-size: 1rem;
+  }
+  
+  .workoutCard__header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .workoutCard__xp {
+    align-self: flex-end;
+  }
+  
+  .workoutCard__stats {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .workoutCard__manualGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .workoutCard__statBoostsGrid {
+  }
+  
+  .statBoost {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .drawer__headerContent {
+    gap: 0.5rem;
+  }
+  
+  .drawer__headerIcon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .drawer__title {
+    font-size: 17px;
+  }
+  
+  .workoutCard {
+    padding: 1rem;
+  }
+  
+  .workoutCard__stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .statItem {
+    padding: 0.75rem;
+  }
+  
+  .workoutCard__title {
+    font-size: 17px;
+  }
+  
+  .workoutCard__xp {
+    padding: 0.5rem;
+    min-width: 60px;
+  }
+  
+  .workoutCard__xpValue {
+    font-size: 17px;
+  }
+}

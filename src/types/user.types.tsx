@@ -67,16 +67,51 @@ export interface UserGoal {
     }[];
 }
 
-export interface LoggedWorkout {
-  id: string;
-  workoutType: string;
-  cardioMode: string; //duration or distance
-  duration: number; //mins
-  distance: number; //miles
-  rpe: number;
-  notes: string;
-  timestamp: string;
-}
+export type PerformedSet = {
+  weight: number;
+  reps: number;
+};
+
+export type PerformedExercise = {
+  name: string;
+  sets: PerformedSet[];
+  notes?: string;
+};
+
+export type WorkoutXp = {
+  strength: number;
+  agility: number;
+  pet: number;
+};
+
+export type WorkoutLog = {
+  _id: string;
+  userId: string;
+  logType: 'manual' | 'routine';
+  timestamp: string; // ISO string
+  notes?: string;
+  rpe?: number;
+  workoutXp: WorkoutXp;
+  workoutType?: 'WEIGHTS' | 'CARDIO' | 'MOBILITY' | 'SPORT';
+
+  // Manual
+  cardioMode?: string;
+  duration?: number;
+  distance?: number;
+
+  // Routine
+  routineId?: string;
+  routineDay?: string;
+  performedExercises?: PerformedExercise[];
+};
+
+export type WorkoutLogResponse = {
+  message: string;
+  workouts: WorkoutLog[];
+  total: number;
+  offset: number;
+  limit: number;
+};
 
 export interface User  {
   uid: string;
@@ -85,8 +120,6 @@ export interface User  {
   avatarUrl?: string;
   pet: PetStats;
   quests: Quest[];
-  meals: LoggedMeal[];
-  workouts: LoggedWorkout[];
   goal: UserGoal;
   bodyStats: UserBodyStats;
   settings: {
