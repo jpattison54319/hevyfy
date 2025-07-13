@@ -10,7 +10,7 @@ import styles from './Routines.module.scss';
 import CreateRoutine from './CreateRoutine';
 import MyRoutines from './MyRoutines';
 import UpdateRoutine from './UpdateRoutine';
-import CommunityRoutines from './CommunityRoutines';
+import CommunityRoutines from './CommunityRoutines/CommunityRoutines';
 
 export default function Routines() {
   return (

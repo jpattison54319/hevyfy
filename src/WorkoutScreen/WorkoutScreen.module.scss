@@ -1,0 +1,229 @@
+.fullScreenWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    color: #00ffcc;
+    font-family: 'Press Start 2P', monospace;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    z-index: 1000;
+}
+
+.timer {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    background-color: #222;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #00ffcc;
+    width: fit-content;
+}
+
+.deckContainer {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+    max-width: 400px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card {
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    height: 85%;
+    padding: 1rem;
+    background-color: #111;
+    border: 2px solid #00ffcc;
+    border-radius: 16px;
+    box-shadow: 0 0 15px #00ffcc;
+    transition: box-shadow 0.3s ease;
+    touch-action: pan-y;
+    user-select: none;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.exerciseTitle {
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: #00ffff;
+    line-height: 25px;
+}
+
+.repRange {
+    font-size: 15px;
+    line-height: 20px;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #aaa;
+}
+
+.setGrid {
+    display: flex;
+        flex-direction: column;
+        width: 100%;
+        gap: 1rem;
+        margin-top: 24px;
+}
+
+.setRow {
+    display: flex;
+    align-items: center;
+}
+
+.setLabel {
+    width: 60px;
+    font-size: 0.75rem;
+    color: #00ffff;
+    text-align: center;
+}
+
+.setLabel,
+.inputLabel,
+.checkboxLabel {
+    font-size: 12px;
+    text-align: center;
+}
+
+.compactInput {
+    width: 60px;
+    padding: 0.25rem;
+    background-color: #222;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+    text-align: center;
+    font-family: inherit;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box; 
+    width: 100%;
+}
+
+.compactInput::placeholder {
+    font-size: 0.75rem;
+    /* or 12px */
+    color: #00ffaa88;
+    /* your theme’s lighter color */
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    overflow: hidden; }
+
+// .setRow input {
+//     padding: 0.25rem;
+//     background-color: #222;
+//     border: 1px solid #00ffcc;
+//     color: #00ffcc;
+//     text-align: center;
+//     font-family: inherit;
+//     border-radius: 4px;
+//     font-size: 0.75rem;
+// }
+
+// .setRow input::placeholder {
+//     color: #00ffaa88;
+// }
+
+.setHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #00ffcc;
+    font-size: 15px;
+    color: #00ffaa; 
+}
+
+.setHeaderRow,
+.setRow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); // same width for all columns
+    align-items: center;
+    column-gap: 0.5rem;
+    gap: 16px;
+
+}
+    
+.inputLabel {
+    width: 60px;
+    text-align: center;
+    font-size: 12px;
+    color: #00ffaa;     }
+
+.finishButton {
+    margin-top: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: #00ffcc;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    font-family: inherit;
+    box-shadow: 0 0 10px #00ffcc;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.finishButton:hover {
+    background-color: #00ffaa;
+}
+
+.setCheckbox {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #00ffcc;
+    border-radius: 4px;
+    background-color: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #00ffcc;
+    cursor: pointer;
+    font-size: 0.75rem;
+    user-select: none;
+    margin: 0 auto;
+}
+
+.checkboxLabel {
+    text-align: center;
+    font-size: 14px;
+    color: #00ffaa; }
+
+.setCheckbox.checked {
+    background-color: #00ffcc;
+    color: #000; }
+
+        .cardSuitTop,
+        .cardSuitBottom {
+            //position: absolute;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    
+        .cardSuitTop {
+            display: flex;
+                opacity: 0.6;
+                pointer-events: none;
+                text-align: left;
+                margin-bottom: 8px;
+        }
+    
+        .cardSuitBottom {
+            position: absolute;
+            bottom: 12px;
+            right: 16px;
+            transform: rotate(180deg);
+            pointer-events: none;
+        }

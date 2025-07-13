@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import RoutineAccordion from './RoutineAccordion';
+import RoutineAccordion from '../RoutineAccordion/RoutineAccordion';
 import styles from './Routines.module.scss';
-import { useUser } from '../context/UserContext';
-import api from '../api/api';
-import { Routine } from '../types/routine.types';
-import Loading from '../Loading/Loading';
+import { useUser } from '../../context/UserContext';
+import api from '../../api/api';
+import { Routine } from '../../types/routine.types';
+import Loading from '../../Loading/Loading';
 
 function MyRoutines() {
     const [routines, setRoutines] = useState<Routine[]>();

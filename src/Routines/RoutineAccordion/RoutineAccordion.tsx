@@ -1,20 +1,21 @@
 import { useRef, useState } from "react";
 import "./RoutineAccordion.css";
-import type { Routine } from "../types/routine.types";
-import { Disclosure, DisclosureButton, DisclosurePanel, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import type { Routine, WeeklyScheduleDay } from "../../types/routine.types";
+import { Button, Disclosure, DisclosureButton, DisclosurePanel, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { MoreVertical, ChevronDown } from "lucide-react";
 import { Menu } from "@headlessui/react";
-import api from "../api/api";
-import { useUser } from "../context/UserContext";
+import api from "../../api/api";
+import { useUser } from "../../context/UserContext";
 
 
 type RoutineAccordionProps = {
   routine: Routine[] | undefined;
   menuOptions: string[];
   setRoutines: React.Dispatch<React.SetStateAction<Routine[] | undefined>>;
+  onStartWorkout?: (day: WeeklyScheduleDay) => void;
 };
 
-export default function RoutineAccordion({ routine, setRoutines, menuOptions }: RoutineAccordionProps) {
+export default function RoutineAccordion({ routine, setRoutines, menuOptions, onStartWorkout }: RoutineAccordionProps) {
   const {userData} = useUser();
   if (!routine || routine.length === 0) return null;
 
@@ -73,26 +74,26 @@ export default function RoutineAccordion({ routine, setRoutines, menuOptions }: 
           <MenuItems className="menu-dropdown">
           {menuOptions.includes("Share") && (
     <MenuItem>
-      <button onClick={() => handleShare(r)} className="menu-item">
+      <Button onClick={() => handleShare(r)} className="menu-item">
         Share
-      </button>
+      </Button>
     </MenuItem>
   )}
   {menuOptions.includes("Delete") && (
     <MenuItem>
-      <button onClick={() => handleDelete(r._id!)} className="menu-item">
+      <Button onClick={() => handleDelete(r._id!)} className="menu-item">
         Delete
-      </button>
+      </Button>
     </MenuItem>
   )}
   {menuOptions.includes("Copy") && (
     <MenuItem>
-      <button
+      <Button
         onClick={() => handleCopy(r)}
         className="menu-item"
       >
         Copy
-      </button>
+      </Button>
     </MenuItem>
   )}
           </MenuItems>
@@ -109,7 +110,14 @@ export default function RoutineAccordion({ routine, setRoutines, menuOptions }: 
                         <div className="day-exercises">
                           {day.exercises.map((exercise) => exercise.exercise).join(", ")}
                         </div>
-                        <button className="start-button">START WORKOUT</button>
+                        {day.exercises.length > 0 && (
+                          <Button
+                            className="start-button"
+                            onClick={() => onStartWorkout !== undefined ? onStartWorkout(day) : undefined}
+                          >
+                            START WORKOUT
+                          </Button>
+                        )}
                       </div>
                     ))}
                   </div>
