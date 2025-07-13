@@ -28,15 +28,14 @@ export default function RoutineAccordion({ routine, setRoutines, menuOptions }: 
   };
 
   const handleShare = (routine: Routine) => {
-    console.log("Share ", routine._id);
-    const updatedRoutine = {
-      ...routine,
-      communityRoutine: true,
-    };
-    api.patch(`/routines/update/${routine._id}`, updatedRoutine).then(() => {
-    }).catch((err) =>{
-      console.error('Failed to share routine: ', err)
-;    });
+    api
+      .post(`/routines/share/${routine._id}`)
+      .then(() => {
+        console.log("Routine shared to community.");
+      })
+      .catch((err) => {
+        console.error("Failed to share routine: ", err);
+      });
   };
 
   const handleCopy = (routine: Routine) => {

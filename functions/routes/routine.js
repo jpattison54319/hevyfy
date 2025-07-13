@@ -121,4 +121,35 @@ router.post('/copy/:routineId', async (req, res) => {
   }
 });
 
+router.post('/share/:_id', async (req, res) => {
+  const { _id } = req.params;
+
+  try {
+    const routine = await Routine.findById(_id);
+
+    if (!routine) {
+      return res.status(404).json({ message: 'Routine not found' });
+    }
+
+    const sharedRoutine = new Routine({
+      ...routine.toObject(),
+      _id: undefined, // Let MongoDB generate a new _id
+      userId: 'Community', // Or "community"
+      communityRoutine: true,
+      timestamp: new Date(),
+    });
+
+    await sharedRoutine.save();
+
+    res.status(201).json({
+      message: 'Routine successfully shared to community',
+      routine: sharedRoutine,
+    });
+
+  } catch (err) {
+    console.error('Error sharing routine: ', err);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 export default router;
