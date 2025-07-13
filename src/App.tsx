@@ -11,6 +11,11 @@ import OnboardingPage from "./onboarding/onboardingPage";
 import api from "./api/api";
 import { handleSignOut } from "./SignOut";
 import { debounce, throttle } from 'lodash';
+import HomePage from "./home/HomePage";
+import SkillsPage from "./skills/SkillsPage";
+import QuestsPage from "./quests/QuestsPage";
+import Routines from "./Routines/Routines";
+const TABS = ["Pet", "Skills", "Quests", "Routines"];
 
 function App() {
   const [user, setUser] = useState<any>(null);
@@ -18,6 +23,23 @@ function App() {
   // const [initializing, setInitializing] = useState(true);
     const { userData, setUserData } = useUser();
    // console.log('User Data in App:', userData); // Log user data to check if it's being set correctly
+
+   const [selectedIndex, setSelectedIndex] = useState(0);
+
+   const getTabComponent = (index: number) => {
+     switch (TABS[index]) {
+       case "Pet":
+         return <HomePage />;
+       case "Skills":
+         return <SkillsPage />;
+       case "Quests":
+         return <QuestsPage />;
+       case "Routines":
+         return <Routines />;
+       default:
+         return <HomePage />;
+     }
+   };
 
 useEffect(() => {
    const throttledFetch = throttle(() => {
@@ -143,11 +165,7 @@ return () => unsub();
     flexDirection: 'column',
         paddingBottom: '14px'
       }}>
-        <Routes>
-          {routes.map((r) => (
-            <Route key={r.name} path={r.path} element={r.element} />
-          ))}
-        </Routes>
+         {getTabComponent(selectedIndex)}
       </div>
       <div style={{
         position: 'fixed',
@@ -156,7 +174,7 @@ return () => unsub();
         right: 0,
         height: '76px',
               }}>
-        <Header />
+        <Header selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
       </div>
     </div>
   </SaltProvider>

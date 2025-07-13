@@ -1,0 +1,256 @@
+$cyan: #00ffff;
+$bg: #111;
+$white: #eee;
+$font: 'Press Start 2P', 'Pixelfy Sans';
+$gray: #333;
+$grayBorder: #555;
+$orange: #ff9900;
+
+.container {
+   background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.1) 2px,
+      rgba(0, 0, 0, 0.1) 4px
+    );
+  color: $white;
+  font-family: $font;
+  min-height: 100%;
+  padding: 16px;
+  margin: auto 0;
+  overFlow-y: auto;
+}
+
+
+
+.tabList {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.tabButton {
+  background: $gray;
+  border: 2px solid $grayBorder;
+  padding: 8px 8px;
+  font-size: 10px;
+  box-shadow: 2px 2px 2px $grayBorder;
+  cursor: pointer;
+  color: $white;
+  font-family: $font;
+  image-rendering: pixelated;
+  transition: all 0.1s ease;
+
+  &:focus {
+    border: 2px solid lighten($orange, 10%);
+  }
+}
+
+.active {
+  border: 2px solid lighten($orange, 10%);
+  background: $gray;
+  box-shadow: 0 0 8px rgba($orange, 0.6);
+  animation: borderGlow 2s ease-in-out infinite alternate;
+  transform: translate(2px, 2px);
+}
+
+@keyframes borderGlow {
+  0% {
+    box-shadow: 0 0 8px rgba($orange, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba($orange, 0.8);
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 19px;
+    line-height: 22px;
+
+    input,
+    select {
+      margin-top: 4px;
+      padding: 6px;
+      border: 2px solid $cyan;
+      background: $grayBorder;
+      color: $white;
+      font-family: $font;
+      font-size: 17px;
+      image-rendering: pixelated;
+      box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3);
+      transition: all 0.1s ease;
+
+      &:focus {
+        box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 6px rgba($cyan, 0.5);
+        outline: none;
+      }
+    }
+  }
+
+  button[type="submit"] {
+    background: $orange;
+    color: #000;
+    padding: 15px;
+    border-radius: 2px;
+    font-family: $font;
+    font-size: 10px;
+    cursor: pointer;
+    image-rendering: pixelated;
+    box-shadow: 0 0 6px $orange;
+    transition: all 0.1s ease;
+
+    &:hover {
+      background: lighten($orange, 10%);
+      box-shadow: 0 0 8px lighten($orange, 10%);
+    }
+
+    &:active {
+      transform: translate(1px, 1px);
+      box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 4px $orange;
+    }
+  }
+}
+
+.heroSection {
+  font-size: 14px;
+
+  p {
+    margin-bottom: 8px;
+  }
+}
+
+.heroList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  background: repeating-linear-gradient(
+  0deg,
+  transparent,
+  transparent 2px,
+  #1a1a1a 2px,
+  #1a1a1a 4px
+);
+   border: 2px solid #00ffff;
+  box-shadow:
+    inset 2px 2px 4px rgba(0, 255, 255, 0.2),
+    inset -2px -2px 4px rgba(0, 255, 255, 0.05),
+    0 0 0 2px #000; // subtle outer frame
+  image-rendering: pixelated;
+  border-radius: 4px;
+  padding: 8px;
+}
+
+.hero {
+  background: $gray;
+  color: $white;
+  padding: 6px 10px;
+  font-family: $font;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  image-rendering: pixelated;
+  transition: all 0.1s ease;
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.1);
+
+
+  &:active {
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.selected {
+  background: $orange;
+  box-shadow: 0 0 6px rgba($orange, 0.6), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    background: lighten($orange, 5%);
+    box-shadow: 0 0 8px rgba($orange, 0.8), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+  }
+
+  &:active {
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba($orange, 0.6);
+  }
+}
+
+.disclosureButton {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 10px;
+  background: #000;
+  color: #00ffff;
+  border: 2px solid #00ffff;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  image-rendering: pixelated;
+
+  &:hover {
+    background-color: rgba(0, 255, 255, 0.1);
+  }
+}
+
+.chevron {
+  transition: transform 0.2s ease-in-out;
+  margin-left: 8px;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.equipmentSection {
+  font-size: 10px;
+  margin-top: 16px;
+
+  p {
+    margin-bottom: 4px;
+  }
+}
+
+.equipmentList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.equipment {
+  background: $gray;
+  border: 2px solid $grayBorder;
+  color: #eee;
+  padding: 6px 10px;
+  font-family: 'Press Start 2P', 'Pixelfy Sans';
+  font-size: 14px;
+  cursor: pointer;
+  image-rendering: pixelated;
+
+}
+
+.selected {
+  background: $orange;
+  box-shadow: 0 0 6px rgba($orange, 0.6), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+
+  &:hover {
+    background: lighten($orange, 5%);
+    box-shadow: 0 0 8px rgba($orange, 0.8), inset 1px 1px 2px rgba(255, 255, 255, 0.2);
+  }
+
+  &:active {
+    transform: translate(1px, 1px);
+    box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 4px rgba($orange, 0.6);
+  }
+}

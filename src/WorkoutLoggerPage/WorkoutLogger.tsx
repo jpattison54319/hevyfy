@@ -277,7 +277,7 @@ const handleLogWorkout = async () => {
           key={type}
           value={type}
           style={{
-            fontSize: '14px',
+            fontSize: '17px',
           fontFamily: '"Open Sans", sans-serif',
            flexShrink: 1, // allows it to compress
         whiteSpace: "nowrap", // stops label from breaking liness

@@ -1,8 +1,16 @@
 import express from 'express';
 const router = express.Router();
-import mongoose from 'mongoose';
+import OpenAI from "openai";
 import Workout from '../models/Workout.js';
 import User from '../models/User.js';
+import { defineSecret } from "firebase-functions/params";
+import Routine from '../models/Routine.js';
+
+import dotenv from "dotenv";
+dotenv.config();
+
+const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
+
 
 export function xpNeededForLevel(level) {
   const baseXp = 1000;       // XP needed to reach level 2
@@ -132,6 +140,119 @@ router.post('/logWorkout', async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
 }
 
+});
+
+router.post("/routine/createRoutine", async (req, res) => {
+   const {
+    goal,
+    sport,
+    experience,
+    days,
+    equipment,
+    include,
+    exclude,
+    considerations,
+    sessionDurationMinutes,
+    petCoach,
+    userId
+  } = req.body;
+
+  const message = {
+    goal,
+    sport,
+    experience,
+    days,
+    equipment,
+    include,
+    exclude,
+    sessionDurationMinutes,
+    considerations,
+    petCoach,
+  };
+
+  const openai = new OpenAI({
+    apiKey: OPENAI_API_KEY.value(),
+  });
+
+  console.log('Received message:', message); // Debug log to check the incoming message
+  if (!message) return res.status(400).json({ error: "No message provided" });
+
+try {
+   const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `
+You are an evidence-based certified strength & conditioning coach and exercise scientist.
+
+The user is requesting a personalized weekly training routine. Based on the inputs provided:
+- Tailor the routine to match their **goal** (e.g., Max Muscle, Strength, Cardio, or Sport Specific).
+- If a **sport** is provided, include relevant movements or conditioning tailored to that sport.
+- Respect their **experience level** (e.g., beginner, intermediate, advanced) and explain any necessary modifications.
+- Use **only equipment** that matches the user's available equipment. Use the equipment from the users list that best meets their goal, ignore the rest.
+- If there are **exercises to include** or **exclude**, follow them precisely.
+- The routine should span exactly the number of days they specified.
+- If a petCoach is provided and not empty (e.g., Fenrir, Primordial Tyrant), tailor the workout to reflect the 
+petCoachs mythical characteristics, emphasizing training styles, exercise themes, or intensities that align with the pets persona while still meeting the users goal, 
+experience level, equipment, and physical considerations. For example, Fenrir might focus on explosive strength. Always prioritize scientific evidence for exercise selection for goal.
+-If exercise is meant to be slow/controlled say that in howTo. If its meant to be explosive include that in howTo.
+- If there are physical considerations (e.g., bad knees, low back pain), **this takes top priority over all goals or pet coach modifications.**
+- If the user has a bad lower back:
+    - Avoid exercises that require unsupported spinal loading (e.g., Romanian deadlifts, bent-over rows, standing overhead press, barbell squats).
+    - Prefer machines (e.g., leg press, chest-supported row, cable overhead press) and supported positions.
+
+Respond in valid JSON format using this exact structure:
+{
+  "routineName": string,
+  "experienceLevel": string,
+  "goal": string,
+  "petCoachAffects": string,
+  "sport": string | null,
+  "physicalConsiderations": string | null,
+  "daysPerWeek": number,
+  "weeklySchedule": [
+    {
+      "dayName": string,
+      "exercises": [
+        {
+          "exercise": string,
+          "repRange": string,
+          "sets": string,
+          "howToPerform": string
+        }
+      ]
+    }
+  ]
+}
+`
+        },
+        {
+          role: "user",
+          content: JSON.stringify(message)
+        }
+      ],
+      max_completion_tokens: 2500,
+      temperature: 0.7,
+      response_format: { type: "json_object" }
+    });
+    console.log('OpenAI response:', response); // Debug log to check the OpenAI response
+
+    // Extract JSON from response text
+const workoutRoutine = JSON.parse(response.choices[0].message.content);
+
+const savedRoutine = await Routine.create({
+  ...workoutRoutine,
+  userId,
+});
+console.log(workoutRoutine);
+
+res.json(savedRoutine);
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "OpenAI request failed" });
+  }
 });
 
 export default router;

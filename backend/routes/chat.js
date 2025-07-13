@@ -119,7 +119,7 @@ Provide your best estimates based on typical nutritional values for the describe
           content: message 
         }
       ],
-      max_tokens: 200,
+      max_completion_tokens: 1000,
       temperature: 0,
       response_format: { type: "json_object" }
     });

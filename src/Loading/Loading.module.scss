@@ -1,0 +1,53 @@
+.puppySpinner {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.loadingText{
+    font-size: 17px;
+    font-family: 'Press Start 2P', 'Pixelfy Sans';
+}
+
+.puppy {
+    animation: run 0.8s infinite steps(4);
+    transform-origin: center;
+}
+
+.treadmillBelt {
+    animation: belt-move 0.5s infinite linear;
+}
+
+@keyframes run {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    25% {
+        transform: translateY(-5px) rotate(3deg);
+    }
+
+    50% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    75% {
+        transform: translateY(-5px) rotate(-3deg);
+    }
+
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+@keyframes belt-move {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-10px);
+    }
+}

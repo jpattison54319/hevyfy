@@ -155,7 +155,7 @@ const ViewWorkouts = () => {
         <div className={styles.workoutCard__stats}>
           {workout.rpe && (
             <div className={`${styles.statItem} ${styles['statItem--rpe']}`}>
-              <div className={styles.statItem__value}>{workout.rpe}/10</div>
+              <div className={styles.statItem__value}>{workout.rpe}/4</div>
               <div className={styles.statItem__label}>RPE</div>
             </div>
           )}

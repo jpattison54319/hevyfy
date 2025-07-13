@@ -2,11 +2,13 @@ import AboutPage from "./skills/SkillsPage";
 import HomePage from "./home/HomePage";
 import SkillsPage from "./skills/SkillsPage";
 import QuestsPage from "./quests/QuestsPage";
+import Routines from "./Routines/Routines";
+import { Navigate } from "react-router-dom";
 
 export const routes = [
   {
     path: "/",
-    name: "Character",
+    name: "Pet",
     element: <HomePage />,
   },
   {
@@ -19,4 +21,14 @@ export const routes = [
     name: "Quests",
     element: <QuestsPage />,
   },
+    {
+    path: "/routines",
+    name: "Routines",
+    element: <Routines />,
+  },
+  {
+    path: "*",
+    name: "NotFound",
+    element: <Navigate to="/" replace />,
+  }
 ] as const;

@@ -13,6 +13,8 @@ import userRoutes from './routes/user.js';
 import weightLogRoutes from './routes/weightLog.js';
 import workoutRoutes from './routes/workout.js';
 import mealRoutes from './routes/meal.js';
+import routineRoutes from './routes/routine.js';
+
 
 
 
@@ -40,6 +42,8 @@ app.use('/api/chatnutrition', chatRoutes);
 app.use('/api/weightLogs', weightLogRoutes);
 app.use('/api/workout', workoutRoutes);
 app.use('/api/meal', mealRoutes);
+app.use('/api/routines', routineRoutes);
+
 
 
 const swaggerOptions = {

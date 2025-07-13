@@ -153,8 +153,8 @@ function FitCameraToModel({ modelRef }: { modelRef: React.RefObject<Group> }) {
       <FlexItem style={{ maxWidth: "100%", padding: 16 }} shrink={1}>
         <CalorieCurrencyContainer userArchetype={userData?.pet.currentPet ?? 'puppy'} count={userData?.goal?.dailyCurrencyTotal ?? 0} consumedCurrency={consumedCurrency} />
       </FlexItem>
-      <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden'}}>
-         <div style={{ width: '100%', height: '100%' }}>
+      <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', padding: '16px 16px'}}>
+         <div style={{ width: '100%', height: '100%', border: '4px solid #00ffff', imageRendering: 'pixelated', boxShadow: '0 0 2px 2px #00ffff, 0 0 4px 2px #00ffff88, 0 0 8px 2px #00ffff88, 0 0 16px 2px #00ffff88' }}>
         <Canvas resize={{ polyfill: ResizeObserver }}  camera={{ position: [5, 4, 5], fov: 50 }}>
           <ambientLight intensity={0.5}/>
           <directionalLight position={[0,5,5]}/>

@@ -181,7 +181,8 @@ $text-dim: #888888;
 .workoutsList {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 32px;
+  margin: 12px 0 0 0;
 }
 
 // Workout card styles
@@ -356,8 +357,6 @@ $text-dim: #888888;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem;
-  background: $primary-bg;
-  border: 1px solid $accent-cyan;
   
   svg {
     color: $accent-green;
@@ -544,28 +543,18 @@ $text-dim: #888888;
 // Notes section
 .workoutCard__notes {
   margin-bottom: 1rem;
+  border: 1px solid $accent-cyan;
 }
 
 .workoutCard__notesText {
   font-size: 0.75rem;
   color: $text-secondary;
   line-height: 1.5;
-  padding: 1rem;
+  padding: 16px;
   background: $primary-bg;
-  @include pixelBorder($accent-yellow, 2px);
   font-style: italic;
   position: relative;
   
-  &::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
-    bottom: 4px;
-    border: 1px solid $accent-yellow;
-    opacity: 0.3;
-  }
 }
 
 // Loading more and end of list
