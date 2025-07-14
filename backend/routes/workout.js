@@ -95,6 +95,7 @@ router.post('/logWorkout', async (req, res) => {
       user.pet.xp -= xpNeededForLevel(user.pet.level);
       user.pet.level += 1;
     }
+    await user.save();
 }catch(err){
     console.error(err);
         res.status(500).json({ message: 'Server Error' });

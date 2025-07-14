@@ -45,6 +45,7 @@ import Emoji from '../Emoji/Emoji';
     const [selectedPetCoach, setSelectedPetCoach] = useState<string>('');
     const [sessionDuration, setSessionDuration] = useState<number>(15);
     const [isLoading, setisLoading] = useState<boolean>(false);
+    const [routineCreated, setRoutineCreated] = useState(false);
     const {addToast} = useToast();
   
     const handleSubmit = (e: React.FormEvent) => {
@@ -64,15 +65,53 @@ import Emoji from '../Emoji/Emoji';
         userId: userData?.uid
       };
   
-      api.post('/workout/routine/createRoutine', payload, { timeout: 30000 })
+      api.post('/workout/routine/createRoutine', payload, { timeout: 50000 })
         .then((res) => {
           console.log('Routine Created:', res.data);
-          addToast({
-            content: (
-              <div style={{
+          setRoutineCreated(true);
+          setTimeout(() => {
+            setRoutineCreated(false);
+          }, 3000);
+        //   addToast({
+        //     content: (
+        //       <div style={{
+        //       display: "flex",
+        //       alignItems: "center",
+        //       gap: 12,
+        //       padding: 16,
+        //       backgroundColor: "#1c1c1c",
+        //       border: "3px solid #ffa640",
+        //       color: "#FFFDD0",
+        //       fontFamily: "'Press Start 2P', monospace, sans-serif",
+        //       fontSize: 17,
+        //       textTransform: "uppercase",
+        //       boxShadow: "0 0 8px #ffa640",
+        //       borderRadius: 8,
+        //     }}>
+        //       <Emoji size={32} symbol="❚█══█❚"/>
+        //       <div className={styles.routineCreatedText}>Routine Created!</div>
+        //     </div>
+        //     )
+        //   });
+         })
+        .catch(err => {
+          console.error(err);
+        }).finally(() => setisLoading(false));
+    };
+
+    if(routineCreated){
+        return (
+            <div style={{ position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0, padding: '0 12px', display: 'flex', width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center',}}>
+                <div style={{
               display: "flex",
+              flexDirection: 'column',
               alignItems: "center",
-              gap: 12,
+              gap: 22,
+              textAlign: 'center',
               padding: 16,
               backgroundColor: "#1c1c1c",
               border: "3px solid #ffa640",
@@ -85,14 +124,11 @@ import Emoji from '../Emoji/Emoji';
             }}>
               <Emoji size={32} symbol="❚█══█❚"/>
               <div className={styles.routineCreatedText}>Routine Created!</div>
+              <div className={styles.routineCreatedText}>Check it out in "My Routines"!</div>
             </div>
-            )
-          });
-        })
-        .catch(err => {
-          console.error(err);
-        }).finally(() => setisLoading(false));
-    };
+                </div>
+        );
+    }
 
     if(isLoading){
             return (

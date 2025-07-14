@@ -48,6 +48,11 @@ $orange: #ff9900;
   }
 }
 
+.routineCreatedText{
+  font-size: 17px;
+  line-height: 20px;
+}
+
 .active {
   border: 2px solid lighten($orange, 10%);
   background: $gray;

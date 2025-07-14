@@ -166,7 +166,7 @@ router.post('/:uid/addMeal', async (req, res) => {
     servings_of_fruits_vegetables, 
     fluid_intake_ml,
     currency,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
     mealAffects
   };
 

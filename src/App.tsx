@@ -173,6 +173,7 @@ return () => unsub();
         left: 0,
         right: 0,
         height: '76px',
+        padding: '0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)',
               }}>
         <Header selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
       </div>

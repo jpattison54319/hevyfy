@@ -43,7 +43,7 @@ router.post('/addMeal', async (req, res) => {
   }
 
   const currency = Math.round(calories / 100);// Convert calories to currency (1 currency = 100 calories)
-  const today = new Date().toISOString().slice(0, 10); // Format: YYYY-MM-DD
+  const today = new Date().slice(0, 10); // Format: YYYY-MM-DD
 const armorRaw = (protein ?? 0) * 0.1;
 const defenseRaw = (fiber ?? 0) * 0.33;
 const speedRaw = (fluid_intake_ml ?? 0) * 0.0025;
@@ -72,7 +72,7 @@ const mealAffects = {
     servings_of_fruits_vegetables, 
     fluid_intake_ml,
     currency,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
     mealAffects,
   });
 
