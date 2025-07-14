@@ -1,0 +1,49 @@
+.prompt {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    right: 16px;
+    background: #111;
+    color: #fff;
+    border: 2px solid #00ffcc;
+    border-radius: 12px;
+    padding: 16px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    box-shadow: 0 0 8px #00ffcc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeInUp 0.4s ease-in-out;
+}
+
+.text {
+    flex: 1;
+    padding-right: 8px;
+}
+
+.shareIcon {
+    font-weight: bold;
+    color: #00ffff;
+}
+
+.dismiss {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

@@ -15,6 +15,7 @@ import HomePage from "./home/HomePage";
 import SkillsPage from "./skills/SkillsPage";
 import QuestsPage from "./quests/QuestsPage";
 import Routines from "./Routines/Routines";
+import PwaInstallPrompt from "./PwaInstallPrompt";
 const TABS = ["Pet", "Skills", "Quests", "Routines"];
 
 function App() {
@@ -155,6 +156,7 @@ return () => unsub();
   
   return (
    <SaltProvider mode="dark">
+    <PwaInstallPrompt />
     <div style={{background: 'var(--salt-palette-background-primary)', backgroundSize: '8px 8px',  maxHeight: '100dvh', minHeight: '100dvh', height: '100dvh', position: 'relative', display: 'flex', flexDirection: 'column'}}>
       <div style={{
         flex: 1,
