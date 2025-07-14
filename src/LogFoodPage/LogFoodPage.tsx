@@ -35,10 +35,15 @@ const handleSubmit = async () => {
   try {
     const { data } = await api.post("/chatnutrition", { message: input });
 
+    const fullTimeStamp = new Date().toISOString(); // accurate meal time
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     const mealWithDescription = {
       ...data,
       description: input,
       userId: userData?.uid,
+      fullTimeStamp: fullTimeStamp,
+      userTimeZone: userTimeZone,
     };
     console.log(mealWithDescription);
     // Show confirmation with bone cost

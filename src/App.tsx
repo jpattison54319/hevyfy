@@ -143,29 +143,31 @@ return () => unsub();
 
 
   if (loading) {
-    return <div>Loading in app.tsx...</div>; // or a loading spinner
+    return <SaltProvider mode="dark"><div>Loading in app.tsx...</div></SaltProvider>; 
   }
 
   if (!user || !userData) {
-    return <SaltProvider mode="dark"><LoginPage /></SaltProvider>; // show your login component until they're logged in
+    return <SaltProvider mode="dark"><LoginPage /></SaltProvider>; // show login component until they're logged in
   }
 
   if (userData.bodyStats.weight === 0) {
-    return <SaltProvider mode="dark"><OnboardingPage /></SaltProvider>; // show your login component until they're logged in
+    return <SaltProvider mode="dark"><OnboardingPage /></SaltProvider>; 
   }
   
   return (
    <SaltProvider mode="dark">
     <PwaInstallPrompt />
     <div style={{background: 'var(--salt-palette-background-primary)', backgroundSize: '8px 8px',  maxHeight: '100dvh', minHeight: '100dvh', height: '100dvh', position: 'relative', display: 'flex', flexDirection: 'column'}}>
+      <div style={{padding: 'env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)'}}></div>
       <div style={{
         flex: 1,
-        maxHeight: 'calc(100dvh - 76px)', 
-        minHeight: 'calc(100dvh - 76px)',
-        height: 'calc(100dvh - 76px)',
+        maxHeight: 'calc(100dvh - 76px - env(safe-area-inset-bottom))',
+        minHeight: 'calc(100dvh - 76px - env(safe-area-inset-bottom))',
+        height: 'calc(100dvh - 76px - env(safe-area-inset-bottom))',
          display: 'flex',
     flexDirection: 'column',
-        paddingBottom: '14px'
+        paddingBottom: '14px',
+        overflow: 'hidden',
       }}>
          {getTabComponent(selectedIndex)}
       </div>
@@ -174,9 +176,7 @@ return () => unsub();
         bottom: 0,
         left: 0,
         right: 0,
-        height: '76px',
-        padding: '0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)',
-              }}>
+        minHeight: '76px'}}>
         <Header selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
       </div>
     </div>

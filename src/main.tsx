@@ -6,6 +6,10 @@ import "./index.css";
 import { UserProvider } from "./context/UserContext";
 import { ToastProvider } from "./context/ToastContext";
 import { SplashScreenProvider } from "./context/SplashScreen";
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({ immediate: true });
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

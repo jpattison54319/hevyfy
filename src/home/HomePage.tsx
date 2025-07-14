@@ -47,7 +47,8 @@ const isModelKitten = useMemo(() => petType === 'kitten', [petType]);
   // }, [userData]);
 
   useEffect(() => {
-  const today = new Date().toLocaleDateString("sv-SE");
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const today = new Date().toLocaleDateString("sv-SE", { timeZone: userTimezone });
 const total = userData?.goal?.dailyCurrencyTotal ?? 0;
 const used = userData?.goal?.dailyCurrencyUsed?.[today] ?? 0;
 const currencyBalance = total - used;

@@ -36,14 +36,16 @@ router.get("/:uid/meals", async (req, res) => {
 });
 
 router.post('/addMeal', async (req, res) => {
-  const { userId, description, calories, protein, carbs, fat, fiber,  servings_of_fruits_vegetables, fluid_intake_ml } = req.body;
+  const { userId, description, calories, protein, carbs, fat, fiber,  servings_of_fruits_vegetables, fluid_intake_ml, fullTimeStamp, userTimeZone } = req.body;
   console.log('Received meal data:', req.body); // Debug log to check the incoming data
   if (!userId) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
+    const dateObj = new Date(fullTimeStamp);
+
+const localDay = new Intl.DateTimeFormat("sv-SE", { timeZone: userTimeZone}).format(dateObj); // "YYYY-MM-DD"
 
   const currency = Math.round(calories / 100);// Convert calories to currency (1 currency = 100 calories)
-  const today = new Date().slice(0, 10); // Format: YYYY-MM-DD
 const armorRaw = (protein ?? 0) * 0.1;
 const defenseRaw = (fiber ?? 0) * 0.33;
 const speedRaw = (fluid_intake_ml ?? 0) * 0.0025;
@@ -72,7 +74,7 @@ const mealAffects = {
     servings_of_fruits_vegetables, 
     fluid_intake_ml,
     currency,
-    timestamp: new Date(),
+    timestamp: dateObj,
     mealAffects,
   });
 
@@ -85,7 +87,7 @@ const mealAffects = {
     const updatedUser = await User.findOneAndUpdate(
       { uid: userId },
     {$inc: {
-      [`goal.dailyCurrencyUsed.${today}`]: currency,
+      [`goal.dailyCurrencyUsed.${localDay}`]: currency,
       'pet.armor': mealAffects.armorIncrease,
       'pet.speed': mealAffects.speedIncrease,
       'pet.intelligence': mealAffects.intelligenceIncrease,

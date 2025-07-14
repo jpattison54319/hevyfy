@@ -6,18 +6,22 @@
   font-family: 'Press Start 2P', monospace;
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   border-top: 4px solid #ff9900;
-  padding: clamp(8px, 2vw, 12px) clamp(4px, 1vw, 8px);
+  padding: 
+  calc(clamp(8px, 2vw, 12px) + env(safe-area-inset-top))
+  calc(clamp(4px, 1vw, 8px) + env(safe-area-inset-right))
+  calc(clamp(8px, 2vw, 12px) + env(safe-area-inset-bottom))
+  calc(clamp(4px, 1vw, 8px) + env(safe-area-inset-left));
   position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  max-width: 100vw;
+  max-width: 100dvw;
   box-sizing: border-box;
   box-shadow: 0 -4px 0 #cc7700 inset, 0 -8px 16px rgba(255, 153, 0, 0.2) inset;
   gap: clamp(8px, 2vw, 12px);
-  overflow: hidden;
-  height: 76px;
+  overflow: visible;
+  min-height: 76px;
 }
 
 /* Scan lines effect */
@@ -139,6 +143,7 @@
 .tab-button:focus {
   outline: 2px solid #ff9900;
   outline-offset: 2px;
+  color: #000;
 }
 
 .tab-selected {
@@ -151,6 +156,8 @@
 .tab-selected:hover {
   background: #ffbb44;
   transform: none;
+  color: #000;
+
 }
 
 /* Menu Panel Styles */

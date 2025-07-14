@@ -174,7 +174,7 @@ const OnboardingPage: React.FC = () => {
                 <FormField>
                   <FormFieldLabel>Weight (lbs)</FormFieldLabel>
                   <Input
-                    value={userDataStaging.bodyStats!.weight}
+                    value={userDataStaging.bodyStats!.weight === 0 ? '' : userDataStaging.bodyStats!.weight }
                     onChange={(e) => handleInputChange(e, 'bodyStats', 'weight')}
                   />
                 </FormField>
@@ -244,7 +244,7 @@ const OnboardingPage: React.FC = () => {
                 <FormField>
                   <FormFieldLabel>Age (years)</FormFieldLabel>
                   <Input
-                    value={userDataStaging.bodyStats!.age}
+                    value={userDataStaging.bodyStats!.age === 0 ? '' : userDataStaging.bodyStats!.age}
                     onChange={(e) => handleInputChange(e, 'bodyStats', 'age')}
                   />
                 </FormField>
