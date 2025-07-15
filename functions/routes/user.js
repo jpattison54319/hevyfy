@@ -2,6 +2,33 @@ import express from 'express';
 const router = express.Router();
 import User from '../models/User.js'; // Adjust the import path as necessary
 import mongoose from 'mongoose';
+import crypto from 'crypto';
+const algorithm = 'aes-256-cbc';
+import { defineSecret } from "firebase-functions/params";
+
+const ENCRYPTION_SECRET_KEY = defineSecret("ENCRYPTION_SECRET_KEY");
+
+function encrypt(text, key) {
+  const iv = crypto.randomBytes(16); // Must be generated per encryption
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  let encrypted = cipher.update(text, 'utf8');
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+  return iv.toString('hex') + ':' + encrypted.toString('hex');
+}
+
+function decrypt(encryptedText, key) {
+  const [ivHex, encryptedHex] = encryptedText.split(':');
+  const iv = Buffer.from(ivHex, 'hex');
+  const encrypted = Buffer.from(encryptedHex, 'hex');
+
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  let decrypted = decipher.update(encrypted);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+  return decrypted.toString('utf8');
+}
+
 
 export function xpNeededForLevel(level) {
   const baseXp = 1000;       // XP needed to reach level 2
@@ -114,101 +141,55 @@ router.post('/update', async (req, res) => {
   }
 });
 
-// router.post('/:uid/addWorkout', async (req, res) => {
-//   const { uid } = req.params;
-//   const { workoutType, cardioMode, duration, distance, rpe, notes, workoutXp } = req.body;
+router.post("/hevy/saveKey", async (req, res) => {
+  const { hevyKey, uid } = req.body;
 
-//   if (!workoutType || !cardioMode || rpe === undefined) {
-//     return res.status(400).json({ message: 'Missing required fields' });
-//   }
+  console.log('hit webhook api: ', hevyKey);
+  const key = Buffer.from(ENCRYPTION_SECRET_KEY.value(), 'base64'); // 32 bytes
 
-//   // Create workout log
-//   const workoutLog = {
-//     id: new mongoose.Types.ObjectId().toString(),
-//     workoutType,
-//     cardioMode,
-//     duration: duration ?? 0,
-//     distance: distance ?? 0,
-//     rpe,
-//     notes: notes ?? '',
-//     workoutXp,
-//     timestamp: new Date().toISOString(),
-//   };
+  if (!uid || !hevyKey) {
+    return res.status(400).json({ message: "Missing user ID (uid) or key!" });
+  }
 
-//   try {
-//     // Fetch the user first to update total XP & level
-//     const user = await User.findOne({ uid });
+  const response = await fetch('https://api.hevyapp.com/v1/webhook-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': `${hevyKey}`,
+        },
+        body: JSON.stringify({
+          authToken: `Bearer ${uid}`,
+          url: `https://api-wosc6bjdaa-uc.a.run.app/api/hevy/webhook`, // your public webhook handler URL
+        }),
+      });
+      console.log('hevy response: ', response);
 
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
+      if (!response.ok) {
+        const error = await response.text();
+        return res.status(response.status).send({ error });
+      }
 
-//     // Update user's total XP by adding workout XP
-//     user.pet.xp = (user.pet.xp || 0) + (workoutXp.pet || 0);
-//     user.pet.strength = (user.pet.strength || 0) + (workoutXp.strength || 0);
-//     user.pet.agility = (user.pet.agility || 0) + (workoutXp.agility || 0);
+      console.log('hevy response: ', response);
 
+  const encryptedKey = encrypt(hevyKey,key);
 
-//     // Check if user.level exists, else default to 1
-//     user.pet.level = user.pet.level || 1;
-//     const previousLevel = user.pet.level || 1;
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { uid },                // Match by UID field
+      { hevyKey: encryptedKey },       // Set hevyKey
+      { new: true }           // Return updated document
+    );
 
-//     // Loop level-ups if multiple levels gained at once
-//     while (user.pet.xp >= xpNeededForLevel(user.pet.level)) {
-//   user.pet.xp -= xpNeededForLevel(user.pet.level);
-//   user.pet.level += 1;
-// }
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found!" });
+    }
 
-//     // Push new workout to workouts array
-//     user.workouts.push(workoutLog);
-
-//     await user.save();
-//     const leveledUp = user.pet.level > previousLevel;
-
-//     res.status(200).json({
-//       message: 'Workout logged and XP updated successfully',
-//       workoutLog,
-//       updatedUser: user,
-//       levelUp: leveledUp,
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// });
-
-// router.get('/:userId/meals', async (req, res) => {
-//   try {
-//     const { userId } = req.params;
-//     const { limit = 50, offset = 0 } = req.query;
-
-//     // Find user and populate meals
-//     const user = await User.findOne({ uid: userId }).select('meals');
-    
-//     if (!user) {
-//       return res.status(404).json({ 
-//         error: 'User not found' 
-//       });
-//     }
-
-//     // Sort meals by timestamp (newest first) and apply pagination
-//     const sortedMeals = user.meals
-//       .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-//       .slice(offset, offset + parseInt(limit));
-
-//     res.json({
-//       meals: sortedMeals,
-//       total: user.meals.length,
-//       offset: parseInt(offset),
-//       limit: parseInt(limit)
-//     });
-
-//   } catch (error) {
-//     console.error('Error fetching meals:', error);
-//     res.status(500).json({ 
-//       error: 'Internal server error' 
-//     });
-//   }
-// });
+    res.json({
+      message: "Hevy integration setup successfully!"});
+  } catch (err) {
+    console.error("Error saving Hevy key:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 
 export default router;

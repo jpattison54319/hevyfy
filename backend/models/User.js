@@ -155,7 +155,7 @@ const UserSchema = new mongoose.Schema({
     type: UserBodyStatsSchema,
     default: () => ({}),
   },
-
+  hevyKey: {type: String, default: ''},
   settings: SettingsSchema,
   lastLogin: { type: Date, default: Date.now }
 }, { timestamps: true });

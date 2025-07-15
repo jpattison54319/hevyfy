@@ -45,7 +45,12 @@ canvas {
   --salt-palette-background-primary: 
     linear-gradient(#111111 50%, transparent 50%),
   linear-gradient(90deg, #000000 50%, transparent 50%);
-
+  --headingFontSize: 22px;
+  --bodyFontSize: 17px;
+  --secondaryTextFontSize: 15px;
+  --primaryInteractionColor: #ff9900;
+  --primaryBorder: #00f6ff;
+  --secondaryBorder: #189094;
 }
 
 

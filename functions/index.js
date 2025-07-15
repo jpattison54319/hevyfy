@@ -25,6 +25,7 @@ import weightLogRoutes from './routes/weightLog.js';
 import workoutRoutes from './routes/workout.js';
 import mealRoutes from './routes/meal.js';
 import routineRoutes from './routes/routine.js';
+import hevyRoutes from './routes/hevy.js';
 
 const isLocal = !process.env.K_SERVICE;
 if (isLocal) {
@@ -39,6 +40,8 @@ const MONGO_PASS = defineSecret("MONGO_PASS");
 const MONGO_CLUSTER = defineSecret("MONGO_CLUSTER");
 const MONGO_DB = defineSecret("MONGO_DB");
 const OPENAI_API_KEY = defineSecret("OPENAI_API_KEY");
+const ENCRYPTION_SECRET_KEY = defineSecret("ENCRYPTION_SECRET_KEY");
+
 
 const user = process.env.MONGO_USER;
 const pass = process.env.MONGO_PASS;
@@ -98,6 +101,8 @@ app.use('/api/weightLogs', weightLogRoutes);
 app.use('/api/workout', workoutRoutes);
 app.use('/api/meal', mealRoutes);
 app.use('/api/routines', routineRoutes);
+app.use('/api/hevy', hevyRoutes);
+
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
@@ -123,7 +128,7 @@ const swaggerSpec = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 export const api = onRequest(
   {
-    secrets: [MONGO_USER, MONGO_PASS, MONGO_CLUSTER, MONGO_DB, OPENAI_API_KEY],
+    secrets: [MONGO_USER, MONGO_PASS, MONGO_CLUSTER, MONGO_DB, OPENAI_API_KEY,ENCRYPTION_SECRET_KEY],
   },
   async (req, res) => {
    const user = await MONGO_USER.value();

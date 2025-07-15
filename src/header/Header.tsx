@@ -27,6 +27,7 @@ import ViewMeals from "../ViewMeals/ViewMeals";
 import LogWeight from "../LogWeight/LogWeight";
 import ViewWorkouts from "../ViewWorkouts/ViewWorkouts";
 import { Button, Tab, TabGroup, TabList } from "@headlessui/react";
+import Settings from "../Settings/Settings";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -53,7 +54,7 @@ const NavLink = forwardRef(function NavLink(
 });
 const TABS = ["Pet", "Skills", "Quests", "Routines"] as const;
 
-type DrawerTypes = "none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist" | "logWeight";
+type DrawerTypes = "none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist" | "logWeight" | "settings";
 type HeaderProps = {
   selectedIndex: number;
   setSelectedIndex: (index: number) => void;
@@ -107,6 +108,7 @@ const Header = ({ selectedIndex, setSelectedIndex }: HeaderProps) => {
         <MenuPanel>
           <MenuItem onClick={() => setDrawerView("mealHist")}>View Meals</MenuItem>
           <MenuItem onClick={() => setDrawerView("workoutHist")}>View Workouts</MenuItem>
+          <MenuItem onClick={() => setDrawerView("settings")}>Settings</MenuItem>
           <MenuItem onClick={handleSignOut}>Logout</MenuItem>
         </MenuPanel>
       </Menu>
@@ -121,6 +123,7 @@ const Header = ({ selectedIndex, setSelectedIndex }: HeaderProps) => {
     {drawerView === "mealHist" && <ViewMeals />}
     {drawerView === "workoutHist" && <ViewWorkouts />}
     {drawerView === "logWeight" && <LogWeight />}
+    {drawerView === "settings" && <Settings />}
   </Drawer>
 </div>
 );

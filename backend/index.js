@@ -14,7 +14,7 @@ import weightLogRoutes from './routes/weightLog.js';
 import workoutRoutes from './routes/workout.js';
 import mealRoutes from './routes/meal.js';
 import routineRoutes from './routes/routine.js';
-
+import hevyRoutes from './routes/hevy.js';
 
 
 
@@ -43,6 +43,8 @@ app.use('/api/weightLogs', weightLogRoutes);
 app.use('/api/workout', workoutRoutes);
 app.use('/api/meal', mealRoutes);
 app.use('/api/routines', routineRoutes);
+app.use('/api/hevy', hevyRoutes);
+
 
 
 

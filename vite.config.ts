@@ -9,54 +9,54 @@ export default defineConfig({
   plugins: [
     react(),
     splitVendorChunkPlugin(),
-    VitePWA({
-      registerType: 'autoUpdate',
-      manifest: {
-        short_name: 'XPets',
-        name: 'XPets: HealthQuest',
-        start_url: '.',
-        display: 'standalone',
-        background_color: '#161616',
-        theme_color: '#161616',
-        icons: [
-          {
-            src: 'logo64.png',
-            type: 'image/png',
-            sizes: '64x64'
-          },
-          {
-            src: 'logo192.png',
-            type: 'image/png',
-            sizes: '192x192'
-          },
-          {
-            src: 'logo512.png',
-            type: 'image/png',
-            sizes: '512x512'
-          }
-        ]
-      },
-      workbox: {
-        globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
-        globIgnores: [
-          '**/vendor-*.js',   
-          '**/*.gltf',
-          '**/*.glb',
-          '**/*.bin',
-          '**/*.png',
-          '**/*.jpg',
-          '**/*.jpeg',
-          '**/*.webp',
-          '**/*.ktx2',
-          '**/textures/**',
-          '**/models/**',
-          '**/kitten/**',
-        ],
-      },
-      devOptions: {
-        enabled: true
-      }
-    })
+    // VitePWA({
+    //   registerType: 'autoUpdate',
+    //   manifest: {
+    //     short_name: 'XPets',
+    //     name: 'XPets: HealthQuest',
+    //     start_url: '.',
+    //     display: 'standalone',
+    //     background_color: '#161616',
+    //     theme_color: '#161616',
+    //     icons: [
+    //       {
+    //         src: 'logo64.png',
+    //         type: 'image/png',
+    //         sizes: '64x64'
+    //       },
+    //       {
+    //         src: 'logo192.png',
+    //         type: 'image/png',
+    //         sizes: '192x192'
+    //       },
+    //       {
+    //         src: 'logo512.png',
+    //         type: 'image/png',
+    //         sizes: '512x512'
+    //       }
+    //     ]
+    //   },
+    //   workbox: {
+    //     globPatterns: ['**/*.{js,css,html,png,svg,woff2}'],
+    //     globIgnores: [
+    //       '**/vendor-*.js',   
+    //       '**/*.gltf',
+    //       '**/*.glb',
+    //       '**/*.bin',
+    //       '**/*.png',
+    //       '**/*.jpg',
+    //       '**/*.jpeg',
+    //       '**/*.webp',
+    //       '**/*.ktx2',
+    //       '**/textures/**',
+    //       '**/models/**',
+    //       '**/kitten/**',
+    //     ],
+    //   },
+    //   devOptions: {
+    //     enabled: true
+    //   }
+    // })
   ],
   // Workaround to make it work on I:\  - https://github.com/vitejs/vite/issues/4635
   resolve: {

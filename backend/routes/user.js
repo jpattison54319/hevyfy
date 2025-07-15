@@ -2,6 +2,31 @@ import express from 'express';
 const router = express.Router();
 import User from '../models/User.js'; // Adjust the import path as necessary
 import mongoose from 'mongoose';
+import crypto from 'crypto';
+const algorithm = 'aes-256-cbc';
+const key = Buffer.from(process.env.ENCRYPTION_SECRET_KEY, 'base64'); // 32 bytes
+
+
+function encrypt(text) {
+  const iv = crypto.randomBytes(16); // Must be generated per encryption
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
+  let encrypted = cipher.update(text, 'utf8');
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
+
+  return iv.toString('hex') + ':' + encrypted.toString('hex');
+}
+
+function decrypt(encryptedText) {
+  const [ivHex, encryptedHex] = encryptedText.split(':');
+  const iv = Buffer.from(ivHex, 'hex');
+  const encrypted = Buffer.from(encryptedHex, 'hex');
+
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
+  let decrypted = decipher.update(encrypted);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
+
+  return decrypted.toString('utf8');
+}
 
 export function xpNeededForLevel(level) {
   const baseXp = 1000;       // XP needed to reach level 2
@@ -212,6 +237,57 @@ router.get('/:userId/meals', async (req, res) => {
     res.status(500).json({ 
       error: 'Internal server error' 
     });
+  }
+});
+
+
+router.post("/hevy/saveKey", async (req, res) => {
+  const { hevyKey, uid } = req.body;
+
+  console.log('hit webhook api: ', hevyKey);
+
+  if (!uid || !hevyKey) {
+    return res.status(400).json({ message: "Missing user ID (uid) or key!" });
+  }
+
+  const response = await fetch('https://api.hevyapp.com/v1/webhook-subscription', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'api-key': `${hevyKey}`,
+        },
+        body: JSON.stringify({
+          authToken: `Bearer ${uid}`,
+          url: `https://api-wosc6bjdaa-uc.a.run.app/api/hevy/webhook`, // your public webhook handler URL
+        }),
+      });
+      console.log('hevy response: ', response);
+
+      if (!response.ok) {
+        const error = await response.text();
+        return res.status(response.status).send({ error });
+      }
+
+      console.log('hevy response: ', response);
+
+  const encryptedKey = encrypt(hevyKey);
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { uid },                // Match by UID field
+      { hevyKey: encryptedKey },       // Set hevyKey
+      { new: true }           // Return updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found!" });
+    }
+
+    res.json({
+      message: "Hevy integration setup successfully!"});
+  } catch (err) {
+    console.error("Error saving Hevy key:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
