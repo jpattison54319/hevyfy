@@ -51,6 +51,9 @@ canvas {
   --primaryInteractionColor: #ff9900;
   --primaryBorder: #00f6ff;
   --secondaryBorder: #189094;
+  --headerFontFamily: 'Press Start 2P', 'Pixelify Sans';
+  --bodyFontFamily: 'Pixelify Sans', 'Open Sans';
+  --nonRetroFontFamily: 'Open Sans', sans-serif;
 }
 
 

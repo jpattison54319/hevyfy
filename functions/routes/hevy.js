@@ -192,4 +192,23 @@ const hevyWorkout = new HevyWorkout({
     }
   });
 
+  router.get('/unseen/:uid', async (req, res) => {
+    const { uid } = req.params;
+    const user = await User.findOne({ uid });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+  
+    const workout = await HevyWorkout.findOne({ userId: user._id, seen: false }).sort({ createdAt: -1 });
+    res.json({ workout });
+  });
+  
+  // POST /hevy/markSeen
+  router.post('/markSeen', async (req, res) => {
+    const { workoutId, uid } = req.body;
+    const user = await User.findOne({ uid });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+  
+    await HevyWorkout.updateOne({ userId: user._id, hevyWorkoutId: workoutId }, { seen: true });
+    res.json({ message: 'Workout marked as seen' });
+  });
+
 export default router;

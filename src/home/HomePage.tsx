@@ -23,6 +23,9 @@ import type { OrbitControls as DreiOrbitControls } from '@react-three/drei';
 import XpBar from "../xpbar/XpBar";
 import { CalorieCurrencyContainer } from "../calorieResources/calorieCurrencyContainer";
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { SpritePet } from "../Pets/SpritePet/SpritePet";
+import CaninePet from "../Pets/CaninePet/CaninePet";
+import FelinePet from "../Pets/FelinePet/FelinePet";
 
 
 
@@ -138,7 +141,9 @@ const newConsumedCurrency = Array(total)
       </FlexItem>
       <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', padding: '16px 16px'}}>
          <div style={{ width: '100%', height: '100%', border: '4px solid #00ffff', imageRendering: 'pixelated', boxShadow: '0 0 2px 2px #00ffff, 0 0 4px 2px #00ffff88, 0 0 8px 2px #00ffff88, 0 0 16px 2px #00ffff88' }}>
-         <Canvas
+         {/* {userData?.pet.currentPet === 'puppy' ? <CaninePet /> : <FelinePet />} */}
+         <FelinePet />
+         {/* <Canvas
   resize={{ polyfill: ResizeObserver }}
   camera={{ position: [2, 0, 4], fov: 100 }}
   gl={(canvas) => {
@@ -154,7 +159,7 @@ const newConsumedCurrency = Array(total)
   maxPolarAngle={Math.PI / 1.5} // Prevents looking below the ground
   minDistance={3}                // Prevents zooming in too close
   maxDistance={10}  />
-</Canvas>
+</Canvas> */}
         </div>
       </FlexItem>
       <FlexItem className={styles.statusSection} style={{flexShrink: 0}}>

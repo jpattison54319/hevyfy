@@ -10,6 +10,7 @@
 .heading {
     font-size: var(--headingFontSize);
     font-weight: 700;
+    font-family: var(--headerFontFamily);
 }
 
 .optionButton {
@@ -21,7 +22,7 @@
     text-align: left;
     cursor: pointer;
     transition: background-color  0.2s ease;
-
+    font-family: var(--bodyFontFamily);
     &:hover {
         background-color: #292929;
     }
@@ -39,12 +40,14 @@
     h3 {
         font-size: var(--bodyFontSize);
         font-weight: 600;
+        font-family: var(--nonRetroFontFamily);
     }
 
     p {
         font-size: var(--secondaryTextFontSize);
         line-height: 1.4;
         color: #ccc;
+        font-family: var(--bodyFontFamily);
     }
 }
 

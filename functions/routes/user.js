@@ -185,7 +185,8 @@ router.post("/hevy/saveKey", async (req, res) => {
     }
 
     res.json({
-      message: "Hevy integration setup successfully!"});
+      message: "Hevy integration setup successfully!",
+      updatedUser: updatedUser});
   } catch (err) {
     console.error("Error saving Hevy key:", err);
     res.status(500).json({ message: "Internal server error" });

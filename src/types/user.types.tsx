@@ -125,6 +125,7 @@ export interface User  {
   settings: {
     showCalories: boolean; // show calorie intake
   }
+  hevyKey: string,
   lastLogin: Date; // last login date
   createdAt: Date; // account creation date
 }
