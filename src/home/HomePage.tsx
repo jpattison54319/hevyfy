@@ -141,8 +141,7 @@ const newConsumedCurrency = Array(total)
       </FlexItem>
       <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', padding: '16px 16px'}}>
          <div style={{ width: '100%', height: '100%', border: '4px solid #00ffff', imageRendering: 'pixelated', boxShadow: '0 0 2px 2px #00ffff, 0 0 4px 2px #00ffff88, 0 0 8px 2px #00ffff88, 0 0 16px 2px #00ffff88' }}>
-         {/* {userData?.pet.currentPet === 'puppy' ? <CaninePet /> : <FelinePet />} */}
-         <FelinePet />
+          {userData?.pet.currentPet === 'puppy' ? <CaninePet /> : <FelinePet />} 
          {/* <Canvas
   resize={{ polyfill: ResizeObserver }}
   camera={{ position: [2, 0, 4], fov: 100 }}
