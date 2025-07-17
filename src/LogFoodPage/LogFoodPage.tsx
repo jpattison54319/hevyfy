@@ -79,8 +79,8 @@ const handleConfirm = async () => {
 
     const summary = [];
     if (mealAffects.currency)
-      summary.push(`🦴 This meal cost ${mealAffects.currency} bone${mealAffects.currency > 1 ? 's' : ''}!`);
-    if (mealAffects.armorIncrease)
+      summary.push(`🦴 This meal cost ${mealAffects.currency} ${currencyType}!`);
+    if (mealAffects.armorIncrease) 
       summary.push(`🛡️ +${mealAffects.armorIncrease.toFixed(1)} Armor from protein`);
     if (mealAffects.defenseIncrease)
       summary.push(`🧱 +${mealAffects.defenseIncrease.toFixed(1)} Defense from fiber`);

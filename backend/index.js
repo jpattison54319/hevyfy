@@ -15,6 +15,7 @@ import workoutRoutes from './routes/workout.js';
 import mealRoutes from './routes/meal.js';
 import routineRoutes from './routes/routine.js';
 import hevyRoutes from './routes/hevy.js';
+import stripeRoutes from './routes/stripe.js';
 
 
 
@@ -44,6 +45,7 @@ app.use('/api/workout', workoutRoutes);
 app.use('/api/meal', mealRoutes);
 app.use('/api/routines', routineRoutes);
 app.use('/api/hevy', hevyRoutes);
+app.use('/api/stripe', stripeRoutes)
 
 
 

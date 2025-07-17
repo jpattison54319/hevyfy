@@ -10,6 +10,20 @@ import { SplashScreenProvider } from "./context/SplashScreen";
 
 // registerSW({ immediate: true });
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then((registrations) => {
+    for (const registration of registrations) {
+      registration.unregister();
+    }
+  });
+
+  caches.keys().then((cacheNames) => {
+    cacheNames.forEach((cacheName) => {
+      caches.delete(cacheName);
+    });
+  });
+}
+
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

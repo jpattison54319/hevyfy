@@ -1,39 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-// Color scheme - 16-bit arcade inspired
-$primary-bg: #0a0a0a;
+// Color scheme - toned down retro
+$primary-bg: #0f0f0f;
 $secondary-bg: #1a1a1a;
-$accent-cyan: #00ffff;
-$accent-green: #00ff00;
-$accent-yellow: #ffff00;
-$accent-pink: #ff00ff;
-$accent-red: #ff0000;
-$accent-blue: #0066ff;
-$accent-orange: #ff9900;
+$card-bg: #222222;
+$accent-cyan: #4dd0e1;
+$accent-green: #66bb6a;
+$accent-yellow: #ffeb3b;
+$accent-pink: #f48fb1;
+$accent-red: #ef5350;
+$accent-blue: #42a5f5;
+$accent-orange: #ff9800;
 $text-primary: #ffffff;
-$text-secondary: #cccccc;
-$text-dim: #888888;
+$text-secondary: #b0b0b0;
+$text-dim: #808080;
+$border-color: #333333;
 
 // Mixins
-@mixin pixelBorder($color: $accent-cyan, $width: 2px) {
+@mixin subtleBorder($color: $accent-cyan, $width: 1px) {
   border: $width solid $color;
-  box-shadow: 
-    0 0 0 #{$width * 2} $primary-bg,
-    0 0 0 #{$width * 3} $color,
-    0 0 #{$width * 4} $color;
+  border-radius: 4px;
 }
 
-@mixin glowEffect($color: $accent-cyan) {
-  box-shadow: 
-    0 0 8px $color,
-    0 0 16px $color,
-    inset 0 0 8px rgba($color, 0.3);
+@mixin subtleGlow($color: $accent-cyan) {
+  box-shadow: 0 0 4px rgba($color, 0.3);
 }
 
 @mixin retroText {
   font-family: 'Press Start 2P', cursive;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 // Header styles
@@ -43,23 +39,20 @@ $text-dim: #888888;
   color: $accent-cyan;
   padding: 16px;
   margin-top: 8px;
-  @include pixelBorder($accent-cyan);
+  @include subtleBorder($accent-cyan);
   position: relative;
-  
+
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, 
-      $accent-cyan 0%, 
-      $accent-green 25%, 
-      $accent-yellow 50%, 
-      $accent-pink 75%, 
-      $accent-red 100%
-    );
+    height: 2px;
+    background: linear-gradient(90deg,
+        $accent-cyan 0%,
+        $accent-green 50%,
+        $accent-yellow 100%);
   }
 }
 
@@ -73,23 +66,15 @@ $text-dim: #888888;
 
 .drawer__headerIcon {
   color: $accent-green;
-  filter: drop-shadow(0 0 8px $accent-green);
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { filter: drop-shadow(0 0 8px $accent-green); }
-  50% { filter: drop-shadow(0 0 16px $accent-green); }
+  filter: drop-shadow(0 0 2px $accent-green);
 }
 
 .drawer__title {
   @include retroText;
-  font-size: 22px;
+  font-size: 18px;
   margin: 0;
   color: $text-primary;
-  text-shadow: 
-    2px 2px 0 $primary-bg,
-    0 0 8px $accent-cyan;
+  text-shadow: 1px 1px 0 $primary-bg;
 }
 
 // Content container
@@ -98,20 +83,20 @@ $text-dim: #888888;
   overflow-y: auto;
   max-height: calc(80vh - 80px);
   background: $primary-bg;
-  
+
   &::-webkit-scrollbar {
     width: 8px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: $secondary-bg;
-    border: 1px solid $accent-cyan;
+    border-radius: 4px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background: $accent-cyan;
-    border-radius: 0;
-    
+    border-radius: 4px;
+
     &:hover {
       background: $accent-green;
     }
@@ -126,9 +111,10 @@ $text-dim: #888888;
   justify-content: center;
   min-height: 300px;
   text-align: center;
-  background: $secondary-bg;
-  @include pixelBorder($accent-cyan);
+  background: $card-bg;
+  @include subtleBorder($accent-cyan);
   margin: 2rem 0;
+  border-radius: 8px;
 }
 
 .loadingState__content,
@@ -140,93 +126,73 @@ $text-dim: #888888;
 }
 
 .loadingState__spinner {
-  width: 32px;
-  height: 32px;
-  border: 4px solid $secondary-bg;
-  border-top: 4px solid $accent-cyan;
-  border-radius: 0;
-  animation: pixel-spin 1s linear infinite;
+  width: 24px;
+  height: 24px;
+  border: 3px solid $secondary-bg;
+  border-top: 3px solid $accent-cyan;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-@keyframes pixel-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .loadingState__text,
 .emptyState__text {
   @include retroText;
-  font-size: 1rem;
+  font-size: 14px;
   color: $text-primary;
-  text-shadow: 2px 2px 0 $primary-bg;
+  text-shadow: 1px 1px 0 $primary-bg;
 }
 
 .loadingState__subtext,
 .emptyState__subtext {
   @include retroText;
-  font-size: 0.75rem;
-  color: $accent-yellow;
+  font-size: 11px;
+  color: $text-secondary;
   text-shadow: 1px 1px 0 $primary-bg;
 }
 
 .emptyState__icon {
   color: $accent-cyan;
-  @include glowEffect($accent-cyan);
+  @include subtleGlow($accent-cyan);
   padding: 1rem;
-  border: 2px solid $accent-cyan;
+  border: 1px solid $accent-cyan;
   background: $primary-bg;
+  border-radius: 8px;
 }
 
 // Workouts list
 .workoutsList {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 24px;
   margin: 12px 0 0 0;
 }
 
 // Workout card styles
 .workoutCard {
-  background: $secondary-bg;
+  background: $card-bg;
   color: $text-primary;
   @include retroText;
-  @include pixelBorder($accent-green);
+  @include subtleBorder($accent-green);
+  @include subtleGlow($accent-green);
   padding: 1.5rem;
   position: relative;
-  overflow: hidden;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, $accent-cyan, transparent);
-    animation: scan-line 3s linear infinite;
-  }
-  
+  border-radius: 8px;
+  transition: all 0.3s ease;
+
   &:hover {
-    @include glowEffect($accent-green);
     transform: translateY(-2px);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba($accent-green, 0.3);
   }
-}
-
-@keyframes scan-line {
-  0% { left: -100%; }
-  100% { left: 100%; }
-}
-
-.workoutCard__border {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  right: 4px;
-  bottom: 4px;
-  border: 1px solid $accent-cyan;
-  pointer-events: none;
-  opacity: 0.3;
 }
 
 .workoutCard__header {
@@ -235,7 +201,7 @@ $text-dim: #888888;
   align-items: flex-start;
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid $accent-cyan;
+  border-bottom: 1px solid $border-color;
 }
 
 .workoutCard__info {
@@ -243,15 +209,15 @@ $text-dim: #888888;
 }
 
 .workoutCard__title {
-  font-size: 17px;
+  font-size: 14px;
   margin: 0 0 0.5rem 0;
   color: $accent-yellow;
-  text-shadow: 2px 2px 0 $primary-bg;
+  text-shadow: 1px 1px 0 $primary-bg;
 }
 
 .workoutCard__timestamp {
   @include retroText;
-  font-size: 12px;
+  font-size: 10px;
   color: $text-dim;
   margin: 0;
   display: flex;
@@ -266,147 +232,41 @@ $text-dim: #888888;
 .workoutCard__xp {
   background: $accent-pink;
   color: $primary-bg;
-  @include pixelBorder($text-primary, 2px);
+  @include subtleBorder($text-primary, 2px);
   padding: 0.75rem;
   text-align: center;
-  min-width: 80px;
-  @include glowEffect($accent-pink);
+  min-width: 70px;
+  border-radius: 6px;
+  @include subtleGlow($accent-pink);
 }
 
 .workoutCard__xpValue {
-  font-size: 17px;
+  font-size: 14px;
   font-weight: bold;
   line-height: 1;
   margin-bottom: 0.25rem;
 }
 
 .workoutCard__xpLabel {
-  font-size: 15px;
+  font-size: 10px;
   opacity: 0.9;
-}
-
-// Main stats grid
-.workoutCard__stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.statItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 1rem;
-  text-align: center;
-  @include pixelBorder($accent-cyan, 2px);
-  background: $primary-bg;
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    border: 1px solid currentColor;
-    opacity: 0.3;
-  }
-}
-
-.statItem--type {
-  color: $accent-blue;
-  border-color: $accent-blue;
-  @include glowEffect($accent-blue);
-}
-
-.statItem--logtype {
-  color: $accent-pink;
-  border-color: $accent-pink;
-  @include glowEffect($accent-pink);
-}
-
-.statItem--rpe {
-  color: $accent-red;
-  border-color: $accent-red;
-  @include glowEffect($accent-red);
-}
-
-.statItem__value {
-  font-size: 17px;
-  font-weight: bold;
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
-
-.statItem__label {
-  font-size: 15px;
-  opacity: 0.9;
-  letter-spacing: 2px;
 }
 
 // Section titles
 .workoutCard__sectionTitle {
   @include retroText;
-  font-size: 13px;
+  font-size: 11px;
   color: $accent-cyan;
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem;
-  
+  padding: 0.5rem 0;
+  border-bottom: 1px solid $border-color;
+
   svg {
     color: $accent-green;
   }
-}
-
-// Manual workout stats
-.workoutCard__manualStats {
-  margin-bottom: 1.5rem;
-}
-
-.workoutCard__manualGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-}
-
-.manualStat {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: $primary-bg;
-  @include pixelBorder($accent-orange, 2px);
-  @include glowEffect($accent-orange);
-}
-
-.manualStat__icon {
-  color: $accent-orange;
-  flex-shrink: 0;
-}
-
-.manualStat__content {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.manualStat__value {
-  font-size: 17px;
-  font-weight: bold;
-  color: $text-primary;
-  line-height: 1;
-  margin-bottom: 0.25rem;
-}
-
-.manualStat__label {
-  font-size: 14px;
-  color: $accent-orange;
-  letter-spacing: 1px;
 }
 
 // Exercises section
@@ -423,108 +283,130 @@ $text-dim: #888888;
 .exerciseItem {
   padding: 1rem;
   background: $primary-bg;
-  @include pixelBorder($accent-green, 2px);
+  @include subtleBorder($accent-green);
+  border-radius: 6px;
   position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
-    bottom: 4px;
-    border: 1px solid $accent-green;
-    opacity: 0.3;
-  }
 }
 
 .exerciseItem__name {
-  font-size: 0.875rem;
+  font-size: 12px;
   color: $accent-yellow;
   margin-bottom: 0.75rem;
   text-shadow: 1px 1px 0 $primary-bg;
 }
 
 .exerciseItem__sets {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 0.5rem;
   margin-bottom: 0.5rem;
 }
 
+// NEW: Set card grid styling (Option 5)
+.setCard {
+  background: $accent-blue;
+  color: $text-primary;
+  padding: 0.75rem;
+  border-radius: 6px;
+  text-align: center;
+  position: relative;
+  border: 2px solid $border-color;
+  font-size: 10px;
+  text-shadow: 1px 1px 0 $primary-bg;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba($accent-blue, 0.4);
+  }
+
+  &::before {
+    content: "SET " attr(data-set-number);
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $accent-red;
+    color: $text-primary;
+    padding: 0.1rem 0.5rem;
+    border-radius: 3px;
+    font-size: 7px;
+    white-space: nowrap;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 $primary-bg;
+  }
+}
+
+.setCard__data {
+  font-size: 10px;
+  margin-top: 0.25rem;
+  font-weight: bold;
+}
+
+// Legacy support for old set styling
 .exerciseItem__set {
   background: $accent-blue;
   color: $text-primary;
-  padding: 0.25rem 0.75rem;
-  border: 1px solid $text-primary;
-  font-size: 0.625rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid $accent-blue;
+  border-radius: 4px;
+  font-size: 9px;
   text-shadow: 1px 1px 0 $primary-bg;
 }
 
 .exerciseItem__notes {
-  font-size: 0.625rem;
+  font-size: 9px;
   color: $text-dim;
   font-style: italic;
   margin-top: 0.5rem;
-  border-top: 1px solid $accent-cyan;
+  border-top: 1px solid $border-color;
   padding-top: 0.5rem;
 }
 
 // XP boosts
 .workoutCard__statBoosts {
-    margin-bottom: 1.5rem;
-  padding: 1.25rem;
-  background: $secondary-bg;
-  @include pixelBorder($accent-cyan, 3px); // Thick visible border for container
-  border-radius: 1rem;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.22);
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: $primary-bg;
+  @include subtleBorder($accent-cyan);
+  border-radius: 6px;
 }
 
 .workoutCard__statBoostsGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9rem;
+  gap: 0.75rem;
 }
 
 .statBoost {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   max-width: fit-content;
-  font-size: 0.75rem;
-  @include pixelBorder($accent-cyan, 2px);
-  background: $primary-bg;
+  font-size: 10px;
+  @include subtleBorder($accent-cyan);
+  background: $card-bg;
+  border-radius: 4px;
   position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    right: 2px;
-    bottom: 2px;
-    border: 1px solid currentColor;
-    opacity: 0.3;
-  }
 }
 
 .statBoost--red {
   color: $accent-red;
   border-color: $accent-red;
-  @include glowEffect($accent-red);
+  @include subtleGlow($accent-red);
 }
 
 .statBoost--yellow {
   color: $accent-yellow;
   border-color: $accent-yellow;
-  @include glowEffect($accent-yellow);
+  @include subtleGlow($accent-yellow);
 }
 
 .statBoost--pink {
   color: $accent-pink;
   border-color: $accent-pink;
-  @include glowEffect($accent-pink);
+  @include subtleGlow($accent-pink);
 }
 
 .statBoost__icon {
@@ -543,18 +425,17 @@ $text-dim: #888888;
 // Notes section
 .workoutCard__notes {
   margin-bottom: 1rem;
-  border: 1px solid $accent-cyan;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  background: $primary-bg;
 }
 
 .workoutCard__notesText {
-  font-size: 0.75rem;
+  font-size: 10px;
   color: $text-secondary;
-  line-height: 1.5;
-  padding: 16px;
-  background: $primary-bg;
+  line-height: 1.4;
+  padding: 12px;
   font-style: italic;
-  position: relative;
-  
 }
 
 // Loading more and end of list
@@ -563,68 +444,69 @@ $text-dim: #888888;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1.5rem;
   text-align: center;
   margin-top: 2rem;
+  border-radius: 8px;
 }
 
 .loadingMore {
-  background: $secondary-bg;
-  @include pixelBorder($accent-cyan);
-  
+  background: $card-bg;
+  @include subtleBorder($accent-cyan);
+
   .loadingMore__content {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
   }
-  
+
   .loadingMore__spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid $secondary-bg;
-    border-top: 3px solid $accent-cyan;
-    border-radius: 0;
-    animation: pixel-spin 1s linear infinite;
+    width: 20px;
+    height: 20px;
+    border: 2px solid $secondary-bg;
+    border-top: 2px solid $accent-cyan;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
   }
-  
+
   .loadingMore__text {
     @include retroText;
-    font-size: 0.875rem;
+    font-size: 12px;
     color: $text-primary;
     text-shadow: 1px 1px 0 $primary-bg;
   }
-  
+
   .loadingMore__subtext {
     @include retroText;
-    font-size: 0.625rem;
-    color: $accent-yellow;
+    font-size: 9px;
+    color: $text-secondary;
     text-shadow: 1px 1px 0 $primary-bg;
   }
 }
 
 .endOfList {
   background: $primary-bg;
-  border: 2px solid $accent-green;
+  border: 1px solid $accent-green;
   color: $accent-green;
-  
+
   .endOfList__content {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
   }
-  
+
   .endOfList__text {
     @include retroText;
-    font-size: 0.875rem;
+    font-size: 12px;
     color: $accent-green;
     text-shadow: 1px 1px 0 $primary-bg;
   }
-  
+
   .endOfList__subtext {
     @include retroText;
-    font-size: 0.625rem;
+    font-size: 9px;
     color: $text-dim;
     text-shadow: 1px 1px 0 $primary-bg;
   }
@@ -633,32 +515,41 @@ $text-dim: #888888;
 // Responsive design
 @media (max-width: 768px) {
   .drawer__title {
-    font-size: 1rem;
+    font-size: 16px;
   }
-  
+
   .workoutCard__header {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
   }
-  
+
   .workoutCard__xp {
     align-self: flex-end;
   }
-  
-  .workoutCard__stats {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .workoutCard__manualGrid {
-    grid-template-columns: 1fr;
-  }
-  
+
   .workoutCard__statBoostsGrid {
+    justify-content: center;
   }
-  
+
   .statBoost {
     justify-content: center;
+  }
+
+  // Adjust set grid for mobile
+  .exerciseItem__sets {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 0.4rem;
+  }
+
+  .setCard {
+    padding: 0.5rem;
+    font-size: 9px;
+
+    &::before {
+      font-size: 6px;
+      padding: 0.05rem 0.3rem;
+    }
   }
 }
 
@@ -666,38 +557,47 @@ $text-dim: #888888;
   .drawer__headerContent {
     gap: 0.5rem;
   }
-  
+
   .drawer__headerIcon {
     width: 24px;
     height: 24px;
   }
-  
+
   .drawer__title {
-    font-size: 17px;
+    font-size: 14px;
   }
-  
+
   .workoutCard {
     padding: 1rem;
   }
-  
-  .workoutCard__stats {
-    grid-template-columns: 1fr;
-  }
-  
-  .statItem {
-    padding: 0.75rem;
-  }
-  
+
   .workoutCard__title {
-    font-size: 17px;
+    font-size: 12px;
   }
-  
+
   .workoutCard__xp {
     padding: 0.5rem;
     min-width: 60px;
   }
-  
+
   .workoutCard__xpValue {
-    font-size: 17px;
+    font-size: 12px;
+  }
+
+  // Even more compact on very small screens
+  .exerciseItem__sets {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 0.3rem;
+  }
+
+  .setCard {
+    padding: 0.4rem;
+    font-size: 8px;
+
+    &::before {
+      font-size: 5px;
+      padding: 0.05rem 0.2rem;
+      top: -8px;
+    }
   }
 }

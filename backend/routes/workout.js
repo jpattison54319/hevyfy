@@ -5,7 +5,7 @@ import OpenAI from "openai";
 import Routine from '../models/Routine.js';
 import Workout from '../models/Workout.js';
 import User from '../models/User.js';
-
+import HevyWorkout from '../models/HevyWorkout.js';
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
@@ -17,35 +17,51 @@ export function xpNeededForLevel(level) {
 }
 
 router.get('/:uid/workouts', async (req, res) => {
-    const userId = req.params.uid;
-      const offset = parseInt(req.query.offset) || 0;
+  const userId = req.params.uid;
+  const offset = parseInt(req.query.offset) || 0;
   const limit = parseInt(req.query.limit) || 10;
-  if (!userId ) {
+
+  if (!userId) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
 
-  try{
+  try {
+    const workoutsPromise = Workout.find({ userId }).lean();
+    const hevyWorkoutsPromise = HevyWorkout.find({ userId }).lean();
+    const [workouts, hevyWorkouts] = await Promise.all([workoutsPromise, hevyWorkoutsPromise]);
 
-      const workouts = await Workout.find({ userId })
-      .sort({ timestamp: -1 }) // Most recent first
-      .skip(offset)
-      .limit(limit);
+    // Add logType to each to identify them on frontend
+    const taggedWorkouts = workouts.map((w) => ({
+      ...w,
+      logType: w.logType || 'manual', // keep original logType
+      timestamp: w.timestamp || new Date(0), // fallback for safety
+    }));
 
-          const totalWorkouts = await Workout.countDocuments({ userId });
+    const taggedHevy = hevyWorkouts.map((h) => ({
+      ...h,
+      logType: 'hevy',
+      timestamp: h.startTime || new Date(0), // unify field for sorting
+    }));
 
+    // Merge and sort by timestamp (desc)
+    const allWorkouts = [...taggedWorkouts, ...taggedHevy].sort(
+      (a, b) => new Date(b.timestamp) - new Date(a.timestamp)
+    );
+
+    // Paginate after merge
+    const paginated = allWorkouts.slice(offset, offset + limit);
 
     res.status(200).json({
-      message: 'Workouts successfully found',
-      workouts,
-      totalWorkouts,
+      message: 'Combined workouts successfully found',
+      workouts: paginated,
+      total: allWorkouts.length,
       offset,
-      limit
+      limit,
     });
-}catch(err){
-console.log('Error retrieving workout logs: ', err);
-res.status(500).json({message: 'Server Error'});
-}
-
+  } catch (err) {
+    console.error('Error retrieving combined workouts: ', err);
+    res.status(500).json({ message: 'Server Error' });
+  }
 });
 
 router.post('/logWorkout', async (req, res) => {

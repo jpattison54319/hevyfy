@@ -1,8 +1,6 @@
-// CanineSpritePet.tsx
 import React, { useEffect, useState } from "react";
-import SpritePet from "../SpritePet/SpritePet"; // Assumes SpritePet is default export
+import SpritePet from "../SpritePet/SpritePet";
 
-// Define the animations with frame metadata
 type AnimationDefinition = {
   name: string;
   spriteSrc: string;
@@ -117,18 +115,52 @@ const animations: AnimationDefinition[] = [
   },
 ];
 
-const INTERVAL = 10000; // 10 seconds
+// Preload images
+const preloadImages = (sources: string[]): Promise<void> => {
+  return Promise.all(
+    sources.map((src) => {
+      return new Promise<void>((resolve) => {
+        const img = new Image();
+        img.src = src;
+        img.onload = () => resolve();
+        img.onerror = () => resolve(); // Ignore individual load failures
+      });
+    })
+  ).then(() => {});
+};
 
-const FelinePet: React.FC = () => {
+interface FelinePetProps {
+    currentPet: string;
+  }
+
+const FelinePet: React.FC<FelinePetProps> = ({ currentPet }) => {
   const [currentAnim, setCurrentAnim] = useState<AnimationDefinition>(animations[0]);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const sources = Array.from(new Set(animations.map((a) => a.spriteSrc)));
+    preloadImages(sources).then(() => setIsLoaded(true));
+  }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    const runAnimationLoop = () => {
       const random = animations[Math.floor(Math.random() * animations.length)];
       setCurrentAnim(random);
-    }, INTERVAL);
-    return () => clearInterval(interval);
-  }, []);
+
+      const duration = (random.frameCount / random.fps) * 1000 * 2;
+      timeoutId = setTimeout(runAnimationLoop, duration);
+    };
+
+    runAnimationLoop();
+
+    return () => clearTimeout(timeoutId);
+  }, [isLoaded]);
+
+  if (!isLoaded) return <div>Loading...</div>;
 
   return (
     <SpritePet

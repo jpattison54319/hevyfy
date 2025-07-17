@@ -115,6 +115,7 @@ export type WorkoutLogResponse = {
 
 export interface User  {
   uid: string;
+  _id: string;
   email: string;
   displayName?: string;
   avatarUrl?: string;

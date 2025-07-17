@@ -16,6 +16,7 @@ import SkillsPage from "./skills/SkillsPage";
 import QuestsPage from "./quests/QuestsPage";
 import Routines from "./Routines/Routines";
 import PwaInstallPrompt from "./PwaInstallPrompt";
+import { HevySplashProvider } from "./context/HevySplashContext";
 const TABS = ["Pet", "Skills", "Quests", "Routines"];
 
 function App() {
@@ -156,6 +157,7 @@ return () => unsub();
   
   return (
    <SaltProvider mode="dark">
+    <HevySplashProvider >
     <PwaInstallPrompt />
     <div style={{background: 'var(--salt-palette-background-primary)', backgroundSize: '8px 8px',  maxHeight: '100dvh', minHeight: '100dvh', height: '100dvh', position: 'relative', display: 'flex', flexDirection: 'column'}}>
       <div style={{padding: 'env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left)'}}></div>
@@ -180,6 +182,7 @@ return () => unsub();
         <Header selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
       </div>
     </div>
+    </HevySplashProvider>
   </SaltProvider>
   );
 }

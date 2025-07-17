@@ -4,6 +4,9 @@ import User from '../models/User.js'; // Adjust the import path as necessary
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 const algorithm = 'aes-256-cbc';
+import dotenv from 'dotenv';
+dotenv.config();
+
 const key = Buffer.from(process.env.ENCRYPTION_SECRET_KEY, 'base64'); // 32 bytes
 
 
@@ -245,6 +248,7 @@ router.post("/hevy/saveKey", async (req, res) => {
   const { hevyKey, uid } = req.body;
 
   console.log('hit webhook api: ', hevyKey);
+  const key = Buffer.from(ENCRYPTION_SECRET_KEY, 'base64'); // 32 bytes
 
   if (!uid || !hevyKey) {
     return res.status(400).json({ message: "Missing user ID (uid) or key!" });
@@ -270,7 +274,7 @@ router.post("/hevy/saveKey", async (req, res) => {
 
       console.log('hevy response: ', response);
 
-  const encryptedKey = encrypt(hevyKey);
+  const encryptedKey = encrypt(hevyKey,key);
 
   try {
     const updatedUser = await User.findOneAndUpdate(
@@ -284,7 +288,8 @@ router.post("/hevy/saveKey", async (req, res) => {
     }
 
     res.json({
-      message: "Hevy integration setup successfully!"});
+      message: "Hevy integration setup successfully!",
+      updatedUser: updatedUser});
   } catch (err) {
     console.error("Error saving Hevy key:", err);
     res.status(500).json({ message: "Internal server error" });

@@ -1,0 +1,308 @@
+.evolutionContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #001122, #000000);
+    position: relative;
+    overflow: hidden;
+}
+
+.energyBox {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    animation: shake 0.5s infinite;
+}
+
+.energyCore {
+    width: 60px;
+    height: 60px;
+    background: #fff;
+    border: 4px solid #00ffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow:
+        0 0 10px #00ffff,
+        0 0 20px #00ffff,
+        0 0 30px #00ffff,
+        inset 0 0 10px #00ffff;
+    animation: energyPulse 0.3s infinite;
+}
+
+.energyRing {
+    position: absolute;
+    border: 2px solid #00ffff;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: ringExpand 1s infinite;
+
+    &.ring1 {
+        width: 80px;
+        height: 80px;
+        animation-delay: 0s;
+    }
+
+    &.ring2 {
+        width: 100px;
+        height: 100px;
+        animation-delay: 0.3s;
+    }
+
+    &.ring3 {
+        width: 120px;
+        height: 120px;
+        animation-delay: 0.6s;
+    }
+}
+
+.lightning {
+    position: absolute;
+    width: 3px;
+    height: 40px;
+    background: linear-gradient(to bottom, #fff, #00ffff);
+    transform-origin: bottom;
+    animation: lightning 0.1s infinite;
+
+    &.lightning1 {
+        top: 20px;
+        left: 60px;
+        animation-delay: 0s;
+    }
+
+    &.lightning2 {
+        top: 60px;
+        right: 20px;
+        animation-delay: 0.05s;
+    }
+
+    &.lightning3 {
+        bottom: 20px;
+        left: 20px;
+        animation-delay: 0.1s;
+    }
+
+    &.lightning4 {
+        bottom: 60px;
+        right: 60px;
+        animation-delay: 0.15s;
+    }
+}
+
+.evolutionText {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 16px;
+    color: #00ffff;
+    text-shadow: 2px 2px 0px #000;
+    margin-top: 30px;
+    animation: textFlash 0.5s infinite;
+}
+
+.explosionContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #ffcc00, #ff6b35, #000);
+    position: relative;
+    overflow: hidden;
+}
+
+.explosionFlash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.9), transparent 70%);
+    animation: flash 0.3s ease-out;
+}
+
+.explosionCore {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, #fff, #ffcc00);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: coreExplosion 0.8s ease-out;
+    box-shadow: 0 0 20px #fff, 0 0 40px #ffcc00;
+}
+
+.explosionRing {
+    position: absolute;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: explosionRing 1s ease-out;
+    box-shadow: 0 0 10px #fff;
+
+    &.ring1 {
+        width: 60px;
+        height: 60px;
+        animation-delay: 0s;
+    }
+
+    &.ring2 {
+        width: 80px;
+        height: 80px;
+        animation-delay: 0.1s;
+    }
+
+    &.ring3 {
+        width: 120px;
+        height: 120px;
+        animation-delay: 0.2s;
+    }
+
+    &.ring4 {
+        width: 160px;
+        height: 160px;
+        animation-delay: 0.3s;
+    }
+}
+
+.explosionText {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 3px 3px 0px #000;
+    z-index: 20;
+    animation: textBounce 0.5s ease-out 0.5s both;
+}
+
+// Keyframes (unchanged)
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(-2px, -2px);
+    }
+
+    50% {
+        transform: translate(2px, 2px);
+    }
+
+    75% {
+        transform: translate(-2px, 2px);
+    }
+}
+
+@keyframes energyPulse {
+
+    0%,
+    100% {
+        background: #fff;
+        box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff, inset 0 0 10px #00ffff;
+    }
+
+    50% {
+        background: #00ffff;
+        box-shadow: 0 0 20px #fff, 0 0 40px #fff, 0 0 60px #fff, inset 0 0 20px #fff;
+    }
+}
+
+@keyframes ringExpand {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes lightning {
+
+    0%,
+    100% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes textFlash {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes coreExplosion {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(2);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes explosionRing {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+    }
+}
+
+@keyframes textBounce {
+    0% {
+        transform: scale(0);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}

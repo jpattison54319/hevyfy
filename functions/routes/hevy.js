@@ -87,6 +87,8 @@ router.post('/webhook', async (req, res) => {
 
     const authHeader = req.headers.authorization || '';
     const uid = authHeader.replace('Bearer ', '').trim();
+    console.log('uid: ', uid);
+
       let user;
     user = await User.findOne({uid: uid});
     if (!user) return res.status(404).send({ error: 'User not found' });
@@ -130,7 +132,7 @@ await user.save();
 
 
 const hevyWorkout = new HevyWorkout({
-  userId: user._id,
+  userId: uid,
   hevyWorkoutId: data.id,
   title: data.title,
   description: data.description,
@@ -194,21 +196,40 @@ const hevyWorkout = new HevyWorkout({
 
   router.get('/unseen/:uid', async (req, res) => {
     const { uid } = req.params;
+    console.log('getting new hevy workouts for user');
+
+    try{
     const user = await User.findOne({ uid });
     if (!user) return res.status(404).json({ message: 'User not found' });
   
-    const workout = await HevyWorkout.findOne({ userId: user._id, seen: false }).sort({ createdAt: -1 });
-    res.json({ workout });
+    const workouts = await HevyWorkout.find({ userId: uid, seen: false }).sort({ createdAt: -1 });
+    res.json({ newHevyWorkouts: workouts });
+    }catch(err){
+      console.log(err);
+      res.json({message: 'Failed to get unseen hevy workouts'});
+    }
   });
   
   // POST /hevy/markSeen
   router.post('/markSeen', async (req, res) => {
-    const { workoutId, uid } = req.body;
-    const user = await User.findOne({ uid });
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const { workoutIds, uid } = req.body;
+    console.log('Updating hevy workouts as seen');
+
+
+    if (!Array.isArray(workoutIds) || workoutIds.length === 0) {
+      return res.status(400).json({ message: 'No workoutIds provided' });
+    }
+    try{
   
-    await HevyWorkout.updateOne({ userId: user._id, hevyWorkoutId: workoutId }, { seen: true });
-    res.json({ message: 'Workout marked as seen' });
+    await HevyWorkout.updateMany(
+      { userId: uid, hevyWorkoutId: { $in: workoutIds } },
+      { $set: { seen: true } }
+    );
+    res.json({ message: 'Workouts marked as seen' });
+  }catch(err){
+    console.log(err);
+    res.json({message: 'Failed to mark hevy workouts as seen.'});
+  }
   });
 
 export default router;
