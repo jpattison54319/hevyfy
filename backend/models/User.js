@@ -150,7 +150,8 @@ const UserSchema = new mongoose.Schema({
     type: UserGoalSchema,
     default: () => ({}),
   },
-
+currentMiniBossLevel: { type: String, default: 'Dwarf Warrior' }, 
+defeatedMiniBossLevels: { type: [String], default: [] },
   bodyStats: {
     type: UserBodyStatsSchema,
     default: () => ({}),
