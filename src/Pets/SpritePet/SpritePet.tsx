@@ -13,6 +13,7 @@ type SpritePetProps = {
   scale?: number;
   animated?: boolean;
   columns?: number;
+  overrideScale?: boolean;
 };
 
 export const SpritePet: React.FC<SpritePetProps> = ({
@@ -26,6 +27,7 @@ export const SpritePet: React.FC<SpritePetProps> = ({
   scale = 1,
   animated = false,
   columns = 4,
+  overrideScale = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerSize, setContainerSize] = useState({ width: 300, height: 300 });
@@ -41,11 +43,18 @@ export const SpritePet: React.FC<SpritePetProps> = ({
 
   useEffect(() => {
     if (!animated || frameCount <= 1) return;
+  
+    setCurrentFrame(frameIndex); // Set to startFrame of selected animation
+  
     const interval = setInterval(() => {
-      setCurrentFrame((prev) => (prev + 1) % frameCount);
+      setCurrentFrame((prev) => {
+        const relative = (prev - frameIndex + 1) % frameCount;
+        return frameIndex + relative;
+      });
     }, 1000 / fps);
+  
     return () => clearInterval(interval);
-  }, [animated, frameCount, fps]);
+  }, [animated, frameCount, fps, frameIndex]);
 
   useEffect(() => {
     const resize = () => {
@@ -78,7 +87,9 @@ export const SpritePet: React.FC<SpritePetProps> = ({
   // Calculate the actual scale to fit within container bounds (with padding)
   const maxScaleX = availableWidth / frameWidth;
   const maxScaleY = availableHeight / frameHeight;
-  const actualScale = Math.min(scale, maxScaleX, maxScaleY);
+  const actualScale = overrideScale
+  ? scale // use full scale, allow overflow if needed
+  : Math.min(scale, maxScaleX, maxScaleY); // original bounded logic
 
   // Calculate actual sprite dimensions after scaling
   const actualSpriteWidth = frameWidth * actualScale;

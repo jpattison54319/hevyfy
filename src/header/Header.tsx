@@ -15,6 +15,7 @@ import {
   useHref,
   useLinkClickHandler,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 import jpmLogo from "../assets/JPM_logo_2008_DIGITAL_D_Black.png";
 import { routes } from "../routes";
@@ -28,6 +29,7 @@ import LogWeight from "../LogWeight/LogWeight";
 import ViewWorkouts from "../ViewWorkouts/ViewWorkouts";
 import { Button, Tab, TabGroup, TabList } from "@headlessui/react";
 import Settings from "../Settings/Settings";
+import {PawPrint, Star, BookOpen, Flag, Dumbbell} from "lucide-react";
 
 // Modified from https://reactrouter.com/en/6.18.0/hooks/use-link-click-handler
 const NavLink = forwardRef(function NavLink(
@@ -52,17 +54,26 @@ const NavLink = forwardRef(function NavLink(
     />
   );
 });
-const TABS = ["Pet", "Skills", "Quests", "Routines"] as const;
+const TABS = [
+  { id: "pet", icon: PawPrint, label: "Pet", path: "/" },
+  { id: "skills", icon: Star, label: "Skills", path: "/skills" },
+  { id: "quests", icon: BookOpen, label: "Quests", path: "/quests" },
+  { id: "campaign", icon: Flag, label: "Campaign", path: "/BossArena" },
+  { id: "routines", icon: Dumbbell, label: "Routines", path: "/routines" },];
 
 type DrawerTypes = "none" | "logFood" | "logWorkout" | "workoutHist" | "mealHist" | "logWeight" | "settings";
-type HeaderProps = {
-  selectedIndex: number;
-  setSelectedIndex: (index: number) => void;
-};
 // Check App header pattern: https://www.saltdesignsystem.com/salt/patterns/app-header
-const Header = ({ selectedIndex, setSelectedIndex }: HeaderProps) => {
+const Header = () => {
   const [drawerView, setDrawerView] = useState<DrawerTypes>("none");
+
   const { pathname } = useLocation();
+const navigate = useNavigate();
+
+// Match current pathname to tab
+const selectedIndex = TABS.findIndex(tab => tab.path === pathname);
+
+// Default to 0 if no match (e.g., fallback route)
+const safeSelectedIndex = selectedIndex >= 0 ? selectedIndex : 0;
 
  return (
   <div className="app-header">
@@ -83,18 +94,24 @@ const Header = ({ selectedIndex, setSelectedIndex }: HeaderProps) => {
   </div>
 
   {/* Center section - Tabs */}
-  <TabGroup selectedIndex={selectedIndex} onChange={setSelectedIndex}>
-    <TabList className="tab-nav">
-      {TABS.map((tab, index) => (
-        <Tab
-          key={tab}
-          className={({ selected }) => `tab-button ${selected ? "tab-selected" : ""}`}
-        >
-          {tab}
-        </Tab>
-      ))}
-    </TabList>
-  </TabGroup>
+  <TabGroup selectedIndex={safeSelectedIndex}  onChange={(index) => navigate(TABS[index].path)}>
+  <TabList className="tab-nav">
+    {TABS.map((tab) => {
+      const IconComponent = tab.icon;
+      return (
+        <Tooltip key={tab.id} placement="bottom" content={tab.label}>
+          <Tab
+            className={({ selected }) =>
+              `tab-button tab-icon-button ${selected ? "tab-selected" : ""}`
+            }
+          >
+            <IconComponent aria-hidden />
+          </Tab>
+        </Tooltip>
+      );
+    })}
+  </TabList>
+</TabGroup>
 
   {/* Right section - User menu */}
   <div>

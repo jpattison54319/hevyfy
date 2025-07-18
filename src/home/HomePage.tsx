@@ -12,7 +12,7 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import CaninePet from "../Pets/CaninePet/CaninePet";
 import FelinePet from "../Pets/FelinePet/FelinePet";
 import { Button } from "@headlessui/react";
-import { puppyEvolutionLevels, puppyEvolutionMap } from "../types/petEvolution.map";
+import { kittenEvolutionLevels, kittenEvolutionMap, puppyEvolutionLevels, puppyEvolutionMap } from "../types/petEvolution.map";
 import { PetStats, User } from "../types/user.types";
 import { launchFireworks } from "../confettiFireworks";
 import EvolutionAnimation from "../evolutionAnimation/EvolutionAnimation";
@@ -26,15 +26,30 @@ export function canEvolvePet(userData: User | null): boolean {
   const currentPet = userData.pet.currentPet;
   const currentLevel = userData.pet.level;
 
+  const family = petFamilyMap[currentPet];
+  if (!family) return false;
+
   const nextEvolution = puppyEvolutionMap[currentPet];
   if (!nextEvolution) return false; // already at final evolution
 
-  const requiredLevel = puppyEvolutionLevels[nextEvolution];
+  const requiredLevel = getEvolutionLevels(family)[nextEvolution];
   return currentLevel >= requiredLevel;
 }
 
-export function getNextEvolution(pet: string){
-  return puppyEvolutionMap[pet];
+export function getNextEvolution(pet: string): string | null {
+  const family = petFamilyMap[pet];
+  if (!family) return null;
+
+  const map = getEvolutionMap(family);
+  return map[pet] ?? null;
+}
+
+function getEvolutionMap(family: 'canine' | 'feline'): Record<string, string | null> {
+  return family === 'canine' ? puppyEvolutionMap : kittenEvolutionMap;
+}
+
+function getEvolutionLevels(family: 'canine' | 'feline'): Record<string, number> {
+  return family === 'canine' ? puppyEvolutionLevels : kittenEvolutionLevels;
 }
 
 export const petFamilyMap: Record<string, 'canine' | 'feline'> = {
@@ -44,7 +59,15 @@ export const petFamilyMap: Record<string, 'canine' | 'feline'> = {
   werewolf: 'canine',
   cerberus: 'canine',
   kitten: 'feline',
+  'egyptian cat': 'feline',
+  'astronaut cat': 'feline',
+  'pirate cat': 'feline',
+  'superhero cat': 'feline',
 };
+
+export function getPetArchetype(currentPet: string){
+  return petFamilyMap[currentPet];
+}
 
 
 
@@ -52,15 +75,7 @@ const HomePage = () => {
   const {userData, setUserData} = useUser(); // Assuming you have a UserContext to manage user data
   const [currencyBalance, setCurrencyBalance] = useState<number>(0);
   const [consumedCurrency, setConsumedCurrency] = useState<boolean[]>([]);
-  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
   const [isEvolving, setIsEvolving] = useState(false);
-
-  const petTypeMap: Record<string, string> = {
-    'puppy': '/puppy/scene.gltf',
-    'kitten': '/kitten/scene.gltf',
-  }
-  const petType = userData?.pet?.currentPet ?? 'puppy';
-  const modelPath = useMemo(() => petTypeMap[petType], [petType]);
 
   useEffect(() => {
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -81,7 +96,6 @@ const newConsumedCurrency = Array(total)
     setIsEvolving(true);
   }
 
-  console.log('Model Path:', modelPath); // Debug log to check the model path
 
   console.log('userData', userData); // Debug log to check if it's a cat model
   const petFamily = petFamilyMap[userData?.pet.currentPet ?? ''];
@@ -99,7 +113,7 @@ const newConsumedCurrency = Array(total)
         </Text>
       </FlexItem>
       <FlexItem style={{ maxWidth: "100%", padding: 16 }} shrink={1}>
-        <CalorieCurrencyContainer userArchetype={userData?.pet.currentPet ?? 'puppy'} count={userData?.goal?.dailyCurrencyTotal ?? 0} consumedCurrency={consumedCurrency} />
+        <CalorieCurrencyContainer userArchetype={petFamily} count={userData?.goal?.dailyCurrencyTotal ?? 0} consumedCurrency={consumedCurrency} />
       </FlexItem>
       <FlexItem grow={1} style={{flex: 1, minHeight: 0, height: '100%', overflow: 'hidden', padding: '16px 16px'}}>
          <div style={{ width: '100%', height: '100%', border: '4px solid #00ffff', imageRendering: 'pixelated', boxShadow: '0 0 2px 2px #00ffff, 0 0 4px 2px #00ffff88, 0 0 8px 2px #00ffff88, 0 0 16px 2px #00ffff88' }}>

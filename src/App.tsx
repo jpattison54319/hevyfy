@@ -17,8 +17,9 @@ import QuestsPage from "./quests/QuestsPage";
 import Routines from "./Routines/Routines";
 import PwaInstallPrompt from "./PwaInstallPrompt";
 import { HevySplashProvider } from "./context/HevySplashContext";
+import { CampaignBosses, MiniBoss } from "./campaign/CampaignBosses/CampaignBosses";
+import BossArena from "./campaign/BossArena";
 const TABS = ["Pet", "Skills", "Quests", "Routines"];
-
 function App() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -28,20 +29,20 @@ function App() {
 
    const [selectedIndex, setSelectedIndex] = useState(0);
 
-   const getTabComponent = (index: number) => {
-     switch (TABS[index]) {
-       case "Pet":
-         return <HomePage />;
-       case "Skills":
-         return <SkillsPage />;
-       case "Quests":
-         return <QuestsPage />;
-       case "Routines":
-         return <Routines />;
-       default:
-         return <HomePage />;
-     }
-   };
+  //  const getTabComponent = (index: number) => {
+  //    switch (TABS[index]) {
+  //      case "Pet":
+  //        return <HomePage />;
+  //      case "Skills":
+  //        return <SkillsPage />;
+  //      case "Quests":
+  //        return <QuestsPage />;
+  //      case "Routines":
+  //        return <Routines  />;
+  //      default:
+  //        return <HomePage />;
+  //    }
+  //  };
 
 useEffect(() => {
    const throttledFetch = throttle(() => {
@@ -171,7 +172,11 @@ return () => unsub();
         paddingBottom: '14px',
         overflow: 'hidden',
       }}>
-         {getTabComponent(selectedIndex)}
+         <Routes>
+  {routes.map((route) => (
+    <Route key={route.path} path={route.path} element={route.element} />
+  ))}
+</Routes>
       </div>
       <div style={{
         position: 'fixed',
@@ -179,7 +184,7 @@ return () => unsub();
         left: 0,
         right: 0,
         minHeight: '76px'}}>
-        <Header selectedIndex={selectedIndex} setSelectedIndex={setSelectedIndex}/>
+        <Header />
       </div>
     </div>
     </HevySplashProvider>

@@ -26,7 +26,7 @@ import workoutRoutes from './routes/workout.js';
 import mealRoutes from './routes/meal.js';
 import routineRoutes from './routes/routine.js';
 import hevyRoutes from './routes/hevy.js';
-
+import minibossRoutes from './routes/miniboss.js';
 const isLocal = !process.env.K_SERVICE;
 if (isLocal) {
   const dotenv = await import("dotenv");
@@ -102,7 +102,7 @@ app.use('/api/workout', workoutRoutes);
 app.use('/api/meal', mealRoutes);
 app.use('/api/routines', routineRoutes);
 app.use('/api/hevy', hevyRoutes);
-
+app.use('/api/miniboss', minibossRoutes);
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',

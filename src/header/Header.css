@@ -304,3 +304,144 @@
       rgba(255, 153, 0, 0.03) 4px);
   pointer-events: none;
 }
+
+/* Add these styles to your existing Header.css */
+
+/* Icon Tab Button Styles */
+.tab-icon-button {
+  /* Override existing tab-button styles for icon version */
+  font-family: 'Press Start 2P', monospace;
+  color: #ccc;
+  background: #333;
+  border: 2px solid #555;
+  padding: clamp(16px, 4vw, 24px);
+  /* Increased padding for bigger icons */
+  transition: all 0.1s ease;
+  box-shadow: 1px 1px 0 #222;
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: clamp(70px, 18vw, 100px);
+  /* Increased max width */
+  text-align: center;
+  cursor: pointer;
+  height: clamp(56px, 14vw, 72px);
+  /* Increased height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 0;
+  /* Keep pixelated look */
+}
+
+.tab-icon-button:hover {
+  color: #ff9900;
+  border-color: #ff9900;
+  background: #444;
+  transform: translate(1px, 1px);
+}
+
+.tab-icon-button:focus {
+  outline: 2px solid #ff9900;
+  outline-offset: 2px;
+  color: #000;
+}
+
+.tab-icon-button.tab-selected {
+  background: #ff9900;
+  color: #000;
+  border-color: #ffbb44;
+  box-shadow: inset 1px 1px 0 #ffbb44, 1px 1px 0 #cc7700;
+}
+
+.tab-icon-button.tab-selected:hover {
+  background: #ffbb44;
+  transform: none;
+  color: #000;
+}
+
+/* Icon sizing within tab buttons */
+.tab-icon-button svg {
+  width: clamp(28px, 7vw, 40px);
+  /* Much larger icons */
+  height: clamp(28px, 7vw, 40px);
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.5));
+}
+
+/* Selected tab icon styling */
+.tab-icon-button.tab-selected svg {
+  filter: drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.8));
+}
+
+/* Update header height to accommodate taller tabs */
+.app-header {
+  font-family: 'Press Start 2P', monospace;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border-top: 4px solid #ff9900;
+  padding:
+    calc(clamp(8px, 2vw, 12px) + env(safe-area-inset-top)) calc(clamp(4px, 1vw, 8px) + env(safe-area-inset-right)) calc(clamp(8px, 2vw, 12px) + env(safe-area-inset-bottom)) calc(clamp(4px, 1vw, 8px) + env(safe-area-inset-left));
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 100dvw;
+  box-sizing: border-box;
+  box-shadow: 0 -4px 0 #cc7700 inset, 0 -8px 16px rgba(255, 153, 0, 0.2) inset;
+  gap: clamp(8px, 2vw, 12px);
+  overflow: visible;
+  min-height: 96px;
+  /* Increased from 88px to accommodate bigger tabs */
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .tab-icon-button {
+    padding: clamp(12px, 3vw, 16px);
+    height: clamp(48px, 12vw, 56px);
+    max-width: clamp(60px, 15vw, 80px);
+  }
+
+  .tab-icon-button svg {
+    width: clamp(24px, 6vw, 32px);
+    height: clamp(24px, 6vw, 32px);
+  }
+
+  .app-header {
+    min-height: 84px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-icon-button {
+    padding: clamp(8px, 2vw, 12px);
+    height: clamp(44px, 10vw, 52px);
+    max-width: clamp(50px, 12vw, 70px);
+  }
+
+  .tab-icon-button svg {
+    width: clamp(20px, 5vw, 28px);
+    height: clamp(20px, 5vw, 28px);
+  }
+
+  .app-header {
+    min-height: 76px;
+  }
+}
+
+@media (max-width: 320px) {
+  .tab-icon-button {
+    padding: clamp(6px, 1.5vw, 8px);
+    height: clamp(40px, 9vw, 48px);
+    max-width: clamp(45px, 10vw, 60px);
+  }
+
+  .tab-icon-button svg {
+    width: clamp(18px, 4vw, 24px);
+    height: clamp(18px, 4vw, 24px);
+  }
+
+  .app-header {
+    min-height: 68px;
+  }
+}

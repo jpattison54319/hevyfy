@@ -16,7 +16,7 @@ import mealRoutes from './routes/meal.js';
 import routineRoutes from './routes/routine.js';
 import hevyRoutes from './routes/hevy.js';
 import stripeRoutes from './routes/stripe.js';
-
+import minibossRoutes from './routes/miniboss.js';
 
 
 // mongodb+srv://jpattison54319:<db_password>@cluster0.x3iwmzl.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
@@ -45,7 +45,9 @@ app.use('/api/workout', workoutRoutes);
 app.use('/api/meal', mealRoutes);
 app.use('/api/routines', routineRoutes);
 app.use('/api/hevy', hevyRoutes);
-app.use('/api/stripe', stripeRoutes)
+app.use('/api/miniboss', minibossRoutes);
+
+app.use('/api/stripe', stripeRoutes);
 
 
 

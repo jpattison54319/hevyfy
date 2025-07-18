@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Bone } from "./Bone";
 import { Fish } from "./Fish";
+import { getPetArchetype } from "../home/HomePage";
 
 interface CurrencyRowProps {
   count: number;
@@ -10,7 +11,6 @@ interface CurrencyRowProps {
 
 export const CalorieCurrencyContainer: React.FC<CurrencyRowProps> = ({ count, consumedCurrency, userArchetype}) => {
     const bonesLeft = count - consumedCurrency.filter(Boolean).length;
-
   
  return (
      <div style={{ width: "100%" }}>
@@ -50,7 +50,7 @@ export const CalorieCurrencyContainer: React.FC<CurrencyRowProps> = ({ count, co
               justifyContent: "center"
             }}
           >
-            {userArchetype === "puppy" ? (
+            {userArchetype === "canine" ? (
               <Bone consumed={consumedCurrency[i] ?? false} />
             ) : (
               <Fish consumed={consumedCurrency[i] ?? false} />

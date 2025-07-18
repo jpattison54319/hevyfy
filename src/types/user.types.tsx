@@ -123,6 +123,9 @@ export interface User  {
   quests: Quest[];
   goal: UserGoal;
   bodyStats: UserBodyStats;
+  currentChapter: number,
+  currentBossNumber: number,
+  defeatedBosses: [{ chapter: number, bossNumber: number }],
   settings: {
     showCalories: boolean; // show calorie intake
   }
